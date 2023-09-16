@@ -14,7 +14,7 @@ To achieve these goals, our software will provide the following:
 
 3. Administrative tools to allow management of menu inventory, perform customer support operations, perform financial operations and generate reports, and see drone status and leasing reports.
 
-4. Drone-owner tools to receive and process pending orders, register and unregister drones for lease, see earnings, and notify customers of when orders have arrived.  
+4. Drone-owner tools to register and unregister drones for lease, see earnings, receive payments, and view pending orders.  
 
 ## Customer User Stories
 
@@ -32,7 +32,7 @@ To achieve these goals, our software will provide the following:
 
 ## Customer Use Cases
 
-![UML Diagram](Customer_Use_Cases_UML.png)
+![UML Diagram](customer_use_cases.png)
 
 ## Admin User Stories
 
@@ -44,7 +44,7 @@ To achieve these goals, our software will provide the following:
   
 * The admin wants to know the number of drone-owners so they can know if they need to get more.
   
-* The admin wants a simple dashboard that shows critical information so that they can handle urgent issues and not waste time searching.
+* The manager opens the website and signs in with their admin credentials. They see a dashboard of the current status of orders and inventory so that they can quickly respond to problems and shortages.
 
 ## Admin Use Cases
 
@@ -62,7 +62,7 @@ To achieve these goals, our software will provide the following:
 
 * As a drone owner I want to see how much money I’ve made.
 
-## Drone Operator Use Cases
+## Drone-Owner Use Cases
 
 ![UML Diagram](Operator_Use_Cases_UML.png)
 
