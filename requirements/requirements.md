@@ -2,7 +2,7 @@
 
 ## Problem Description
 
-Drone Cones aims to provide a service that can allow a customer to order ice cream products at their specified location and have them delivered via drone delivery.  This will require systems to facilitate customer, drone operator, and manager interactions.
+Drone Cones aims to provide a service that can allow a customer to order ice cream products at their specified location and have them delivered via drone delivery.  This will require systems to facilitate customer, drone-owner, and manager interactions.
 
 ## Solution Description
 
@@ -10,7 +10,7 @@ To achieve these goals, our software will provide the following:
 
 1. An ordering system to allow customers to view menu items, add menu items into an order, pay for the order, and track the status of the order as it is being delivered.
 
-2. An account system to store necessary data for customers, drone operators, and admins to allow notifications to be sent to account holders.
+2. An account system to store necessary data for customers, drone-owners, and admins to allow notifications to be sent to account holders.
 
 3. Administrative tools to allow management of menu inventory, perform customer support operations, perform financial operations and generate reports, and see drone status and leasing reports.
 
@@ -42,7 +42,7 @@ To achieve these goals, our software will provide the following:
   
 * The admin wants to see stats on how many orders they get so that they can know if the business is gonna go out of business.
   
-* The admin wants to know the number of drone operators so they can know if they need to get more.
+* The admin wants to know the number of drone-owners so they can know if they need to get more.
   
 * The admin wants a simple dashboard that shows critical information so that they can handle urgent issues and not waste time searching.
 
