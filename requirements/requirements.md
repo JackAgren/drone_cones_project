@@ -14,7 +14,7 @@ To achieve these goals, our software will provide the following:
 
 3. Administrative tools to allow management of menu inventory, perform customer support operations, perform financial operations and generate reports, and see drone status and leasing reports.
 
-4. Drone operator tools to receive and process pending orders, register and unregister drones for lease, see earnings, and notify customers of when orders have arrived.  
+4. Drone-owner tools to receive and process pending orders, register and unregister drones for lease, see earnings, and notify customers of when orders have arrived.  
 
 ## Customer User Stories
 
@@ -50,7 +50,7 @@ To achieve these goals, our software will provide the following:
 
 ![UML Diagram](Manager_Use_Cases_UML.png)
 
-## Drone Operator User Stories
+## Drone-Owner User Stories
 
 * As a drone-owner, I want to be able to register a drone/register new drones.
   
