@@ -32,7 +32,7 @@ To achieve these goals, our software will provide the following:
 
 ## Customer Use Cases
 
-![UML Diagram](customer_use_cases.png)
+![UML Diagram](customer_use_cases_UML.png)
 
 ## Admin User Stories
 
