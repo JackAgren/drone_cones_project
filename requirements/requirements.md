@@ -65,22 +65,3 @@ To achieve these goals, our software will provide the following:
 ## Drone-Owner Use Cases
 
 ![UML Diagram](Operator_Use_Cases_UML.png)
-
-## Drone Owner Data
-
-* Username 
-* Password 
-* Email 
-* Phone Number 
-* Leassor ID
-  
-## Drone Data
-
-* Status 
-* Size
-* Drone ID
-  
-## Other Data
-
-* Order Queue
-* Leased Drone List – List of leased drones, each item being a drone data item.  
