@@ -119,6 +119,12 @@ The finance system can be broken down into the following sub-systems:
 
 * **Customer Transaction Modifcation System** - This is a tool for admins to issue refunds or modify a customer transaction (i.e. applying a discount that may have been forgotten).  This also queries the order issues database from the customer support system for descriptions of the order issues to be resolved.  The finance and transation databases should be updated as needed.
 
+**Considerations**
+
+* Transactions must account for tax.  Use 3% tax rate for all food itmes, which is in accordance to Utah State Tax Commision.
+
+* Price of ice cream scoops are all the same.  $1 per scoop.
+
 ### Drone System
 
 The drone system is responsible for tracking data relevant to drones and drone owners.
