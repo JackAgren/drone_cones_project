@@ -99,6 +99,13 @@ The inventory system can be broken down into the following subsystems:
 
 The finance system is responsible for handling financial transactions and providing tools for admins to perform financial operations (generating reports, making lease payments, refunding customers, etc.)
 
+Transactions can be defined as follows:
+
+* Transaction ID
+* Amount (in dollars)
+* Transaction Name
+* Description
+
 An important financial transaction for Drone Cones is lease payments to drone owners who lease their drones.  A lease consists of the following:
 
 * Drone Size Class - The size of the drone (large, medium, small)
