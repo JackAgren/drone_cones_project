@@ -99,11 +99,19 @@ The inventory system can be broken down into the following subsystems:
 
 The finance system is responsible for handling financial transactions and providing tools for admins to perform financial operations (generating reports, making lease payments, refunding customers, etc.)
 
+An important financial transaction for Drone Cones is lease payments to drone owners who lease their drones.  A lease consists of the following:
+
+* Drone Size Class - The size of the drone (large, medium, small)
+* Monthly Payment Rate - How much the drone owner will get paid per month.  The monthly rate is fixed.  The rate is determined by the size of the drone.
+
 The finance system can be broken down into the following sub-systems:
 
 * **Transaction Database** - This is a database of all transactions that occurred.
 * **Finance Database** - This is a database that holds current state of the business finance.  It also has operations to add or deplete cash.  The database might hold the following info:
-    * Current Balance
+
+    * Current Balance - How much money the company currently has.
+    * Start of Month Balance - How much money the company had a start of current month. 
+    * Earnings/Deficit of Month Amount - How much money earned or lost for the current month.
 
 * **Finance Report Generator** - This will addlow admins to have a report of earnings, costs, and other relevant financial info.
 
