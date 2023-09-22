@@ -110,12 +110,12 @@ The finance system can be broken down into the following sub-systems:
 * **Finance Database** - This is a database that holds current state of the business finance.  It also has operations to add or deplete cash.  The database might hold the following info:
 
     * Current Balance - How much money the company currently has.
-    * Start of Month Balance - How much money the company had a start of current month. 
+    * Start of Month Balance - How much money the company had a start of current month.
     * Earnings/Deficit of Month Amount - How much money earned or lost for the current month.
 
-* **Finance Report Generator** - This will addlow admins to have a report of earnings, costs, and other relevant financial info.
+* **Finance Report Generator** - This will allow admins to have a report of earnings, costs, and other relevant financial info.
 
-* **Lease Payment System** - This is a tool that allows admins to make lease payments to drone owners.  The finance and transation databases should be updated as needed.
+* **Lease Payment System** - This is a tool that allows admins to make lease payments to drone owners.  This should query the Drone Database (under Drone System) to get a list of leases currently active.  The finance and transation databases should be updated as needed.
 
 * **Customer Transaction Modifcation System** - This is a tool for admins to issue refunds or modify a customer transaction (i.e. applying a discount that may have been forgotten).  This also queries the order issues database from the customer support system for descriptions of the order issues to be resolved.  The finance and transation databases should be updated as needed.
 
