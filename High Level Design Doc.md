@@ -150,7 +150,7 @@ The inventory system can be broken down into the following subsystems:
 
 The finance system is responsible for handling financial transactions and providing tools for admins to perform financial operations (generating reports, making lease payments, refunding customers, etc.)
 
-Transactions can be defined as follows:
+A transaction can be defined as follows:
 
 * Transaction ID
 * Amount (in dollars)
