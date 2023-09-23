@@ -150,17 +150,38 @@ The inventory system can be broken down into the following subsystems:
 
 The finance system is responsible for handling financial transactions and providing tools for admins to perform financial operations (generating reports, making lease payments, refunding customers, etc.)
 
+A transaction can be defined as follows:
+
+* Transaction ID
+* Amount (in dollars)
+* Transaction Name
+* Description
+
+An important financial transaction for Drone Cones is lease payments to drone owners who lease their drones.  A lease consists of the following:
+
+* Drone Size Class - The size of the drone (large, medium, small)
+* Monthly Payment Rate - How much the drone owner will get paid per month.  The monthly rate is fixed.  The rate is determined by the size of the drone.
+
 The finance system can be broken down into the following sub-systems:
 
 * **Transaction Database** - This is a database of all transactions that occurred.
 * **Finance Database** - This is a database that holds current state of the business finance.  It also has operations to add or deplete cash.  The database might hold the following info:
-    * Current Balance
 
-* **Finance Report Generator** - This will addlow admins to have a report of earnings, costs, and other relevant financial info.
+    * Current Balance - How much money the company currently has.
+    * Start of Month Balance - How much money the company had a start of current month.
+    * Earnings/Deficit of Month Amount - How much money earned or lost for the current month.
 
-* **Lease Payment System** - This is a tool that allows admins to make lease payments to drone owners.  The finance and transation databases should be updated as needed.
+* **Finance Report Generator** - This will allow admins to have a report of earnings, costs, and other relevant financial info.
+
+* **Lease Payment System** - This is a tool that allows admins to make lease payments to drone owners.  This should query the Drone Database (under Drone System) to get a list of leases currently active.  The finance and transation databases should be updated as needed.
 
 * **Customer Transaction Modifcation System** - This is a tool for admins to issue refunds or modify a customer transaction (i.e. applying a discount that may have been forgotten).  This also queries the order issues database from the customer support system for descriptions of the order issues to be resolved.  The finance and transation databases should be updated as needed.
+
+**Considerations**
+
+* Transactions must account for tax.  Use 3% tax rate for all food itmes, which is in accordance to Utah State Tax Commision.
+
+* Price of ice cream scoops are all the same.  $1 per scoop.
 
 ### Drone System
 
