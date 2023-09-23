@@ -99,27 +99,29 @@ This will deal with security aspects of the user account logins in the backgroun
 
 ### Ordering System
 
-The ordering system is responsible for issuing and tracking orders made by customers.  Both customer account holders AND non-account-holding customers should be able to use the ordering system.
+The ordering system defines how a user sees, selects and sends an order to the dronecones, and how the business stores past orders and tracks current ones.
 
-An order can be defined as follows:
+## User View
 
-* Order ID - This is a unique ID that identifies a particular order
-* Order Items List - Thisis a list of order items to be purchased.
-* Total Cost - The cost of all items in the order, plus additional charges like tax.
-* Estimated Time of Arrival - Tracks how much time the order will likely arrive while being delivered.
+The user will see a menu that displays what is available in the inventory. The user selects how they would like their ice cream, including options for toppings, flavor, and size. They then proceed to checkout to review their order.
 
-An order item is defined as follows:
+## Order information
 
-* Container - Specifies the type (Cone or Bowl) and size (number of scoops allowed in container) of a container that holds ice cream scoops.  The number of scoops placed onto a container cannot exceed the max size specified by the container size.
-* Scoop List - A collection of ice cream scoops within the current container.  Each scoop is simply an ice cream flavor.
-* Topping List - A collection of toppings added onto the scoops.
+The order information that is stored for a registered user includes the contents (flavors, size, toppings, ect), User ID, price, and what drone
 
-The ordering system can be broken down into the following sub-systems:
+## Order processing and delivery
 
-* **Menu** - Displays menu items and their availability.  It will query the inventory to determine which items are available, sales prices, etc..
-* **Cart** - This is what will allow users to assemble their order.  This also tracks the total cost of the order.  Customer accounts should also option to use order history to fill out the cart.
-* **Delivery and Payment** - This is where the user will input their delivery location and issue payment after confirming the order.  When payment is made, the finance system will add money to the finance database and update transaction database.
-* **Order Tracking** - Once an order is placed, the order will be trackable by customers, displaying estimated time of arrival.  When the order is delivered, it should be placed into the customer's order history.  A database to hold pending orders should be considered.
+The order information is first sent in its entirety to the order processing system. This system is responsable for:
+
+1. telling the admin system the current status of orders
+2. Informing the inventory system which ingredients were used
+3. Assigning orders to certain drones????????
+4. Calculating the ETA and returning it to the user.
+
+## QUESTIONS
+
++ Does the drone system or the order system assign drones to orders?
++ Do we want live orders in a database or just in a list on the server (noob moment)
   
 ### Inventory Management System
 
