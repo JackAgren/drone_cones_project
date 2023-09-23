@@ -1,20 +1,16 @@
 # High-Level Design Document
 
-## Overview
- 
-***TBD***
-
 ## Platform
 
 The Drone Cones application will be a web app.
 
 ## Architecture
 
-***TBD***
+Client/Server Architecture
 
 ## Programming Languages and Frameworks
 
-***TBD***
+Django, Python, Vue.js
 
 ## Systems
 
@@ -190,6 +186,8 @@ The finance system can be broken down into the following sub-systems:
 The drone system is responsible for tracking data relevant to drones and drone owners.
 
 A drone is defined as follows:
+
+Add drone capacity (number of scoops, S, M, L)
 
 * Drone ID - A unique identifier for a particular drone.
 * Drone Size (small, medium, large) - Size class of drone.  Determines how many scoops it can hold and how much the lease for the drone costs.
