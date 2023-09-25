@@ -246,6 +246,6 @@ With all the systems defined, the database will contain the following 8 tables:
 * Order Issue Table
 * Customer Complaint Table
 
-Below is a UML diagram for how the tables could look and interact with each other inside the database. Because this is the high level design document, the data is subject to change, along with the variable types. Becasue we are using Django, the database will use sqlite3.
+Below is a UML diagram for how the tables could look and interact with each other inside the database. Because this is the high level design document, the data is subject to change, along with the variable types. Because we are using Django, the database will use SQLite3.
 
 ![UML Diagram](high_level_UML.png)
