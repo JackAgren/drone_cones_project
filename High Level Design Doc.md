@@ -8,9 +8,9 @@ The Drone Cones application will be a web app.
 
 Client/Server Architecture
 
-## Programming Languages and Frameworks
+## Programming Languages, Libraries, and Frameworks
 
-Django, Python, Vue.js
+Django - Python, Vue.js
 
 ## Systems
 
@@ -22,6 +22,8 @@ The account system is responsible for user accounts and logins. There are three 
 * Drone Owner
 * Admin (Manager) 
 
+We will use Django's PBKDF2 flexible password storage system to manage sensitive account information.
+
 #### User Data
 
 User account data consists of a combination of data obtained by the user at
@@ -32,18 +34,16 @@ This data consists *at least* the following (based on the user's role):
 * Email
 * Password
 * Delivery address
-* Order history
 
 **Drone Owner**
 * Email
 * Password
-* Drone ID(s)
-    * Referencing the corresponding rows in the Drone table
+* Delivery address (optional - if the user wishes to use the customer privileges of the account)
 
 **Admin**
 * Email
 * Password
-
+* Delivery address (optional - if the user wishes to use the customer privileges of the account)
 
 #### User Permissions
 
@@ -62,6 +62,7 @@ Once a user is register for an account, the user will have different privileges 
 * Temporarily or permanently remove drone from service
 * View payments
 * View drone activity
+* All permissions of a customer
 
 **Admin**
 * Log in to account
@@ -73,15 +74,15 @@ Once a user is register for an account, the user will have different privileges 
 * View incoming and outgoing payments
     * As well as a summary of financial activity
 * Ban other users
+* All permissions of a customer
+* All permissions of a drone owner
 
 #### Sub-Systems
 
 The account system can be broken down into the following sub-systems:
 
-* **Account Database** - 
-This is a database of all user accounts made and is also where admin operations regarding account data takes place (i.e. banning an account, making changes to password, etc.).
-* **Account Info Databases** - 
-These are separate databases for specific account types (customer, admin, drone owners) that holds specific information for their respective roles (i.e. customers will have order history info stored).
+* **Account Table** - 
+This is a table of all user accounts made. It is where admin operations regarding account data takes place (i.e. banning an account, making changes to password, etc.). The table will contain the account type and required information for the relevant user type. Columns for data irrelevant to the user role will contain `NULL`.
 * **Login Page** - 
 This is where users will login into their accounts using their account credentials.
 * **Registration Page** - 
