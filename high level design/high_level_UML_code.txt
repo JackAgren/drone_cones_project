@@ -1,0 +1,73 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table Accounts {
+  user_id string [primary key]
+  user_type string
+  email string
+  password string
+  address string
+}
+
+Table Inventory {
+  item_name string [primary key]
+  item_type string
+  quantity integer
+  sales_price integer
+  restock_cost integer
+}
+
+Table Orders {
+  order_id string [primary key]
+  user_id string
+  drone_id string
+  flavor string
+  scoops integer
+  topping string
+  price integer
+}
+
+Table Transactions {
+  transaction_id string [primary key]
+  order_id string
+  price integer
+}
+
+Table Finance {
+  month_id string [primary key]
+  start_balance float
+  current_balance float
+  earnings float
+}
+
+Table Drones {
+  drone_id string [primary key]
+  owner_id string
+  size integer
+  status string
+}
+
+Table Issues {
+  issue_id string [primary key]
+  customer_id string
+  order_id string
+  description string
+  resolved boolean
+}
+
+Table Complaints {
+  complaint_id string [primary key]
+  customer_id string
+  description string
+}
+
+Ref: Accounts.user_id < Orders.user_id
+Ref: Transactions.transaction_id - Orders.order_id
+Ref: Accounts.user_id < Complaints.customer_id
+Ref: Accounts.user_id < Drones.owner_id
+Ref: Inventory.item_name - Orders.flavor
+Ref: Inventory.item_name - Orders.scoops
+Ref: Inventory.item_name - Orders.topping
+Ref: Issues.customer_id - Accounts.user_id
+Ref: Issues.order_id - Orders.order_id
+Ref: Transactions.price - Finance.current_balance
