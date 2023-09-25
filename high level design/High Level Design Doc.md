@@ -244,3 +244,6 @@ With all the systems defined, the database will contain the following 8 tables:
 * Drone Table
 * Order Issue Table
 * Customer Complaint Table
+
+Below is a UML diagram for how he tables could look and interact with each other inside the database. Because this is the high level design document, the data is still expected to change, along with the variable types.
+![UML Diagram](high_level_UML.png)
