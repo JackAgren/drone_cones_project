@@ -30,7 +30,9 @@ Table Orders {
 Table Transactions {
   transaction_id string [primary key]
   order_id string
+  transaction_name string
   price integer
+  description string
 }
 
 Table Finance {
@@ -63,7 +65,7 @@ Table Complaints {
 
 Ref: Accounts.user_id < Orders.user_id
 Ref: Transactions.transaction_id - Orders.order_id
-Ref: Accounts.user_id < Complaints.customer_id
+Ref: Accounts.user_id - Complaints.customer_id
 Ref: Accounts.user_id < Drones.owner_id
 Ref: Inventory.item_name - Orders.flavor
 Ref: Inventory.item_name - Orders.scoops
