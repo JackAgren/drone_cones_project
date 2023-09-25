@@ -10,7 +10,8 @@ Client/Server Architecture
 
 ## Programming Languages, Libraries, and Frameworks
 
-Django - Python, Vue.js - JavaScript
+* Django - Python, SQL (SQLite3)
+* Vue.js - JavaScript
 
 ## Systems
 
@@ -30,7 +31,7 @@ We will use Django's PBKDF2 flexible password storage system to manage sensitive
 
 User account data consists of a combination of data obtained by the user at
 the creation of the account and data collected through the user's use of the app.
-This data consists *at least* the following (based on the user's role):
+This data consists of *at least* the following (based on the user's role):
 
 **Customer**
 * Email
@@ -140,7 +141,7 @@ There are three types of inventory items:
 
 The inventory system can be broken down into the following subsystems:
 
-* **Inventory Table**: The database will have a table that holds all the inventory data and has functionality to query and update the inventory (restocking, depleting inventory for orders, etc.).  When inventory is restocked, the finance system will have money depleted from finance database and update the transactions database.
+* **Inventory Table**: The database will have a table that holds all the inventory data and has functionality to query and update the inventory (restocking, depleting inventory for orders, etc.).  When inventory is restocked, the Finance System will have money depleted from the **Finance Table** and update the **Transactions Table**.
 * **Inventory Report Generator**: This allows admins to see a report of the current state of the inventory.
 
 ### Finance System
@@ -165,7 +166,7 @@ The finance system can be broken down into the following sub-systems:
 * **Finance Table** - This table of the database holds current state of the business finance.  It also has operations to add or deplete cash.  The database might hold the following info:
 
     * Current Balance - How much money the company currently has.
-    * Start of Month Balance - How much money the company had a start of current month.
+    * Start of Month Balance - How much money the company had at the start of current month.
     * Earnings/Deficit of Month Amount - How much money earned or lost for the current month.
 
 * **Finance Report Generator** - This will allow admins to have a report of earnings, costs, and other relevant financial info.
@@ -229,7 +230,7 @@ A customer complaint can be defined as follows:
 
 The customer support system can be broken down into the following sub-systems:
 
-* **Order Issue Table** - This holds a queue of customer issues to be resolved.  Customers can add order issues via the customer support page, and admins can remove order issues when resolved via the Customer Transaction Modifcation System in the finance database.
+* **Order Issue Table** - This holds a queue of customer issues to be resolved.  Customers can add order issues via the customer support page, and admins can remove order issues when resolved via the Customer Transaction Modifcation System in the **Finance Table**.
 * **Customer Complaint Table** - This simply holds all the customer complaints.
 * **Customer Support Report Generator** - This will allow admins to receive a report of customer complaints and pending order issues.
 * **Customer Support Page** - This is where a customer can enter in an order issue or customer complaint.  This consists of inputting whether the problem is order-related or complaint-related, customer info and a text description of the order issue or complaint.
@@ -245,5 +246,6 @@ With all the systems defined, the database will contain the following 8 tables:
 * Order Issue Table
 * Customer Complaint Table
 
-Below is a UML diagram for how he tables could look and interact with each other inside the database. Because this is the high level design document, the data is still expected to change, along with the variable types.
+Below is a UML diagram for how the tables could look and interact with each other inside the database. Because this is the high level design document, the data is subject to change, along with the variable types. Becasue we are using Django, the database will use sqlite3.
+
 ![UML Diagram](high_level_UML.png)
