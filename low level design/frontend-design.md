@@ -44,14 +44,14 @@ The user can (depending on the permissions of their role):
     * Move to the manage accounts page
     * Move to the manage menu page
 * Access drone owner tools
-    * TODO
+    * Move to the drone registration page
+    * Move to the payments page
+    * Move to the drone activity page
 * Access customer options
     * Move to the menu page
     * Move to the order history page
 
-Requests made to the backend:
-
-* n/a
+No requests made to the backend from the initial dashboard.
 
 ## Customer Pages
 
@@ -114,8 +114,43 @@ The user can:
 * Return to the dashboard
 
 ## Drone Owner Pages
+### Menu
+The drone owner will have options to move between the registration, activity, and payments pages.
+### Drone Registration
+The drone owner can:
 
-### TODO
+* Register a new drone
+* Temporarily remove a drone from service
+* Permanently remove a drone from service
+
+Requests made to the backend:
+
+* Query drone data
+    * Get drone ID, name
+* Change drone data
+    * Change drone status
+
+### Drone Activity
+The drone owner can:
+
+* View data for each drone registered
+
+Requests made to the backend:
+
+* Query drone data
+    * Get deliveries
+    * Get status
+### Payments
+
+The drone owner can:
+
+* View their current balance
+* Transfer funds to account
+
+Requests made to the backend:
+
+* Query user
+* Change user funds
 
 ## Admin Pages
 
