@@ -1,251 +1,289 @@
-# High-Level Design Document
+# Low Level Frontend Design
 
-## Platform
+## UI Diagrams Figma Project Link
+https://www.figma.com/file/kuxGFMhTcyI4Y4n39xwAdq/DroneCones_UX_Blueprint?type=design&node-id=0%3A1&mode=design&t=ioyr94quhipTfDVW-1
 
-Drone Cones will be a web application.
+## Account/Main Pages
 
-## Architecture
+### Home
 
-Client/Server Architecture
+The user can:
 
-## Programming Languages, Libraries, and Frameworks
+* Move to the login page
+* Move to the menu page
+* Move to the page to create a customer account
+* Move to the page to create a drone owner account
+* Move to the page to apply to create an admin account
 
-* Django - Python, SQL (SQLite3)
-* Vue.js - JavaScript
+Requests made to the backend:
 
-## Systems
+* n/a
 
-The application will be split into the following 6 main systems.
+### Login
 
-### Account System
+The user can:
 
-The account system is responsible for user accounts and logins. There are three types of user accounts:
+* Enter their login information and attempt to log in
+    * If login is successful, the user is moved to the dashboard page
+* Move to the page to create an account
+* Move to the customer support page
 
-* Customer
-* Drone Owner
-* Admin (Manager) 
+Requests made to the backend:
 
-We will use Django's PBKDF2 flexible password storage system to manage sensitive account information.
+* Verify login information
+    * And get user ID / role (permissions)
 
-#### User Data
+### Dashboard
 
-User account data consists of a combination of data obtained by the user at
-the creation of the account and data collected through the user's use of the app.
-This data consists of *at least* the following (based on the user's role):
+The user can (depending on the permissions of their role):
 
-**Customer**
-* Email
-* Password
-* Delivery address
+* Access admin tools
+    * Move to the financial records page
+    * Move to the manage payments page
+    * Move to the manage inventory page
+    * Move to the manage accounts page
+    * Move to the manage menu page
+* Access drone owner tools
+    * Move to the drone registration page
+    * Move to the payments page
+    * Move to the drone activity page
+* Access customer options
+    * Move to the menu page
+    * Move to the order history page
 
-**Drone Owner**
-* Email
-* Password
-* Delivery address (optional - if the user wishes to use the customer privileges of the account)
+No requests made to the backend from the initial dashboard.
 
-**Admin**
-* Email
-* Password
-* Delivery address (optional - if the user wishes to use the customer privileges of the account)
+## Customer Pages
 
-#### User Permissions
+### View Menu & Select Items
 
-Once a user is registered for an account, the user will have different privileges granted to them based on account type.
+The user can:
 
-**Customer**
-* Log in to account
-* View menu 
-* Place an order
-* View active order status
-* View order history
+* Select a suggested cone
+* Create their own cone
+* Add a cone to their cart
+* Move to the cart page
+* Return to the dashboard page
 
-**Drone Owner**
-* Log in to account
-* View drones registered under account
-* Temporarily or permanently remove drone from service
-* View payments
-* View drone activity
-* All permissions of a customer
+Requests made to the backend:
 
-**Admin**
-* Log in to account
-* View active and past orders
-    * As well as a summary of past orders
-* Check and update inventory
-* View customer feedback
-* View drone and drone owner info
-* View incoming and outgoing payments
-    * As well as a summary of financial activity
-* Ban other users
-* All permissions of a customer
-* All permissions of a drone owner
+* Get available cones, ice cream flavors, and toppings
+    * As well as their prices
 
-#### Sub-Systems
+### View Cart & Check Out
 
-The account system can be broken down into the following sub-systems:
+The user can:
 
-* **Account Table** - 
-This is a table of all user accounts made. It is where admin operations regarding account data takes place (i.e. banning an account, making changes to password, etc.). The table will contain the account type and required information for the relevant user type. Columns for data irrelevant to the user role will contain `NULL`.
-* **Login Page** - 
-This is where users will login into their accounts using their account credentials.
-* **Registration Page** - 
-This is where new user accounts will be made.
-* **Account Page** - 
-This is a page that will display user account info, as well as provide tools to users to modify info such as password and address.
-* **Forgot Username/Password Page** - 
-This is where users can contact customer support to help unlock their account.  For this project, an email system to send user credentials will not be made.
-* **Authentication** - 
-This will deal with security aspects of the user account logins in the background.
+* View their cart
+* Edit/remove items in their cart
+* Return to the menu page
+* Enter location information
+* Place their order (which moves them to the order tracking page)
 
-### Ordering System
+Requests made to the backend:
 
-The ordering system defines how a user sees, selects and sends an order to Drone Cones, and how the business stores past orders and tracks current ones.
+* Place a new order
 
-#### User View
+### Track Order
 
-The user will see a menu that displays what is available in the inventory. The user selects how they would like their ice cream, including options for toppings, flavor, and size. They then proceed to checkout to review their order.
+The user can:
 
-#### Order Information
+* View how far away their order is from arrival
+* Be automatically moved to the order arrived page when the order completes
 
-The order information that is stored for a registered user includes the contents (flavors, size, toppings, etc.), User ID, price, and what drone is responsible for the delivery.
+Requests made to the backend:
 
-#### Order Processing and Delivery
+* Periodically checks to see the status of the order
 
-The order information is first sent in its entirety to the order processing system. This system is responsible for:
+### Order Arrived
 
-1. Communicating to the Account System (the customer) the current status of orders
-2. Informing the Inventory Management System which ingredients were used
-3. Communicating orders to the Drone System for pick up
-4. Calculating the ETA and returning it to the user
-5. Storing orders in the database as the **Order Table**
+The user can:
+
+* Return to the dashboard page
+
+Requests made to the backend:
+
+* n/a
+
+### Order History
+
+The user can:
+
+* View their past orders
+* Select one to reorder (sends user to the checkout page)
+* Return to the dashboard
+
+## Drone Owner Pages
+### Menu
+The drone owner will have options to move between the registration, activity, and payments pages.
+### Drone Registration
+The drone owner can:
+
+* Register a new drone
+* Temporarily remove a drone from service
+* Permanently remove a drone from service
+
+Requests made to the backend:
+
+* Query drone data
+    * Get drone ID, name
+* Change drone data
+    * Change drone status
+
+### Drone Activity
+The drone owner can:
+
+* View data for each drone registered
+
+Requests made to the backend:
+
+* Query drone data
+    * Get deliveries
+    * Get status
+### Payments
+
+The drone owner can:
+
+* View their current balance
+* Transfer funds to account
+
+Requests made to the backend:
+
+* Query user
+* Change user funds
+
+## Admin Pages
+
+### Manage Accounts
+
+The admin user can:
+
+* View list of all registered accounts.
+* Modify the account type via dropdown menu.
+* Modify whether the account is active or banned.
+
+Requests made to the backend:
+
+* Query accounts database to generate a list of accounts consisting of:
+  * User ID
+  * Email
+  * Account Type
+  * Account Status
+* Given a specific user account:
+  * Request to change Account Type in database.
+  * Request to change Account Status in database.
+
+### Manage Inventory
+
+The admin user can:
+
+* View list of all inventory items.
+* Restock items.
+
+Requests made to the backend:
+
+* Query inventory database to generate a list of inventory items consisting of:
+  * Item ID
+  * Item Name
+  * Item Cost per Unit
+  * Quantity
+* Given a specific item:
+  * Request to modify quantity of an item in inventory database.
+  * Request to modify balance in finance database.
+  * Request to modify current month profit/deficit.
+  * Request to add new transaction corresponding to restock action.
+
+* Stock Status is *dervied* from whether or not quantity is or is not 0.
+
+### Manage Lease Payments
+
+The admin user can:
+
+* View list of active leases.
+* Make lease payments to selected unpaid leases.
+
+Requests made to the backend:
+
+* Query drones database to generate a list of leases consist of:
+  * Drone ID
+  * Drone Owner ID
+  * Drone Size Class
+  * Amount Due
+* Given a specific drone ID:
+  * Request to modify amount due data point corresponding to the drone ID.
+  * Request to modify balance in finance database.
+  * Request to modify current month profit/deficit.
+  * Request to add new transaction corresponding to lease payment action.
   
-### Inventory Management System
+* Payment status is *dervied* from whether or not amount due is or is not 0.
 
-The inventory management system is responsible for tracking and updating the inventory.
+### Financial Records
 
-An inventory item can be defined as follows:
+The admin user can:
 
-* Item Name
-* Item Type
-* Current Quantity
-* Sales Price per Unit
-* Restock Cost per Unit
+* See current balance.
+* See current earnings for the month.
+* See a list of all transactions, arranged from most recent to lease recent.
+* Generate a finance report (printable document or PDF).
 
-There are three types of inventory items:
+Requests made to the backend:
 
-* Containers (Cones, bowls, etc.)
-* Ice Cream (Flavors)
-* Toppings (Sprinkles, nuts, etc.)
+* Query finance database to generate:
+  * Current Balance
+  * Current Month Starting Profit
+    * Recorded at the start of each month.
+  * Current Month Profit/Deficit
+    * Calculated by summing together all transactions from start of month to current date.
+  * A list of transactions consisting of:
+    * Transaction ID
+    * Transaction Type
+    * Description
+    * Amount
 
-**Considerations**: Units for each item type, as well as units in context of menu items need to be well-defined (i.e. Liters of ice cream vs. a "scoop" of ice cream needs to be defined).
+### Manage Menu
 
-The inventory system can be broken down into the following subsystems:
+The admin user can:
 
-* **Inventory Table**: The database will have a table that holds all the inventory data and has functionality to query and update the inventory (restocking, depleting inventory for orders, etc.).  When inventory is restocked, the Finance System will have money depleted from the **Finance Table** and update the **Transactions Table**.
-* **Inventory Report Generator**: This allows admins to see a report of the current state of the inventory.
+* See list of menu items.
+* Add/Remove menu items.
+* Edit the price of menu itmes.
 
-### Finance System
+Requests made to the backend:
 
-The finance system is responsible for handling financial transactions and providing tools for admins to perform financial operations (generating reports, making lease payments, refunding customers, etc.)
+* Query inventory database and menu database to generate list of menu items consisting of:
+  * Item ID (from inventory database)
+  * Item Name (from inventory database)
+  * Item Type (from inventory database)
+  * Sales Price (from menu database)
+* Given an item ID to remove:
+  * Request deletion of menu item in menu item database.
+  * Request deletion of corresponding inventory item.
+* Given an item ID to edit:
+  * Request modification of menu item sales price.
+* Given an item name, item tpye, cost per unit, and sales price,
+  * Request insertion of corresponding inventory item in inventory database.
+  * Request insertion of menu item in menu item database.
 
-A transaction can be defined as follows:
+* Stock Status is *dervied* from whether or not quantity (from inventory database) is or is not 0.
 
-* Transaction ID
-* Amount (in dollars)
-* Transaction Name
-* Description
+## UI Diagrams
 
-An important financial transaction for Drone Cones is lease payments to drone owners who lease their drones.  A lease consists of the following:
-
-* Drone Size Class - The size of the drone (large, medium, small)
-* Monthly Payment Rate - How much the drone owner will get paid per month.  The monthly rate is fixed.  The rate is determined by the size of the drone.
-
-The finance system can be broken down into the following sub-systems:
-
-* **Transaction Table** - This table of the database contains all transactions that occurred.
-* **Finance Table** - This table of the database holds current state of the business finance.  It also has operations to add or deplete cash.  The database might hold the following info:
-
-    * Current Balance - How much money the company currently has.
-    * Start of Month Balance - How much money the company had at the start of current month.
-    * Earnings/Deficit of Month Amount - How much money earned or lost for the current month.
-
-* **Finance Report Generator** - This will allow admins to have a report of earnings, costs, and other relevant financial info.
-
-* **Lease Payment System** - This is a tool that allows admins to make lease payments to drone owners.  This should query the **Drone Table** (under Drone System) to get a list of leases currently active.  The finance and transaction tables should be updated as needed.
-
-* **Customer Transaction Modifcation System** - This is a tool for admins to issue refunds or modify a customer transaction (i.e. applying a discount that may have been forgotten).  This also queries the **Order Issues Table** from the customer support system for descriptions of the order issues to be resolved.
-
-**Considerations**
-
-* Transactions must account for tax.  Use 3% tax rate for all food itmes, which is in accordance to Utah State Tax Commission.
-
-* Price of ice cream scoops are all the same,  $1 per scoop.
-
-### Drone System
-
-The drone system is responsible for the following:
-
-1. Assigning orders received from the Ordering System
-2. Registering and deactivating drones from the **Drone Table**
-3. Delivering orders
-4. Updating order status in the **Order Table**
-
-A drone can be defined as follows:
-* Drone ID
-* Drone owner ID (ID of the owner, stored in the **Account Table**)
-* Size (ranging from small, medium, or large)
-* Status (Busy, Available, Deactivated)
-
-**Considerations**:
-* A drone owner is also a customer in the system
-* A drone owner can have virtually infinite drones registered, while each drone only has one owner
-* Drone sizes will be determined by the amount of "scoops" they can carry
-    * Small drones will carry 1 scoop
-    * Medium drones will carry 2 scoops
-    * Large drones will carry 3 or more scoops
-* Since this is a prototype and we aren't actually delivering ice cream, "delivering" orders will actually just set a short timer
-* Drone owners will be compensated based on the amount of time their drone is leased (as opposed to a per delivery basis)
-
-Drone owners will be able to add or remove drones from the **Drone Table** if they wish to lease or unlease their drones.
-
-**Drone Report Generator** - Administrators will be able to generate a report showing all drone data.
-
-
-### Customer Support System
-
-The customer support system is responsible for handling order issues and customer complaints.
-
-Order issues deal with problems with an order (overcharging the customer, forgetting to apply discounts, refunds, etc). An order issue can be defined as follows:
-
-* Order issue ID
-* Customer info (provided by customer account or manual input for non-account holders)
-* Order ID
-* Description
-
-A customer complaint can be defined as follows:
-
-* Customer complaint ID
-* Customer info (provided by customer account or manual input for non-account holders)
-* Description
-
-The customer support system can be broken down into the following sub-systems:
-
-* **Order Issue Table** - This holds a queue of customer issues to be resolved.  Customers can add order issues via the customer support page, and admins can remove order issues when resolved via the Customer Transaction Modifcation System in the **Finance Table**.
-* **Customer Complaint Table** - This simply holds all the customer complaints.
-* **Customer Support Report Generator** - This will allow admins to receive a report of customer complaints and pending order issues.
-* **Customer Support Page** - This is where a customer can enter in an order issue or customer complaint.  This consists of inputting whether the problem is order-related or complaint-related, customer info and a text description of the order issue or complaint.
-
-### Database
-With all the systems defined, the database will contain the following 8 tables:
-* Account Table
-* Inventory Table
-* Order Table
-* Transaction Table
-* Finance Table
-* Drone Table
-* Order Issue Table
-* Customer Complaint Table
-
-Below is a UML diagram for how the tables could look and interact with each other inside the database. Because this is the high level design document, the data is subject to change, along with the variable types. Because we are using Django, the database will use SQLite3.
-
-![UML Diagram](high_level_UML.png)
+![Image](./Screenshots/HomePage.png)
+![Image](./Screenshots/LoginPage.png)
+![Image](./Screenshots/RegistrationPage.png)
+![Image](./Screenshots/Dashboard%20-%20Customer.png)
+![Image](./Screenshots/Menu%20Page.png)
+![Image](./Screenshots/Checkout.png)
+![Image](./Screenshots/Order%20Status.png)
+![Image](./Screenshots/Arrived.png)
+![Image](./Screenshots/Dashboard%20-%20Admin.png)
+![Image](./Screenshots/Financial%20Records.png)
+![Image](./Screenshots/Manage%20Lease%20Payments.png)
+![Image](./Screenshots/Manage%20Lease%20Payments%20-%20Pay%20Lease.png)
+![Image](./Screenshots/Manage%20Inventory.png)
+![Image](./Screenshots/Manage%20Inventory%20-%20Restock.png)
+![Image](./Screenshots/Manage%20Accounts.png)
+![Image](./Screenshots/Manage%20Menu.png)
+![Image](./Screenshots/Manage%20Menu%20-%20Menu%20Item%20Add.png)
+![Image](./Screenshots/Manage%20Menu%20-%20Menu%20Price%20Edit.png)
+![Image](./Screenshots/Manage%20Menu%20-%20Remove%20Item.png)
