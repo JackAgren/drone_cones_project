@@ -1,5 +1,8 @@
 # Low Level Frontend Design
 
+## UI Diagrams Figma Project Link
+https://www.figma.com/file/kuxGFMhTcyI4Y4n39xwAdq/DroneCones_UX_Blueprint?type=design&node-id=0%3A1&mode=design&t=ioyr94quhipTfDVW-1
+
 ## Account Pages
 
 ## Customer Pages
@@ -177,3 +180,26 @@ Requests made to the backend:
   * Request insertion of menu item in menu item database.
 
 * Stock Status is *dervied* from whether or not quantity (from inventory database) is or is not 0.
+
+
+## UI Diagrams
+
+![Image](./Screenshots/HomePage.png)
+![Image](./Screenshots/LoginPage.png)
+![Image](./Screenshots/RegistrationPage.png)
+![Image](./Screenshots/Dashboard%20-%20Customer.png)
+![Image](./Screenshots/Menu%20Page.png)
+![Image](./Screenshots/Checkout.png)
+![Image](./Screenshots/Order%20Status.png)
+![Image](./Screenshots/Arrived.png)
+![Image](./Screenshots/Dashboard%20-%20Admin.png)
+![Image](./Screenshots/Financial%20Records.png)
+![Image](./Screenshots/Manage%20Lease%20Payments.png)
+![Image](./Screenshots/Manage%20Lease%20Payments%20-%20Pay%20Lease.png)
+![Image](./Screenshots/Manage%20Inventory.png)
+![Image](./Screenshots/Manage%20Inventory%20-%20Restock.png)
+![Image](./Screenshots/Manage%20Accounts.png)
+![Image](./Screenshots/Manage%20Menu.png)
+![Image](./Screenshots/Manage%20Menu%20-%20Menu%20Item%20Add.png)
+![Image](./Screenshots/Manage%20Menu%20-%20Menu%20Price%20Edit.png)
+![Image](./Screenshots/Manage%20Menu%20-%20Remove%20Item.png)
