@@ -1,6 +1,55 @@
 # Low Level Frontend Design
 
-## Account Pages
+## Account/Main Pages
+
+### Home
+
+The user can:
+
+* Move to the login page
+* Move to the menu page
+* Move to the page to create a customer account
+* Move to the page to create a drone owner account
+* Move to the page to apply to create an admin account
+
+Requests made to the backend:
+
+* n/a
+
+### Login
+
+The user can:
+
+* Enter their login information and attempt to log in
+    * If login is successful, the user is moved to the dashboard page
+* Move to the page to create an account
+* Move to the customer support page
+
+Requests made to the backend:
+
+* Verify login information
+    * And get user ID / role (permissions)
+
+### Dashboard
+
+The user can (depending on the permissions of their role):
+
+* Access admin tools
+    * Move to the financial records page
+    * Move to the manage payments page
+    * Move to the manage inventory page
+    * Move to the manage accounts page
+    * Move to the manage menu page
+* Access drone owner tools
+    * TODO
+* Access customer options
+    * Move to the menu page
+    * Move to the order history page
+
+Requests made to the backend:
+
+* n/a
+
 
 ## Customer Pages
 
@@ -63,6 +112,8 @@ The user can:
 * Return to the dashboard
 
 ## Drone Owner Pages
+
+### TODO
 
 ## Admin Pages
 
