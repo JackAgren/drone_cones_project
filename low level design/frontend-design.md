@@ -99,6 +99,11 @@ Requests made to the backend:
   * Item Name
   * Item Cost per Unit
   * Quantity
+* Given a specific item:
+  * Request to modify quantity of an item in inventory database.
+  * Request to modify balance in finance database.
+  * Request to modify current month profit/deficit.
+  * Request to add new transaction corresponding to restock action.
 
 * Stock Status is *dervied* from whether or not quantity is or is not 0.
 
@@ -116,8 +121,13 @@ Requests made to the backend:
   * Drone Owner ID
   * Drone Size Class
   * Amount Due
-
-* Stock Status is *dervied* from whether or not amount due is or is not 0.
+* Given a specific drone ID:
+  * Request to modify amount due data point corresponding to the drone ID.
+  * Request to modify balance in finance database.
+  * Request to modify current month profit/deficit.
+  * Request to add new transaction corresponding to lease payment action.
+  
+* Payment status is *dervied* from whether or not amount due is or is not 0.
 
 ### Financial Records
 
@@ -157,5 +167,13 @@ Requests made to the backend:
   * Item Name (from inventory database)
   * Item Type (from inventory database)
   * Sales Price (from menu database)
+* Given an item ID to remove:
+  * Request deletion of menu item in menu item database.
+  * Request deletion of corresponding inventory item.
+* Given an item ID to edit:
+  * Request modification of menu item sales price.
+* Given an item name, item tpye, cost per unit, and sales price,
+  * Request insertion of corresponding inventory item in inventory database.
+  * Request insertion of menu item in menu item database.
 
 * Stock Status is *dervied* from whether or not quantity (from inventory database) is or is not 0.
