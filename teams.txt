@@ -1,0 +1,10 @@
+Inventory management: Skyler
+Ordering system: Jack
+Finance system: Benjamin
+Account system: Emma
+Drone system: Evan
+Customer support: Boston
+
+Front end team: Emma, Benjamin, Evan
+
+Back end team: Skyler, Jack, Boston
