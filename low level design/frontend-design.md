@@ -15,9 +15,7 @@ The user can:
 * Move to the page to create a drone owner account
 * Move to the page to apply to create an admin account
 
-Requests made to the backend:
-
-* n/a
+No requests are made to the backend.
 
 ### Login
 
