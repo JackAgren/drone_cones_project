@@ -101,9 +101,7 @@ The user can:
 
 * Return to the dashboard page
 
-Requests made to the backend:
-
-* n/a
+No requests are made to the backend.
 
 ### Order History
 
@@ -140,17 +138,16 @@ Requests made to the backend:
 * Query drone data
     * Get deliveries
     * Get status
-### Payments
+### Earnings
 
 The drone owner can:
 
 * View their current balance
-* Transfer funds to account
 
 Requests made to the backend:
 
 * Query user
-* Change user funds
+* Query orders
 
 ## Admin Pages
 
