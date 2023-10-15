@@ -1,3 +1,5 @@
 from django.db import models
 
-# Create your models here.
+class PermissionsRequest(models.Model):
+    request = models.ArrayField(models.CharField(max_length=20))
+    
