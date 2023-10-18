@@ -28,6 +28,14 @@ Through the GitLab merge requests page, the team lead can add comments and sugge
 
 I'll get to this later
 
+
+## Installing PostgreSQL
+
+**IMPORTANT** You will be unable to run the django migrations until you have completed this installation.
+
+Go to https://www.postgresql.org/download/ and download the correct version for your computer. You now have the postgres server installed along with a program called PGadmin, which gives a nice GUI to see the status of your database.
+
+
 ## Getting started
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
