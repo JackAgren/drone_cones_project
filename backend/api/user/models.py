@@ -1,6 +1,24 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields import CIEmailField
+from .managers import CustomUserManager
+# Create your models here.
 
-class Users(models.Model):
-    email = models.EmailField()
-    password = models.CharField(max_length=250)
-    permissions = models.ArrayField(models.CharField(max_length=20))# admin, manager, drone owner, user
+class CustomUser(AbstractUser):
+    username = None
+
+    email = CIEmailField(
+        unique=True, 
+        error_messages={"unique": "An account with that email already exists"}
+    )
+    REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'email'
+
+    objects = CustomUserManager()
+
+    def __str__(self) -> str:
+        return self.email
+
+"""
+Need to define groups and group permissions.
+"""
