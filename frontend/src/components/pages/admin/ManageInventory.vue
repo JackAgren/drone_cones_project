@@ -44,8 +44,8 @@
 
         <div id="buttonArea">
           <VueButton
-            :class="{ 'button-disabled': selectedRowIndex === null }"
-            :disabled="selectedRowIndex === null"
+            :class="{ 'button-disabled': !canRestock }"
+            :disabled="!canRestock"
             @click="gotoRestock"
           >
             Restock
@@ -107,6 +107,10 @@ computed: {
       const calculatedHeight = ((totalRows) * rowHeight);
       return Math.min(calculatedHeight, this.maxHeight); // Return the smaller of the two
     },
+  canRestock() {
+      if (this.selectedRowIndex === null) return false;
+      return this.rows[this.selectedRowIndex].col4 !== 'In Stock';
+    },
   },
 
   mounted() {
@@ -136,7 +140,7 @@ computed: {
     }
   },
       getStatus(status) {
-      return status === 'In Stock' ? 'in-stock' : 'out-of-stock';
+      return status === 'In Stock' ? 'on' : 'off';
     },
     goBack() {
       this.$router.push({path: '/dashboard', query: {}})

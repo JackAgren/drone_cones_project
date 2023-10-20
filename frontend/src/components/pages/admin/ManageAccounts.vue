@@ -134,7 +134,7 @@ computed: {
     },
 
     getStatus(status) {
-      return status === 'Active' ? 'active' : 'banned';
+      return status === 'Active' ? 'on' : 'off';
     },
 
     goBack() {
