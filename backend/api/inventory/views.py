@@ -1,6 +1,6 @@
 # Create your views here.
 from django.contrib.admin.views.autocomplete import JsonResponse
-
+from django.contrib.auth.mixins import PermissionRequiredMixin
 def get_inventory(request):
     return JsonResponse({ 'Response': 'INVENTORY_GOES_HERE' })
 
