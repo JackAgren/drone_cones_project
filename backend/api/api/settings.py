@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'inventory.apps.InventoryConfig',
     'orders.apps.OrdersConfig',
     'permission_change.apps.PermissionChangeConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
