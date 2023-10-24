@@ -1,11 +1,26 @@
 # Create your views here.
-from django.contrib.admin.views.autocomplete import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.mixins import PermissionRequiredMixin
-
+from django.views import View
+from rest_framework import viewsets, mixins, generics
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.response import Response
+from .serializers import InventorySerializer
+from .models import Inventory
 
 # ./get_inv?description=<description>
-def get_inventory(request):
-    r = request.GET
+@csrf_exempt
+def inv_api(request, pk):
+    if request.method == 'GET':
+        items = Inventory.objects.get(pk=pk)
+        serializer = InventorySerializer(items)
+        return JsonResponse(serializer.data, safe=False)
+
+
+
+
+
+def get_inventory(request): 
     return JsonResponse({ 'Response': 'INVENTORY_GOES_HERE' })
 
 # ./add/description=<description>&cost=<cose-of-unit>&quantity=<quantity>
