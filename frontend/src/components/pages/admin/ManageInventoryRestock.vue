@@ -10,6 +10,7 @@
         <div id="actionContentArea">
           <div id="infoArea1">
             <p class="infoLabel">Item to restock: Vanilla Ice Cream</p>
+            <p class="infoLabel">Item Type: Ice Cream</p>
             <p class="infoLabel">Current Quantity: 0 Gallons</p>
             <p class="infoLabel">Cost per Unit: $5.67/Gallon</p>
           </div>
