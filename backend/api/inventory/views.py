@@ -17,20 +17,6 @@ class InventoryDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = InventorySerializer
 
 
-
-
-@api_view(['GET'])
-def inv_api(request, pk):
-    if request.method == 'GET':
-        items = Inventory.objects.get(pk=pk)
-        serializer = InventorySerializer(items)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-
-
-
-
 def get_inventory(request): 
     return JsonResponse({ 'Response': 'INVENTORY_GOES_HERE' })
 
