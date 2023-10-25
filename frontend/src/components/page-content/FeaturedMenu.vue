@@ -1,0 +1,155 @@
+<template>
+
+  <table>
+    <tr v-for="row in featured" style="height: 40%;">
+
+      <td v-for="item in row" style="width: 50%;">
+        <div class="small-center">
+
+          <h3>{{item.name}}</h3>
+          <img :class="item.css" :src="item.image" alt="Photo of featured cone.">
+
+          <div>
+            <p class="featured-price">${{ Math.round(item.price) / 100 }}</p>
+            <div @click="addToCart" class="this-button">
+              &nbsp;<img class="cart-icon" src="../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
+            </div>
+          </div>
+
+        </div>
+      </td>
+
+    </tr>
+  </table>
+
+</template>
+
+<script>
+import Background from "@/components/Background.vue";
+import VueButton from "@/components/Button.vue";
+
+import featured0 from '../../assets/img/featured0.png';
+import featured1 from '../../assets/img/featured1.png';
+import featured2 from '../../assets/img/featured2.png';
+import featured3 from '../../assets/img/featured3.png';
+
+export default {
+  name: 'FeaturedMenu',
+  components: {
+    Background,
+    VueButton,
+  },
+  data() {
+    return {
+      featured: [
+        [
+          {name: "S'mores", price: 123, image: featured0, css: 'featured-image f0'},
+          {name: 'Berry Blast', price: 123, image: featured1, css: 'featured-image f1'},
+        ],
+        [
+          {name: 'Strawberry Cheesecake', price: 123, image: featured2, css: 'featured-image f2'},
+          {name: 'Peanut Butter', price: 123, image: featured3, css: 'featured-image f3'},
+        ],
+      ],
+    }
+  },
+  methods: {
+    addToCart() {
+      //TODO: add to cart
+    },
+  },
+}
+</script>
+
+<style scoped>
+
+.featured-price {
+  margin: 0;
+  position: absolute;
+  top: 87%;
+  display: inline-block;
+}
+
+.this-button img {
+  width: 80%;
+}
+
+.this-button {
+  margin: 0;
+  display: inline-block;
+  width: 20%;
+  height: 18%;
+  border-radius: 15px;
+  padding: 5px 5px 5px 5px;
+  cursor: pointer;
+  background-color: rgb(115, 221, 67);
+  color: white;
+  transition: background-color 0.3s;
+  float: right;
+  position: absolute;
+  left: 75%;
+  top: 75%;
+}
+
+.this-button:hover {
+  background-color:  rgb(64, 126, 36);
+}
+
+.f0 {
+  width: 60%;
+}
+
+.f1 {
+  width: 60%;
+}
+
+.f2 {
+  width: 55%;
+}
+
+.f3 {
+  width: 65%;
+}
+
+.featured-image {
+  display: block;
+  margin: auto;
+}
+
+h3 {
+  font-size: 12pt;
+  text-align: center;
+  margin-top: 2mm;
+}
+
+.small-center {
+  padding: 10px 10px 0 10px;
+  margin: 10px;
+  color: rgba(40, 40, 40);
+  font-weight: bold;
+  text-align: left;
+  background-color: rgba(244, 255, 256, .95);
+  position: relative;
+}
+
+.cart-icon {
+  width: 20%;
+}
+
+input {
+  width: 70%;
+  height: 6%;
+  display: inline-block;
+}
+
+hr {
+  border: 2px solid black;
+}
+
+h2 {
+  margin-top: 3%;
+  font-size: 18pt;
+}
+
+
+</style>
