@@ -1,20 +1,31 @@
 # Create your views here.
 from django.http import JsonResponse, HttpResponse
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.views import View
-from rest_framework import viewsets, mixins, generics
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework import viewsets, mixins, generics, status
+from rest_framework.decorators import api_view, APIView
 from rest_framework.response import Response
 from .serializers import InventorySerializer
 from .models import Inventory
 
 # ./get_inv?description=<description>
-@csrf_exempt
+
+class InventoryList(generics.ListCreateAPIView):
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
+    
+class InventoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
+
+
+
+
+@api_view(['GET'])
 def inv_api(request, pk):
     if request.method == 'GET':
         items = Inventory.objects.get(pk=pk)
         serializer = InventorySerializer(items)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 
