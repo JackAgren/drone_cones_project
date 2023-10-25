@@ -1,0 +1,226 @@
+[
+    {
+        "id": 1,
+        "description": "Vanilla",
+        "costPerUnit": 3.99,
+        "quantity": 50,
+        "dateFilled": "2023-10-24",
+        "category": "ice cream"
+    },
+    {
+        "id": 2,
+        "description": "Chocolate",
+        "costPerUnit": 4.49,
+        "quantity": 45,
+        "dateFilled": "2023-10-25",
+        "category": "ice cream"
+    },
+    {
+        "id": 3,
+        "description": "Strawberry",
+        "costPerUnit": 5.25,
+        "quantity": 40,
+        "dateFilled": "2023-10-26",
+        "category": "ice cream"
+    },
+    {
+        "id": 4,
+        "description": "Mint Chocolate Chip",
+        "costPerUnit": 6.99,
+        "quantity": 35,
+        "dateFilled": "2023-10-27",
+        "category": "ice cream"
+    },
+    {
+        "id": 5,
+        "description": "Cookie Dough",
+        "costPerUnit": 7.49,
+        "quantity": 30,
+        "dateFilled": "2023-10-28",
+        "category": "ice cream"
+    },
+    {
+        "id": 6,
+        "description": "Rocky Road",
+        "costPerUnit": 7.99,
+        "quantity": 25,
+        "dateFilled": "2023-10-29",
+        "category": "ice cream"
+    },
+    {
+        "id": 7,
+        "description": "Butter Pecan",
+        "costPerUnit": 8.49,
+        "quantity": 20,
+        "dateFilled": "2023-10-30",
+        "category": "ice cream"
+    },
+    {
+        "id": 8,
+        "description": "Pistachio",
+        "costPerUnit": 8.99,
+        "quantity": 15,
+        "dateFilled": "2023-10-31",
+        "category": "ice cream"
+    },
+    {
+        "id": 9,
+        "description": "Caramel Swirl",
+        "costPerUnit": 9.49,
+        "quantity": 10,
+        "dateFilled": "2023-11-01",
+        "category": "ice cream"
+    },
+    {
+        "id": 10,
+        "description": "Raspberry Ripple",
+        "costPerUnit": 9.99,
+        "quantity": 5,
+        "dateFilled": "2023-11-02",
+        "category": "ice cream"
+    },
+    {
+        "id": 11,
+        "description": "Lemon Sorbet",
+        "costPerUnit": 4.99,
+        "quantity": 40,
+        "dateFilled": "2023-11-03",
+        "category": "ice cream"
+    },
+    {
+        "id": 12,
+        "description": "Mango Tango",
+        "costPerUnit": 5.49,
+        "quantity": 35,
+        "dateFilled": "2023-11-04",
+        "category": "ice cream"
+    },
+    {
+        "id": 13,
+        "description": "Peanut Butter Cup",
+        "costPerUnit": 6.99,
+        "quantity": 30,
+        "dateFilled": "2023-11-05",
+        "category": "ice cream"
+    },
+    {
+        "id": 14,
+        "description": "Coconut Bliss",
+        "costPerUnit": 7.49,
+        "quantity": 25,
+        "dateFilled": "2023-11-06",
+        "category": "ice cream"
+    },
+    {
+        "id": 15,
+        "description": "Cherry Jubilee",
+        "costPerUnit": 7.99,
+        "quantity": 20,
+        "dateFilled": "2023-11-07",
+        "category": "ice cream"
+    },
+    {
+        "id": 16,
+        "description": "Peach Melba",
+        "costPerUnit": 8.49,
+        "quantity": 15,
+        "dateFilled": "2023-11-08",
+        "category": "ice cream"
+    },
+    {
+        "id": 17,
+        "description": "Blueberry Cheesecake",
+        "costPerUnit": 8.99,
+        "quantity": 10,
+        "dateFilled": "2023-11-09",
+        "category": "ice cream"
+    },
+    {
+        "id": 18,
+        "description": "Red Velvet",
+        "costPerUnit": 9.49,
+        "quantity": 5,
+        "dateFilled": "2023-11-10",
+        "category": "ice cream"
+    },
+    {
+        "id": 19,
+        "description": "Salted Caramel",
+        "costPerUnit": 9.99,
+        "quantity": 3,
+        "dateFilled": "2023-11-11",
+        "category": "ice cream"
+    },
+    {
+        "id": 20,
+        "description": "S'mores",
+        "costPerUnit": 10.49,
+        "quantity": 2,
+        "dateFilled": "2023-11-12",
+        "category": "ice cream"
+    },
+    {
+        "id": 21,
+        "description": "Chocolate Sauce",
+        "costPerUnit": 1.99,
+        "quantity": 100,
+        "dateFilled": "2023-10-24",
+        "category": "toppings"
+    },
+    {
+        "id": 22,
+        "description": "Sprinkles",
+        "costPerUnit": 0.49,
+        "quantity": 200,
+        "dateFilled": "2023-10-25",
+        "category": "toppings"
+    },
+    {
+        "id": 23,
+        "description": "Caramel Drizzle",
+        "costPerUnit": 2.25,
+        "quantity": 150,
+        "dateFilled": "2023-10-26",
+        "category": "toppings"
+    },
+    {
+        "id": 24,
+        "description": "Whipped Cream",
+        "costPerUnit": 1.99,
+        "quantity": 120,
+        "dateFilled": "2023-10-27",
+        "category": "toppings"
+    },
+    {
+        "id": 25,
+        "description": "Chopped Nuts",
+        "costPerUnit": 2.49,
+        "quantity": 80,
+        "dateFilled": "2023-10-28",
+        "category": "toppings"
+    },
+    {
+        "id": 26,
+        "description": "Waffle Cone",
+        "costPerUnit": 2.25,
+        "quantity": 150,
+        "dateFilled": "2023-10-26",
+        "category": "cone"
+    },
+    {
+        "id": 27,
+        "description": "Sugar Cone",
+        "costPerUnit": 0.99,
+        "quantity": 120,
+        "dateFilled": "2023-10-27",
+        "category": "cone"
+    },
+    {
+        "id": 28,
+        "description": "Bowl",
+        "costPerUnit": 2.49,
+        "quantity": 80,
+        "dateFilled": "2023-10-28",
+        "category": "cone"
+    }  
+]
