@@ -13,6 +13,7 @@
               <tr>
                 <th style="width: 10%">Item ID</th>
                 <th style="width: 15%">Item Name</th>
+                <th style="width: 15%">Item Type</th>
                 <th style="width: 15%">Cost per Unit</th>
                 <th style="width: 15%">Stock Status</th>
                 <th style="width: 10%">Quantity</th>
@@ -32,10 +33,11 @@
                   <td style="width: 10%">{{ row.col1 }}</td>
                   <td style="width: 15%">{{ row.col2 }}</td>
                   <td style="width: 15%">{{ row.col3 }}</td>
-                  <td style="width: 15%" :class="getStatus(row.col4)">
-                    {{ row.col4 }}
+                  <td style="width: 15%">{{ row.col4 }}</td>
+                  <td style="width: 15%" :class="getStatus(row.col5)">
+                    {{ row.col5 }}
                   </td>
-                  <td style="width: 10%">{{ row.col5 }}</td>
+                  <td style="width: 10%">{{ row.col6 }}</td>
                 </tr>
               </tbody>
             </table>
@@ -44,8 +46,8 @@
 
         <div id="buttonArea">
           <VueButton
-            :class="{ 'button-disabled': selectedRowIndex === null }"
-            :disabled="selectedRowIndex === null"
+            :class="{ 'button-disabled': !canRestock }"
+            :disabled="!canRestock"
             @click="gotoRestock"
           >
             Restock
@@ -79,22 +81,21 @@ data() {
     maxHeight: 500, // Max height in pixels
     selectedRowIndex: null, // Index of the selected row
     rows: [
-        { col1: '1', col2: 'Vanilla Ice Cream', col3: '$10.00/Gallon', col4: 'In Stock', col5: '15 Gallons' },
-        { col1: '2', col2: 'Chocolate Ice Cream', col3: '$12.00/Gallon', col4: 'In Stock', col5: '5 Gallons' },
-        { col1: '3', col2: 'Mint Ice Cream', col3: '$15.00/Gallon', col4: 'Out of Stock', col5: '0 Gallons' },
-        { col1: '4', col2: 'Strawberry Ice Cream', col3: '$9.00/Gallon', col4: 'In Stock', col5: '18 Gallons' },
-        { col1: '5', col2: 'Waffle Cone', col3: '$3.00/Box', col4: 'In Stock', col5: '5 Boxes' },
-        { col1: '6', col2: 'Sugar Cone', col3: '$5.25/Box', col4: 'In Stock', col5: '1 Boxes' },
-        { col1: '7', col2: 'Bowl', col3: '$2.00/Box', col4: 'Out of Stock', col5: '0 Boxes' },
-        { col1: '8', col2: 'Rainbow Sprinkles', col3: '$1.00/Box', col4: 'In Stock', col5: '12 Boxes' },
-        { col1: '9', col2: 'Chocolate Sprinkles', col3: '$1.00/Box', col4: 'In Stock', col5: '14 Boxes' },
-        { col1: '10', col2: 'Peanuts', col3: '$2.00/Box', col4: 'Out of Stock', col5: '0 Boxes' },
-        { col1: '11', col2: 'Watermelon Ice Cream', col3: '$120.00/Gallon', col4: 'In Stock', col5: '1 Gallons' },
-        { col1: '12', col2: 'Orange Ice Cream', col3: '$50.00/Gallon', col4: 'Out of Stock', col5: '0 Gallons' },
-        { col1: '13', col2: 'Rocky Road Ice Cream', col3: '$10.00/Gallon', col4: 'In Stock', col5: '15 Gallons' },
-        { col1: '14', col2: 'Oreo Ice Cream', col3: '$10.00/Gallon', col4: 'In Stock', col5: '12 Gallons' },
-        { col1: '15', col2: 'Mystery Ice Cream', col3: '$1000.00/Gallon', col4: 'In Stock', col5: '1 Gallons' },
-
+        { col1: '1', col2: 'Vanilla Ice Cream', col3: 'Ice Cream', col4: '$10.00/Gallon', col5: 'In Stock', col6: '15 Gallons' },
+        { col1: '2', col2: 'Chocolate Ice Cream', col3: 'Ice Cream', col4: '$12.00/Gallon', col5: 'In Stock', col6: '5 Gallons' },
+        { col1: '3', col2: 'Mint Ice Cream', col3: 'Ice Cream', col4: '$15.00/Gallon', col5: 'Out of Stock', col6: '0 Gallons' },
+        { col1: '4', col2: 'Strawberry Ice Cream', col3: 'Ice Cream', col4: '$9.00/Gallon', col5: 'In Stock', col6: '18 Gallons' },
+        { col1: '5', col2: 'Waffle Cone', col3: 'Container', col4: '$3.00/Box', col5: 'In Stock', col6: '5 Boxes' },
+        { col1: '6', col2: 'Sugar Cone', col3: 'Container', col4: '$5.25/Box', col5: 'In Stock', col6: '1 Boxes' },
+        { col1: '7', col2: 'Bowl', col3: 'Container', col4: '$2.00/Box', col5: 'Out of Stock', col6: '0 Boxes' },
+        { col1: '8', col2: 'Rainbow Sprinkles', col3: 'Toppings', col4: '$1.00/Box', col5: 'In Stock', col6: '12 Boxes' },
+        { col1: '9', col2: 'Chocolate Sprinkles', col3: 'Toppings', col4: '$1.00/Box', col5: 'In Stock', col6: '14 Boxes' },
+        { col1: '10', col2: 'Peanuts', col3: 'Toppings', col4: '$2.00/Box', col5: 'Out of Stock', col6: '0 Boxes' },
+        { col1: '11', col2: 'Watermelon Ice Cream', col3: 'Ice Cream', col4: '$120.00/Gallon', col5: 'In Stock', col6: '1 Gallons' },
+        { col1: '12', col2: 'Orange Ice Cream', col3: 'Ice Cream', col4: '$50.00/Gallon', col5: 'Out of Stock', col6: '0 Gallons' },
+        { col1: '13', col2: 'Rocky Road Ice Cream', col3: 'Ice Cream', col4: '$10.00/Gallon', col5: 'In Stock', col6: '15 Gallons' },
+        { col1: '14', col2: 'Oreo Ice Cream', col3: 'Ice Cream', col4: '$10.00/Gallon', col5: 'In Stock', col6: '12 Gallons' },
+        { col1: '15', col2: 'Mystery Ice Cream', col3: 'Ice Cream', col4: '$1000.00/Gallon', col5: 'In Stock', col6: '1 Gallons' },
         // Add more rows as needed
       ]
   }
@@ -106,6 +107,10 @@ computed: {
       const totalRows = this.rows.length;
       const calculatedHeight = ((totalRows) * rowHeight);
       return Math.min(calculatedHeight, this.maxHeight); // Return the smaller of the two
+    },
+  canRestock() {
+      if (this.selectedRowIndex === null) return false;
+      return this.rows[this.selectedRowIndex].col4 !== 'In Stock';
     },
   },
 
@@ -136,7 +141,7 @@ computed: {
     }
   },
       getStatus(status) {
-      return status === 'In Stock' ? 'in-stock' : 'out-of-stock';
+      return status === 'In Stock' ? 'on' : 'off';
     },
     goBack() {
       this.$router.push({path: '/dashboard', query: {}})

@@ -139,7 +139,7 @@ computed: {
     earningsInfo() {
       const earnings = parseFloat(this.earnings.replace(/[$,]/g, ''));
       const sign = earnings >= 0 ? '+' : '-';
-      const tagDisplayMode = earnings >= 0 ? 'positive' : 'negative';
+      const tagDisplayMode = earnings >= 0 ? 'on' : 'off';
       const absEarnings = Math.abs(earnings).toLocaleString('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -148,7 +148,7 @@ computed: {
     },
     transactionColorings() {
       return this.rows.map(row => {
-        return row.col4.startsWith('+') ? 'positive' : 'negative';
+        return row.col4.startsWith('+') ? 'on' : 'off';
       });
    },
   },
