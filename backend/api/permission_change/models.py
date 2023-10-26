@@ -1,5 +1,6 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 class PermissionsRequest(models.Model):
-    request = models.ArrayField(models.CharField(max_length=20))
+    request = ArrayField(models.CharField(max_length=20))
     
