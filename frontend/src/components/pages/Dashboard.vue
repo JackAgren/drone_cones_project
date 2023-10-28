@@ -41,6 +41,11 @@ export default {
       this.currentSelection = event.target.id;
     },
   },
+  created() {
+    if (this.$route.query.focus) {
+      this.currentSelection = this.$route.query.focus;
+    }
+  },
 }
 </script>
 

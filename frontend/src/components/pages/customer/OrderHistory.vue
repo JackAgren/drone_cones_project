@@ -2,7 +2,7 @@
 
   <Background/>
 
-  <VueButton @click="moveToDashboard" class="dashboard-button">&#x25C0; &nbsp; Dashboard</VueButton>
+  <VueButton @mouseup="moveToDashboard" class="dashboard-button">&#x25C0; &nbsp; Dashboard</VueButton>
   <VueButton @click="moveToCheckout" class="checkout-button">
     Checkout
     <img class="cart-icon" src="../../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
@@ -11,21 +11,24 @@
   <div class="center">
     <h1>Order History</h1>
 
-    <div class="small-center">
+    <div class="small-center scroll">
 
       <table>
 
         <tr v-for="item in orderHistory">
           <td style="padding-top: 20px;">
             <span style="font-weight: normal">{{item.order_date}} &nbsp;&nbsp;&nbsp;&nbsp;</span>
-            {{ item.qty }} {{ item.name }} &nbsp;&nbsp;&nbsp;&nbsp; {{ Math.round(item.price * item.qty) / 100 }}
+            {{ item.qty }} {{ getTitle(item.name, item.qty) }} &nbsp;&nbsp;&nbsp;&nbsp; {{ Math.round(item.price * item.qty) / 100 }}
             <br>
             <ul class="details" v-for="detail in formatDetails(item.details)">
               <li>{{ detail }}</li>
             </ul>
           </td>
           <td class="price">
-            <VueButton @click="addToCart" class="add-to-cart">
+            <VueButton @mouseup="addToCart(item)" class="add-to-cart" v-if="item.alreadyAdded">
+              Added! Add again?
+            </VueButton>
+            <VueButton @mouseup="addToCart(item)" class="add-to-cart" v-else>
               Add to Cart
             </VueButton>
           </td>
@@ -58,28 +61,45 @@ export default {
         },
         {name: 'Strawberry cheesecake cone', price: 259, qty: 1, order_date: '01-01-2000'},
         {name: "S'mores cone", price: 259, qty: 1, order_date: '01-01-2000'},
-      ]
+        {name: 'CYO cone', price: 499, qty: 1, order_date: '01-01-2000', details: {
+            cone: 'waffle', scoops: ['chocolate', 'strawberry'], toppings: ['sprinkles']
+          }
+        },
+        {name: 'CYO cone', price: 499, qty: 1, order_date: '01-01-2000', details: {
+            cone: 'waffle', scoops: ['chocolate', 'strawberry'], toppings: ['sprinkles']
+          }
+        },
+      ],
+      cart: [],
+    }
+  },
+  created() {
+    if (this.$route.query.cart) {
+      this.cart = JSON.parse(this.$route.query.cart);
     }
   },
   methods: {
+    getTitle(name, qty) {
+      if (qty > 1) {
+        return `${name}s`;
+      }
+      return name;
+    },
     moveToDashboard() {
-      this.$router.push({path: '/dashboard', query: {}})
+      if (confirm("Are you sure you want to return to the dashboard? The contents of your cart will not be saved.")) {
+        this.$router.push({path: '/dashboard', query: {}});
+      }
     },
     moveToCheckout() {
-      this.$router.push({path: '/customer/checkout', query: {}})
-    },
-    placeOrder() {
-      //TODO: place order
-      this.$router.push({path: '/customer/track-order', query: {}})
+      this.$router.push({path: '/customer/checkout', query: {cart: JSON.stringify(this.cart)}});
     },
     formatDetails(details) {
       if (details === undefined) {
         return;
       }
-      console.log(JSON.stringify(details));
       let toReturn = [`${details.cone.charAt(0).toUpperCase() + details.cone.slice(1)} cone`];
       for (let i = 0; i < details.scoops.length; i++) {
-        toReturn.push(`1 scoop ${details.scoops[i]}`);
+        toReturn.push(`Scoop ${details.scoops[i]}`);
       }
       for (let i = 0; i < details.toppings.length; i++) {
         const toppingName = details.toppings[i];
@@ -87,16 +107,21 @@ export default {
       }
       return toReturn;
     },
-    addToCart() {
-      //TODO: add to cart
+    addToCart(item) {
+      console.log(`Adding ${item.qty} of ${item.name} to the cart`);
+      this.cart.push({name: item.name, price: item.price, qty: item.qty, details: item.details});
+      item.alreadyAdded = true;
     },
   },
-  computed: {
-  }
 }
 </script>
 
 <style scoped>
+
+div.scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 
 .add-to-cart {
   font-size: 12pt;

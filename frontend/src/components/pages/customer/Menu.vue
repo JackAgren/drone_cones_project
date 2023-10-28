@@ -49,12 +49,12 @@ export default {
   },
   data() {
     return {
-      orderInfo: [
-        {name: 'Berry Blast cone', price: 259, qty: 2},
-        {name: 'CYO cone', price: 499, qty: 1, details: {
-            cone: 'waffle', scoops: ['chocolate', 'strawberry'], toppings: ['sprinkles']
-          }}
-      ],
+      cart: [],
+    }
+  },
+  created() {
+    if (this.$route.query.cart) {
+      this.cart = JSON.parse(this.$route.query.cart);
     }
   },
   methods: {
