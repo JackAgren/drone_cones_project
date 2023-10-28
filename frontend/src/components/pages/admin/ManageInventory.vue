@@ -144,7 +144,7 @@ computed: {
       return status === 'In Stock' ? 'on' : 'off';
     },
     goBack() {
-      this.$router.push({path: '/dashboard', query: {}})
+      this.$router.push({path: '/dashboard', query: {focus: `admin`}})
     },
     gotoRestock() {
       this.$router.push({path: '/admin/manageInventory/restock', query: {}})

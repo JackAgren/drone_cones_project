@@ -83,7 +83,13 @@ Use the built-in continuous integration in GitLab.
 
 ### `/dashboard`
 * <a href="https://www.flaticon.com/free-icons/food-and-restaurant" title="food and restaurant icons">Food and restaurant icons created by Freepik - Flaticon</a>
-* 
+* Drone: Modeled by Benjamin Ricks
+* <a href="https://www.flaticon.com/free-icons/binoculars" title="binoculars icons">Binoculars icons created by smashingstocks - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/money" title="money icons">Money icons created by vectorsmarket15 - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/dollar" title="dollar icons">Dollar icons created by Freepik - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/pay" title="pay icons">Pay icons created by Freepik - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/inventory" title="inventory icons">Inventory icons created by IconBaandar - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/user" title="user icons">User icons created by Freepik - Flaticon</a>
 
 ### `/customer/history`
 * <a href="https://www.flaticon.com/free-icons/shopping-cart" title="shopping cart icons">Shopping cart icons created by Vectors Market - Flaticon</a>
@@ -96,4 +102,17 @@ Use the built-in continuous integration in GitLab.
 * <a href="https://www.flaticon.com/free-icons/ice-cream" title="ice cream icons">Ice cream icons created by Freepik - Flaticon</a>
 * Drone: Modeled by Benjamin Ricks
 
+### `customer/menu`
+* Featured 0: https://www.pinterest.com/pin/74872412544956633/
+* Featured 1: https://www.stlmag.com/dining/the-dish-ices-plain-fancy/
+* Featured 2: https://practicallyhomemade.com/strawberry-crunch-cheesecake-cones/
+* Featured 3: https://pintsizedbaker.com/peanut-butter-ice-cream/
+* <a href="https://www.flaticon.com/free-icons/waffle" title="waffle icons">Waffle icons created by iconixar - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/bowl" title="bowl icons">Bowl icons created by Roundicons - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/ice-cream-cone" title="ice cream cone icons">Ice cream cone icons created by Freepik - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/cone" title="cone icons">Cone icons created by Nikita Golubev - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/cookie" title="cookie icons">Cookie icons created by Smashicons - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/sprinkles" title="sprinkles icons">Sprinkles icons created by Freepik - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/oreo" title="oreo icons">Oreo icons created by LAFS - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/syrup" title="syrup icons">Syrup icons created by Freepik - Flaticon</a>
 

@@ -2,10 +2,9 @@
   <Background />
 
   <div class="sidenav">
-    <p>Account</p>
-    <p id="customer" @click="changeSelection">Customer</p>
-    <p id="drones" @click="changeSelection">Drones</p>
-    <p id="admin" @click="changeSelection">Admin Tools</p>
+    <p id="customer" @click="changeSelection" :style="checkHighlight('customer')">Place an Order</p>
+    <p id="drones" @click="changeSelection" :style="checkHighlight('drones')">Manage Leased Drone</p>
+    <p id="admin" @click="changeSelection" :style="checkHighlight('admin')">Admin Tools</p>
   </div>
 
   <CustomerDashboard v-if="currentSelection==='customer'"/>
@@ -40,6 +39,12 @@ export default {
     changeSelection(event) {
       this.currentSelection = event.target.id;
     },
+    checkHighlight(button) {
+      if (button === this.currentSelection) {
+        return "color: #FFF; opacity: 100%;";
+      }
+      return "";
+    }
   },
   created() {
     if (this.$route.query.focus) {
@@ -52,7 +57,7 @@ export default {
 <style scoped>
 .sidenav {
   height: 100%;
-  width: 175px;
+  width: 230px;
   position: fixed;
   z-index: 1;
   top: 70px;

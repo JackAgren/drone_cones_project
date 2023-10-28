@@ -2,7 +2,7 @@
 
   <Background/>
 
-  <VueButton @click="moveToDashboard" class="dashboard-button">&#x25C0; &nbsp; Menu</VueButton>
+  <VueButton @click="moveToDashboard" class="dashboard-button">&#x25C0; &nbsp; Dashboard</VueButton>
   <VueButton @click="moveToCheckout" class="checkout-button">
     Checkout
     <img class="cart-icon" src="../../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     moveToDashboard() {
-      this.$router.push({path: '/customer/menu', query: {}})
+      this.$router.push({path: '/customer/dashboard', query: {}})
     },
     moveToCheckout() {
       this.$router.push({path: '/customer/checkout', query: {}})
