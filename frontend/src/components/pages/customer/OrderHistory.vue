@@ -2,7 +2,7 @@
 
   <Background/>
 
-  <VueButton @click="moveToMenu" class="dashboard-button">&#x25C0; &nbsp; Menu</VueButton>
+  <VueButton @click="moveToDashboard" class="dashboard-button">&#x25C0; &nbsp; Dashboard</VueButton>
   <VueButton @click="moveToCheckout" class="checkout-button">
     Checkout
     <img class="cart-icon" src="../../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
@@ -16,7 +16,8 @@
       <table>
 
         <tr v-for="item in orderHistory">
-          <td>
+          <td style="padding-top: 20px;">
+            <span style="font-weight: normal">{{item.order_date}} &nbsp;&nbsp;&nbsp;&nbsp;</span>
             {{ item.qty }} {{ item.name }} &nbsp;&nbsp;&nbsp;&nbsp; {{ Math.round(item.price * item.qty) / 100 }}
             <br>
             <ul class="details" v-for="detail in formatDetails(item.details)">
@@ -26,7 +27,6 @@
           <td class="price">
             <VueButton @click="addToCart" class="add-to-cart">
               Add to Cart
-              <img class="cart-icon" src="../../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
             </VueButton>
           </td>
         </tr>
@@ -51,19 +51,19 @@ export default {
   data() {
     return {
       orderHistory: [
-        {name: 'Berry Blast cone', price: 259, qty: 2},
-        {name: 'CYO cone', price: 499, qty: 1, details: {
+        {name: 'Berry Blast cone', price: 259, qty: 2, order_date: '01-01-2000'},
+        {name: 'CYO cone', price: 499, qty: 1, order_date: '01-01-2000', details: {
             cone: 'waffle', scoops: ['chocolate', 'strawberry'], toppings: ['sprinkles']
           }
         },
-        {name: 'Strawberry cheesecake cone', price: 259, qty: 1},
-        {name: "S'mores cone", price: 259, qty: 1},
+        {name: 'Strawberry cheesecake cone', price: 259, qty: 1, order_date: '01-01-2000'},
+        {name: "S'mores cone", price: 259, qty: 1, order_date: '01-01-2000'},
       ]
     }
   },
   methods: {
-    moveToMenu() {
-      this.$router.push({path: '/customer/menu', query: {}})
+    moveToDashboard() {
+      this.$router.push({path: '/dashboard', query: {}})
     },
     moveToCheckout() {
       this.$router.push({path: '/customer/checkout', query: {}})
@@ -136,6 +136,7 @@ td {
 
 .details {
   font-weight: normal;
+  padding-left: 125px;
 }
 
 .dashboard-button {

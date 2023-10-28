@@ -6,7 +6,7 @@ Here is are a few git commands that will be used very often when collaborating
 *   `git clone git@gitlab.com:sodo-launch-pad/raptor/raptor.git`
     *   In order to clone the repo via SSH, you must have a functioning SSH key on the GitLab. 
 *   `git checkout -b <YourBranchNameHere>`
-    *   If the specified branch doesn't exist, it will be created. The specified branch will then be checked out and all uncommited changes will be brought to this branch
+    *   If the specified branch doesn't exist, it will be created. The specified branch will then be checked out and all uncommitted changes will be brought to this branch
 *   `git add .`
     *   All changes will be moved to staged
 *   `git commit -am "<Commit Message>"`
@@ -14,7 +14,7 @@ Here is are a few git commands that will be used very often when collaborating
 *   `git push --set-upstream <RemoteName> <BranchName>`
     *   When pushing up a branch for the first time you need to establish which remote to push to. The **RemoteName = origin**, and BranchName is the name of the branch you have checked out and are attempting to push. This command only needs to be used the first a branch is pushed, after that `git push` can be used.
 *   `git push`
-    *   Will push all your local and commited changes to the remote repo.
+    *   Will push all your local and committed changes to the remote repo.
 
 ## Merge Requests
 
