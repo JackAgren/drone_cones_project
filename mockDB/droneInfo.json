@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "ownerId": 1,
+        "status": "active",
+        "size": "small"
+    },
+    {
+        "id": 2,
+        "ownerId": 2,
+        "status": "active",
+        "size": "small"
+    },
+    {
+        "id": 3,
+        "ownerId": 3,
+        "status": "inactive",
+        "size": "large"
+    },
+    {
+        "id": 4,
+        "ownerId": 4,
+        "status": "active",
+        "size": "medium"
+    }
+]

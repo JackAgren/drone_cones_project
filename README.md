@@ -35,25 +35,21 @@ I'll get to this later
 
 1. Go to https://www.postgresql.org/download/ and download the correct version for your computer. You now have the postgres server installed along with a program called PGadmin, which gives a nice GUI to see the status of your database.
 
-2. Using your prefered python package manager, install 'psychopg2'. This gives an easy way to use python with postgres.
+## Running the backend server
+0. Make sure you have pulled the most recent version from GitLab.
 
-## Getting started
+1. Go to https://www.postgresql.org/download/ and download the correct version for your computer. You now have the postgres server installed along with a program called PGadmin, which gives a nice GUI to see the status of your database.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+2. Install the django rest framework with `pip install djangorestframework`
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+3. Navigate to `backend/api` and run `python manage.py makemigrations` followed by `python manage.py migrate`. If you get errors here please let me know.
 
-## Add your files
+4. run `python manage.py runserver`. You will get some output telling you the port the server is running on (usually localhost:8000).
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+5. Since the tables are empty, you can go to `http://localhost:8000/inventory/get_inventory` to add some items by filling out the form at the bottom of the page.
 
-```
-cd existing_repo
-git remote add origin https://gitlab.cs.usu.edu/drone-cones/project-cone-by-drone.git
-git branch -M master
-git push -uf origin master
-```
+**As of 26 Oct**
+You can now perfore `GET` requests from the inventory by the description, or simply get a list. You can fetch from `http://localhost:8000/inventory/get_inventory` to get JSON of all items in the inventory, or `http://localhost:8000/inventory/get_inventory/<description>` to get a specific item.
 
 ## Integrate with your tools
 
