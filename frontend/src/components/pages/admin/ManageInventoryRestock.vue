@@ -91,7 +91,7 @@ methods: {
       this.$router.push({path: '/admin/manageInventory', query: {}})
     },
     gotoRestock() {
-      this.$router.push({path: '/admin/manageMenu', query: {}})
+      this.$router.push({path: '/admin/manageInventory', query: {}})
     },
 },
 

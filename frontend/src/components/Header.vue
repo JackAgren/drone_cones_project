@@ -2,7 +2,8 @@
   <div class="header">
     <img id="headerLogo" src="@/assets/headerLogo.png" />
     <div id="loginButtonArea" @click="toggleDropdown">
-      <p class="headerText" id="usernameTag">
+      <p class="headerText" id="usernameTag"
+      @click="isLoggedIn ? null : gotoLogin()">
         {{ isLoggedIn ? username : 'Login' }}
       </p>
       <img
@@ -27,7 +28,7 @@ export default {
   name: 'AppHeader',
   data() {
     return {
-      isLoggedIn: true,
+      isLoggedIn: false,
       username: 'Fred_Rodgers',
       showDropdown: false
     };
@@ -41,7 +42,10 @@ export default {
     logout() {
       this.isLoggedIn = false;
       this.showDropdown = false;
-    }
+    },
+    gotoLogin() {
+      this.$router.push({path: '/login', query: {}})
+    },
   }
 };
 </script>
