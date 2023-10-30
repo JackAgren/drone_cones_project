@@ -33,7 +33,7 @@
           Get paid while we let your drone <br />
           do all the work!
         </p>
-        <a href="">Lease a drone →</a>
+        <a href="">Lease a drone →></a>
       </div>
 
       <div class="section2Subsection">

@@ -133,7 +133,7 @@ computed: {
       return status === 'Paid' ? 'on' : 'off';
     },
     goBack() {
-      this.$router.push({path: '/dashboard', query: {}})
+      this.$router.push({path: '/dashboard', query: {focus: `admin`}})
     },
     gotoPayLease() {
       this.$router.push({path: '/admin/manageLeasePayments/paylease', query: {}})

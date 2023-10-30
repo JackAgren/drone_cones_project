@@ -28,7 +28,7 @@ export default {
   name: 'DroneDashboard',
   methods: {
     toRegistration() {
-      this.$router.push({path: '/drone/register', query: {}})
+      this.$router.push({path: '/drone/registration', query: {}})
     },
     toActivity() {
       this.$router.push({path: '/drone/activity', query: {}})
