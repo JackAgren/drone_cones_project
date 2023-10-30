@@ -17,8 +17,8 @@
       </div>
 
       <div id="section1ButtonArea">
-        <VueButton id="section1LoginButton"> Login </VueButton>
-        <VueButton id="section1LoginButton"> Register </VueButton>
+        <VueButton id="section1LoginButton" @click="gotoLogin"> Login </VueButton>
+        <VueButton id="section1LoginButton" @click="gotoRegister"> Register </VueButton>
       </div>
 
       <div id="droneIconArea">
@@ -62,7 +62,15 @@ export default {
   name: 'HomepageContent',
   components:{
     VueButton
-  }
+  },
+  methods: {
+  gotoLogin() {
+      this.$router.push({path: '/login', query: {}})
+    },
+  gotoRegister() {
+    this.$router.push({path: '/register', query: {}})
+  },
+  },
 };
 </script>
 
