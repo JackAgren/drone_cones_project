@@ -4,11 +4,12 @@ from django.contrib.auth.models import Group
 from .managers import CustomUserManager
 # Create your models here.
 
+
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(
-        db_collation="utf8_general_ci",
-        unique=True, 
+        db_collation="und-x-icu",
+        unique=True,
         error_messages={"unique": "An account with that email already exists"}
     )
     REQUIRED_FIELDS = []
@@ -19,7 +20,7 @@ class CustomUser(AbstractUser):
     def __str__(self) -> str:
         return self.email
 
+
 """
 Need to define groups and group permissions.
 """
-
