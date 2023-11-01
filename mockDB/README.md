@@ -9,6 +9,7 @@ Here is the defined schema for all of our tables
 - **`dateFilled` (String):** The date when the item was last restocked. It follows the format "YYYY-MM-DD".
 - **`category` (String):** The category to which the item belongs such as 'cone', or 'topping'. This also helps determin what the unit is when describing the price, ie 'cone' = boxes, 'ice cream' = gallons.
     - Possible values: "cone", "topping", "ice cream"
+- **`salesPrice` (Float):** Amount the item will be sold at to customers.
 
 #### Example JSON Object:
 
@@ -19,7 +20,8 @@ Here is the defined schema for all of our tables
     "costPerUnit": 3.99,
     "quantity": 50,
     "dateFilled": "2023-10-24",
-    "category": "ice cream"
+    "category": "ice cream",
+    "salesPrice": 2.99
 }
 ```
 
