@@ -42,6 +42,50 @@
           </div>
 
           <div class="inputArea">
+            <p>Address</p>
+            <div class="input-wrapper2">
+              <input
+                type="text"
+                placeholder="Enter your address"
+                v-model="address"
+              />
+            </div>
+          </div>
+
+          <div class="inputArea">
+            <p>City</p>
+            <div class="input-wrapper2">
+              <input
+                type="text"
+                placeholder="Enter your city"
+                v-model="city"
+              />
+            </div>
+          </div>
+
+          <div class="inputArea">
+            <p>State</p>
+            <div class="input-wrapper2">
+              <input
+                type="text"
+                placeholder="Enter your state"
+                v-model="state"
+              />
+            </div>
+          </div>
+
+          <div class="inputArea">
+            <p>Zip Code</p>
+            <div class="input-wrapper2">
+              <input
+                type="text"
+                placeholder="Enter your zip code"
+                v-model="zip"
+              />
+            </div>
+          </div>
+
+          <div class="inputArea">
             <p>Account Type</p>
             <div class="input-wrapper3">
               <img id="downIcon" src="@/assets/downTriangle.png" />
@@ -63,6 +107,7 @@
           <VueButton
             :class="{ 'button-disabled': !isFormComplete }"
             :disabled="!isFormComplete"
+            @click="gotoDashboard"
           >
             Register
           </VueButton>
@@ -96,6 +141,10 @@ data() {
       email: '',
       password: '',
       confirmPassword: '',
+      address: '',
+      city: '',
+      state: '',
+      zip: ''
   };
 },
 
@@ -126,11 +175,15 @@ methods: {
   goBack() {
     this.$router.push({path: '/', query: {}})
   },
+  gotoDashboard() {
+    this.$router.push({path: '/dashboard', query: {}})
+  },
 },
 
 computed: {
   isFormComplete() {
-    return this.email && this.password && this.confirmPassword && this.accountType !== '';
+    return this.email && this.password && this.confirmPassword && this.accountType !== ''
+      && this.address && this.city && this.state && this.zip;
   },
 },
 
@@ -173,7 +226,7 @@ computed: {
   margin-left: auto;
   margin-right: auto;
   z-index: 1;
-  height: 600px;
+  height: 1000px;
   width: 550px;
 }
 
@@ -192,7 +245,7 @@ computed: {
   grid-column: 2/3;
   width: 400px;
   right: -90px;
-  top: 530px;
+  top: 920px;
 }
 
 #tableArea {

@@ -34,13 +34,15 @@
           <VueButton
             :class="{ 'button-disabled': !isFormComplete }"
             :disabled="!isFormComplete"
+            @click="gotoDashboard"
           >
             Login
           </VueButton>
         </div>
 
         <div id="buttonArea1">
-          <VueButton>
+          <VueButton
+          @click="gotoRegister">
             Register
           </VueButton>
         </div>
@@ -81,6 +83,22 @@ data() {
         confirmPassword: '',
     };
   },
+  methods: {
+  gotoDashboard() {
+      this.$router.push({path: '/dashboard', query: {}})
+    },
+  gotoRegister() {
+    this.$router.push({path: '/register', query: {}})
+    },
+  goBack() {
+    this.$router.push({path: '/', query: {}})
+    },
+  },
+  computed: {
+  isFormComplete() {
+    return this.email !== '' && this.password !== '';
+  }
+},
 };
 </script>
 

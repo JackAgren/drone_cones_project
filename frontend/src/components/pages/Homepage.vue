@@ -12,6 +12,7 @@ import AppHeader from '@/components/Header.vue';
 import AppFooter from '@/components/Footer.vue';
 import HomepageContent from '@/components/page-content/HomepageContent.vue';
 
+
 export default {
   name: 'Homepage',
   components: {
@@ -24,6 +25,7 @@ export default {
       //add data for the page
     }
   },
+
 }
 </script>
 

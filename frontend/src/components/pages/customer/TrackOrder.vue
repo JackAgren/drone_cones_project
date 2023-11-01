@@ -17,7 +17,7 @@
     </div>
 
 
-    <p>Approximate arrival: {{ minToArrival }} minutes</p>
+    <p>Approximate arrival: {{ Math.round(minToArrival * 100) / 100 }} minute(s)</p>
 
     </div>
 
@@ -27,6 +27,9 @@
 <script>
 import Background from "@/components/Background.vue";
 
+const TOTAL_TIME = .5; //in minutes
+const UPDATE_RATE = .1; //in minutes
+
 export default {
   name: 'Track Order',
   components: {
@@ -34,14 +37,40 @@ export default {
   },
   data() {
     return {
-      minToArrival: 2,
-      totalTime: 10,
+      timePassed: 0,
     }
+  },
+  created() {
+    let numOfSections = TOTAL_TIME / UPDATE_RATE;
+    let sectionLength = (TOTAL_TIME / numOfSections /*in minutes*/) * 60 * 1000; //into milliseconds
+    this.doTheWait(numOfSections, sectionLength)
+        .then((resp) => {
+          console.log(resp);
+          this.$router.push({path: '/customer/arrived', query: {}});
+        });
+  },
+  methods: {
+    doTheWait(numOfSections, sectionLength) {
+      return this.sleep(sectionLength)
+          .then(async() => {
+            this.timePassed += (sectionLength / 1000 / 60);
+            if (numOfSections > 0) {
+              return await this.doTheWait(numOfSections - 1, sectionLength);
+            }
+            return "We did it!";
+          });
+    },
+    sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    },
   },
   computed: {
     barProgress() {
-      const percent = Math.round(((this.totalTime - this.minToArrival) / this.totalTime) * 100);
+      const percent = Math.round(((TOTAL_TIME - this.minToArrival) / TOTAL_TIME) * 100);
       return `width: ${percent}%`;
+    },
+    minToArrival() {
+      return TOTAL_TIME - this.timePassed;
     },
   },
 }

@@ -41,6 +41,11 @@ components: {
     return {
       quantityToPurchase: null, // New data property
     }
+  },
+  methods: {
+    goBack() {
+      this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
+    },
   }
 }
 </script>

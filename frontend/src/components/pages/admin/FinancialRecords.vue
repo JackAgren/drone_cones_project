@@ -126,7 +126,7 @@ data() {
 },
 methods: {
   goBack() {
-      this.$router.push({path: '/dashboard', query: {}})
+      this.$router.push({path: '/dashboard', query: {focus: `admin`}})
     },
   },
 computed: {

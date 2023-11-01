@@ -8,7 +8,7 @@ from .models import Inventory
 
 # /inventory/get_inventory
 class InventoryList(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
 

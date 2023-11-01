@@ -22,6 +22,11 @@ export default {
       //add data for the page
     }
   },
+  methods: {
+  gotoDashboard() {
+      this.$router.push({path: '/dashboard', query: {}})
+    },
+  },
 }
 </script>
 
