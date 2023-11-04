@@ -38,10 +38,17 @@ I'll get to this later
 ## Running the backend server
 0. Make sure you have pulled the most recent version from GitLab.
 
+<<<<<<< HEAD
 1. Go to https://www.postgresql.org/download/ and download the correct version for your computer. You now have the postgres server installed along with a program called PGadmin, which gives a nice GUI to see the status of your database.
     
     * If in PGadmin there is no server but you have installed postgresql you need to register a new server.
     * Start PostgreSql. If using mac '''run brew services start postgresql@15''' or '''psql'''
+=======
+1. Go to https://www.postgresql.org/download/ and download the correct version for your computer. You now have the postgres server installed along with a program called PGadmin, which gives a nice GUI to see the status of your database. If running macOS run ```brew install postgresql@15```.
+    
+    * If in PGadmin there is no server but you have installed postgresql you need to register a new server.
+    * Start PostgreSql. If using mac ```run brew services start postgresql@15``` or ```psql```
+>>>>>>> e2beddd38aeb94924cc096d09719fa6427f74fc0
     * Right click databases and then click "Register"
     * Set name to DroneConesServer
     * Set host to localhost
