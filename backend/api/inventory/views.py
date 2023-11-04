@@ -1,5 +1,4 @@
-# Create your views here.
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from .serializers import InventorySerializer
@@ -29,8 +28,11 @@ def get_inventory(request):
 def add_inventory(request):
     try:
         quantity = request.data['quantity'] if request.data['quantity'] else 0
-        Inventory.objects.create(description=request.data['description'], salesPrice=request.data['salesPrice'], costPerUnit=request.data['costPerUnit'], quantity=quantity, dateFilled=datetime.now())
+        dateFilled = request.data['dateFilled'] if request.data['dateFilled'] else datetime.now()
+        Inventory.objects.create(description=request.data['description'], salesPrice=request.data['salesPrice'], costPerUnit=request.data['costPerUnit'], quantity=quantity, dateFilled=dateFilled)
         return Response({'success': 'ADDED'})
+    except KeyError:
+        return Response({'error': 'BAD REQUEST'})
     except Exception as err:
         return Response({'error': str(err)})
 
@@ -39,8 +41,10 @@ def add_inventory(request):
 @api_view(['POST'])
 def remove_inventory(request):
     try:
-        query = Inventory.objects.get(description=request.query_params['description']).delete()
+        query = Inventory.objects.get(description=request.request.data['description']).delete()
         return Response({'success': 'DELETED'})
+    except KeyError:
+        return Response({'error': 'BAD REQUEST'})
     except Exception as err:
         return Response({'error': str(err)})
 
@@ -49,20 +53,26 @@ def remove_inventory(request):
 @api_view(['POST'])
 def increment_inventory(request):
     try:
-        query = Inventory.objects.get(description=request.GET['description'])
+        query = Inventory.objects.get(description=request.data['description'])
         setattr(query, 'quantity', query.quantity + request.data['amount'])
+        setattr(query, 'dateFilled', datetime.now())
         query.save()
-        return Response({'success': f"{request.data['amount']} units added to {request.query_params['description']}"})
-    except Exception as err: 
+        return Response({'success': f"{request.data['amount']} units added to {request.data['description']}"})
+    except KeyError:
+        return Response({'error': 'BAD REQUEST'})
+    except Exception as err:
         return Response({'error': str(err)})
 
 
 # ./decrement/description=<description>&num_increment=<number-to-remove>
+@api_view(['POST'])
 def decrement_inventory(request):
     try:
-        query = Inventory.objects.get(description=request.GET['description'])
+        query = Inventory.objects.get(description=request.data['description'])
         setattr(query, 'quantity', query.quantity - request.data['amount'])
         query.save()
-        return Response({'success': f"{request.data['amount']} units removed from {request.query_params['description']}"})
-    except Exception as err: 
+        return Response({'success': f"{request.data['amount']} units removed from {request.data['description']}"})
+    except KeyError:
+        return Response({'error': 'BAD REQUEST'})
+    except Exception as err:
         return Response({'error': str(err)})
