@@ -1,51 +1,68 @@
 # Create your views here.
-from django.http import JsonResponse, HttpResponse
-from rest_framework import viewsets, mixins, generics, status
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from .serializers import InventorySerializer
 from .models import Inventory
-
-# /inventory/get_inventory
-class InventoryList(generics.ListCreateAPIView):
-    # permission_classes = [IsAuthenticatedOrReadOnly]
-    queryset = Inventory.objects.all()
-    serializer_class = InventorySerializer
+from datetime import datetime
 
 
-# /inventory/get_inventory/<description>    
-class InventoryDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Inventory.objects.all()
-    serializer_class = InventorySerializer
-
-
+@api_view(['GET'])
 def get_inventory(request):
-    return JsonResponse({ 'Response': 'INVENTORY_GOES_HERE' })
+    if request.query_params:
+        try:
+            query = Inventory.objects.get(description=request.query_params['description'])
+            res = InventorySerializer(query, many=False)
+        except Exception as err:
+            return Response({'error': str(err)})
+    else:
+        queryset = Inventory.objects.all()
+        res = InventorySerializer(queryset, many=True)
+        if not queryset:
+            return Response({'error': 'Inventory empty.'})
+
+    return Response(res.data)
 
 
 # ./add/description=<description>&cost=<cose-of-unit>&quantity=<quantity>
+@api_view(['POST'])
 def add_inventory(request):
-    if request.GET["description"] and request.GET["cost"] and request.GET["quantity"]:
-        return JsonResponse({'Response': 'ADD CONFIRMATION'})
-    else:
-        return JsonResponse({'Error', 'Bad Request'})
+    try:
+        quantity = request.data['quantity'] if request.data['quantity'] else 0
+        Inventory.objects.create(description=request.data['description'], salesPrice=request.data['salesPrice'], costPerUnit=request.data['costPerUnit'], quantity=quantity, dateFilled=datetime.now())
+        return Response({'success': 'ADDED'})
+    except Exception as err:
+        return Response({'error': str(err)})
+
 
 # ./remove/description=<description>&cost=<cose-of-unit>&quantity=<quantity>
+@api_view(['POST'])
 def remove_inventory(request):
-    if request.POST["description"]:
-        return JsonResponse({'Response': 'REMOVE CONFIRMATION'})
-    else:
-        return JsonResponse({'Error', 'Bad Request'})
+    try:
+        query = Inventory.objects.get(description=request.query_params['description']).delete()
+        return Response({'success': 'DELETED'})
+    except Exception as err:
+        return Response({'error': str(err)})
 
 
 # ./increment/description=<description>&num_increment=<number-to-add>
+@api_view(['POST'])
 def increment_inventory(request):
-    if request.POST["description"] and request["num_increment"]:
-        return JsonResponse({'Response': 'NEW INVENTORY'})
-    else:
-        return JsonResponse({'Error', 'Bad Request'})
+    try:
+        query = Inventory.objects.get(description=request.GET['description'])
+        setattr(query, 'quantity', query.quantity + request.data['amount'])
+        query.save()
+        return Response({'success': f"{request.data['amount']} units added to {request.query_params['description']}"})
+    except Exception as err: 
+        return Response({'error': str(err)})
 
 
 # ./decrement/description=<description>&num_increment=<number-to-remove>
 def decrement_inventory(request):
-    return JsonResponse({ 'Response': 'NEW INVENTORY' })
+    try:
+        query = Inventory.objects.get(description=request.GET['description'])
+        setattr(query, 'quantity', query.quantity - request.data['amount'])
+        query.save()
+        return Response({'success': f"{request.data['amount']} units removed from {request.query_params['description']}"})
+    except Exception as err: 
+        return Response({'error': str(err)})
