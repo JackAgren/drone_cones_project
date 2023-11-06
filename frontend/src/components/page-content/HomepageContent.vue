@@ -37,7 +37,7 @@
           Get paid while we let your drone <br />
           do all the work!
         </p>
-        <a href="dashboard">Lease a drone →></a>
+        <a href="">Lease a drone →></a>
       </div>
 
       <div class="section2Subsection">
@@ -66,7 +66,15 @@ export default {
   name: 'HomepageContent',
   components:{
     VueButton
-  }
+  },
+  methods: {
+  gotoLogin() {
+      this.$router.push({path: '/login', query: {}})
+    },
+  gotoRegister() {
+    this.$router.push({path: '/register', query: {}})
+  },
+  },
 };
 </script>
 

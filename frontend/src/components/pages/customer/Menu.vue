@@ -2,7 +2,7 @@
 
   <Background/>
 
-  <VueButton @click="moveToDashboard" class="dashboard-button">&#x25C0; &nbsp; Menu</VueButton>
+  <VueButton @click="moveToDashboard" class="dashboard-button">&#x25C0; &nbsp; Dashboard</VueButton>
   <VueButton @click="moveToCheckout" class="checkout-button">
     Checkout
     <img class="cart-icon" src="../../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
@@ -49,17 +49,17 @@ export default {
   },
   data() {
     return {
-      orderInfo: [
-        {name: 'Berry Blast cone', price: 259, qty: 2},
-        {name: 'CYO cone', price: 499, qty: 1, details: {
-            cone: 'waffle', scoops: ['chocolate', 'strawberry'], toppings: ['sprinkles']
-          }}
-      ],
+      cart: [],
+    }
+  },
+  created() {
+    if (this.$route.query.cart) {
+      this.cart = JSON.parse(this.$route.query.cart);
     }
   },
   methods: {
     moveToDashboard() {
-      this.$router.push({path: '/customer/menu', query: {}})
+      this.$router.push({path: '/customer/dashboard', query: {}})
     },
     moveToCheckout() {
       this.$router.push({path: '/customer/checkout', query: {}})

@@ -6,7 +6,12 @@
 
         <div class="small-center">
           <h3>Number of Scoops</h3>
-          <p class="scoop-count"><span @click="decreaseScoops">&#x25C0;</span> {{scoopCount}} <span @click="increaseScoops">&#x25B6;</span></p>
+
+          <div style="padding-left: 25%;" class="no-highlight">
+            <p @click="decreaseScoops" class="arrow-button" :style="checkIfDisabled('remove scoop')">&#x25C0;</p>
+            <p class="scoop-count">{{scoopCount}}</p>
+            <p @click="increaseScoops" class="arrow-button" :style="checkIfDisabled('add scoop')">&#x25B6;</p>
+          </div>
 
           <h3>Flavor(s)</h3>
           <p class="descript">&#x25C0; Strawberry &#x25B6;</p>
@@ -38,7 +43,10 @@ import Background from "@/components/Background.vue";
 import VueButton from "@/components/Button.vue";
 
 const MIN_SCOOPS = 1;
-const MAX_SCOOPS = 4;
+const MAX_SCOOPS = 3;
+const FLAVORS = ['chocolate', 'strawberry', 'vanilla', 'mint', 'peanut butter'];
+const CONES = ['waffle', 'sugar', 'waffle bowl', 'cup'];
+const TOPPINGS = ['cookie dough', 'a very famous chocolate cookie', 'sprinkles', 'chocolate sauce'];
 
 export default {
   name: 'Menu',
@@ -52,6 +60,12 @@ export default {
     }
   },
   methods: {
+    checkIfDisabled(button) {
+      if ((button === 'remove scoop' && this.scoopCount === MIN_SCOOPS) || (button === 'add scoop' && this.scoopCount === MAX_SCOOPS)) {
+        return "opacity: 50%";
+      }
+      return "";
+    },
     addToCart() {
       //TODO: add to cart
     },
@@ -71,10 +85,24 @@ export default {
 
 <style scoped>
 
+.no-highlight {
+  user-select: none; /*chrome and Opera*/
+  -moz-user-select: none; /*Firefox*/
+  -webkit-text-select: none; /*IOS Safari*/
+  -webkit-user-select: none; /*Safari*/
+}
+
 .scoop-count {
   text-align: center;
-  font-size: 30pt;
+  font-size: 20pt;
+  display: inline-block;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.arrow-button {
   cursor: pointer;
+  display: inline-block;
 }
 
 .descript {

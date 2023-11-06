@@ -2,18 +2,19 @@
 
   <Background/>
 
-  <VueButton @click="moveToDashboard" class="dashboard-button">&#x25C0; &nbsp; Menu</VueButton>
+  <VueButton @click="moveToMenu" class="button0">&#x25C0; &nbsp; Menu</VueButton>
+  <VueButton @click="moveToHistory" class="button1">&#x25C0; &nbsp; Order History</VueButton>
 
   <div class="center">
     <h1>Order Details</h1>
 
-    <div class="small-center">
+    <div class="small-center scroll">
 
       <table>
 
         <tr v-for="item in orderInfo">
           <td>
-            {{ item.qty }} {{ item.name }}
+            {{ item.qty }} {{ getTitle(item.name, item.qty) }}
             <br>
             <ul class="details" v-for="detail in formatDetails(item.details)">
               <li>{{ detail }}</li>
@@ -24,7 +25,7 @@
 
         <tr class="taxBox">
           <td>Tax</td>
-          <td class="price">{{tax}}</td>
+          <td class="price">{{tax()}}</td>
         </tr>
 
         <tr>
@@ -38,14 +39,16 @@
 
         <tr>
           <td></td>
-          <td class="price">${{total}}</td>
+          <td class="price">${{ Math.round((tax() + subTotal()) * 100) / 100 }}</td>
         </tr>
 
       </table>
 
+    </div>
+
+    <div class="address-field">
       <p style="display: inline-block; font-weight: normal">&nbsp;&nbsp;Delivery address &nbsp;&nbsp;</p>
       <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-
     </div>
 
     <VueButton @click="placeOrder" class="order-button">Purchase & Place Order</VueButton>
@@ -57,6 +60,8 @@
 <script>
 import Background from "@/components/Background.vue";
 import VueButton from "@/components/Button.vue";
+
+const SALES_TAX_RATE = .07; //source: https://www.avalara.com/taxrates/en/state-rates/utah/cities/logan.html
 
 export default {
   name: 'Checkout',
@@ -74,9 +79,17 @@ export default {
       ]
     }
   },
+  created() {
+    if (this.$route.query.cart) {
+      this.orderInfo = JSON.parse(this.$route.query.cart);
+    }
+  },
   methods: {
-    moveToDashboard() {
-      this.$router.push({path: '/customer/menu', query: {}})
+    moveToMenu() {
+      this.$router.push({path: '/customer/menu', query: {cart: JSON.stringify(this.orderInfo)}})
+    },
+    moveToHistory() {
+      this.$router.push({path: '/customer/history', query: {cart: JSON.stringify(this.orderInfo)}})
     },
     placeOrder() {
       //TODO: place order
@@ -86,10 +99,9 @@ export default {
       if (details === undefined) {
         return;
       }
-      console.log(JSON.stringify(details));
       let toReturn = [`${details.cone.charAt(0).toUpperCase() + details.cone.slice(1)} cone`];
       for (let i = 0; i < details.scoops.length; i++) {
-        toReturn.push(`1 scoop ${details.scoops[i]}`);
+        toReturn.push(`Scoop ${details.scoops[i]}`);
       }
       for (let i = 0; i < details.toppings.length; i++) {
         const toppingName = details.toppings[i];
@@ -97,21 +109,33 @@ export default {
       }
       return toReturn;
     },
-  },
-  computed: {
+    getTitle(name, qty) {
+      if (qty > 1) {
+        return `${name}s`;
+      }
+      return name;
+    },
+    subTotal() {
+      let subTotal = 0;
+      for (let i = 0; i < this.orderInfo.length; i++) {
+        subTotal += (this.orderInfo[i].price * this.orderInfo[i].qty);
+      }
+      return Math.round(subTotal) / 100;
+    },
     tax() {
-      //TODO: calc tax
-      return 1.03;
+      let theTax = SALES_TAX_RATE * this.subTotal();
+      return Math.round(theTax * 100) / 100;
     },
-    total() {
-      //TODO: calc total
-      return 12.41;
-    },
-  }
+  },
 }
 </script>
 
 <style scoped>
+
+div.scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 
 input {
   width: 70%;
@@ -146,18 +170,35 @@ td {
   font-weight: normal;
 }
 
-.dashboard-button {
+.button0 {
   position: fixed;
   top: 12%;
   left: 2%;
+  width: 200px;
+}
+
+.button1 {
+  position: fixed;
+  top: 20%;
+  left: 2%;
+  width: 200px;
 }
 
 .order-button {
   position: fixed;
-  top: 80%;
+  top: 83%;
   left: 36%;
   z-index: 1;
   width: 350px;
+}
+
+.address-field {
+  position: fixed;
+  top: 76%;
+  left: 25%;
+  width: 800px;
+  font-weight: bolder;
+  font-size: 16pt;
 }
 
 .center {

@@ -31,8 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'inventory.apps.InventoryConfig',
-    'drone_operator.apps.DroneOperatorConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +42,7 @@ INSTALLED_APPS = [
     'inventory.apps.InventoryConfig',
     'orders.apps.OrdersConfig',
     'permission_change.apps.PermissionChangeConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -83,10 +82,10 @@ WSGI_APPLICATION = 'api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'user-test', 
-        'USER': 'postgres',
-        'PASSWORD': 'Gomath!1234*',
-        'HOST': '127.0.0.1', 
+        'NAME': 'DroneConesDB',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
