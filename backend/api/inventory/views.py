@@ -15,19 +15,18 @@ def get_inventory(request):
     ** Returns all items matching description **
     .inventory/get_inventory?description=<DESCRIPTION>
     '''
-    if request.query_params:
-        try:
-            query = Inventory.objects.get(description=request.query_params['description'])
-            res = InventorySerializer(query, many=False)
-        except KeyError:
-            return Response({'error': 'BAD REQUEST'})
-        except Exception as err:
-            return Response({'error': str(err)})
-    else:
-        queryset = Inventory.objects.all()
-        res = InventorySerializer(queryset, many=True)
-        if not queryset:
-            return Response({'error': 'Inventory empty.'})
+    try:
+        if 'description' in request.query_params:
+            query = Inventory.objects.all().filter(description=request.query_params['description'])
+        elif 'lessThan' in request.query_params:
+            query = Inventory.objects.all().filter(quantity__lt=request.query_params['lessThan'])
+        elif 'greaterThan' in request.query_params:
+            query = Inventory.objects.all().filter(quantity__gt=request.query_params['greaterThan'])
+        res = InventorySerializer(query, many=True)
+    except KeyError:
+        return Response({'error': 'BAD REQUEST'})
+    except Exception as err:
+        return Response({'error': str(err)})
 
     return Response(res.data)
 

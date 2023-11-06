@@ -24,7 +24,7 @@ def delivered(request):
     except Exception as err:
         return Response({'error': str(err)})
 
-    return Response({'Response': 'UPDATE_CONFIRMATION'})
+    return Response({'success': 'UPDATE SUCCESS'})
 
 
 @api_view(['POST'])
@@ -70,12 +70,21 @@ def delete(request):
 @api_view(['GET'])
 def order_search(request):
     try:
-        query = Orders.objects.get(id=request.query_params['order'])
-        cones = []
-        for cone in query.cones:
-            cones.append(Cones.objects.get(id=cone))
-        query.cones = cones
-        res = OrdersSerializer(query, many=False)
+        if 'order' in request.query_params:
+            query = Orders.objects.all().filter(id=request.query_params['order'])
+        elif 'userID' in request.query_params:
+            query = Orders.objects.all().filter(userID=request.query_params['userID'])
+        elif 'droneID':
+            query = Orders.objects.all().filter(userID=request.query_params['droneID'])
+        elif 'location':
+            query = Orders.objects.all().filter(userID=request.query_params['location'])
+
+        for order in query:
+            cones = []
+            for cone in order.cones:
+                cones.append(Cones.objects.get(id=cone))
+            order.cones = cones
+        res = OrdersSerializer(query, many=True)
         return Response(res.data)
     except KeyError:
         return Response({'error': 'BAD REQUEST'})
