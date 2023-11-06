@@ -1,18 +1,19 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
-    
-class OrderObject(models.Model):
+
+class Cones(models.Model):
     cone = models.CharField(max_length=25)
-    iceCream = ArrayField(models.CharField(max_length=25)) #number of scoops = size of iceCream
+    iceCream = models.CharField(max_length=25) #number of scoops = size of iceCream
     toppings = ArrayField(models.CharField(max_length=25))
     cost = models.FloatField()
-    
+
+
 class Orders(models.Model):
     userID = models.IntegerField()
     droneID = ArrayField(models.IntegerField())
-    order = models.ManyToManyField(OrderObject)
+    cones = ArrayField(models.IntegerField())
     location = models.CharField(max_length=200)
     timeOrdered = models.DateTimeField()
-    timeDelivered = models.DateTimeField()
+    timeDelivered = models.DateTimeField(null=True)
     #number of cones = size of order object
