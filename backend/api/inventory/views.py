@@ -12,6 +12,8 @@ def get_inventory(request):
         try:
             query = Inventory.objects.get(description=request.query_params['description'])
             res = InventorySerializer(query, many=False)
+        except KeyError:
+            return Response({'error': 'BAD REQUEST'})
         except Exception as err:
             return Response({'error': str(err)})
     else:
@@ -28,8 +30,10 @@ def get_inventory(request):
 def add_inventory(request):
     try:
         quantity = request.data['quantity'] if request.data['quantity'] else 0
-        dateFilled = request.data['dateFilled'] if request.data['dateFilled'] else datetime.now()
-        Inventory.objects.create(description=request.data['description'], salesPrice=request.data['salesPrice'], costPerUnit=request.data['costPerUnit'], quantity=quantity, dateFilled=dateFilled)
+        Inventory.objects.create(description=request.data['description'],
+                                 salesPrice=request.data['salesPrice'],
+                                 costPerUnit=request.data['costPerUnit'],
+                                 quantity=quantity, dateFilled=datetime.now())
         return Response({'success': 'ADDED'})
     except KeyError:
         return Response({'error': 'BAD REQUEST'})
@@ -41,7 +45,8 @@ def add_inventory(request):
 @api_view(['POST'])
 def remove_inventory(request):
     try:
-        query = Inventory.objects.get(description=request.request.data['description']).delete()
+        Inventory.objects.get(
+                description=request.request.data['description']).delete()
         return Response({'success': 'DELETED'})
     except KeyError:
         return Response({'error': 'BAD REQUEST'})
