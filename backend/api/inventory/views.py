@@ -46,7 +46,7 @@ def add_inventory(request):
 def remove_inventory(request):
     try:
         Inventory.objects.get(
-                description=request.request.data['description']).delete()
+                description=request.data['description']).delete()
         return Response({'success': 'DELETED'})
     except KeyError:
         return Response({'error': 'BAD REQUEST'})

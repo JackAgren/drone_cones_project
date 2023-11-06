@@ -10,7 +10,18 @@ import pytz
 
 # Create your views here.
 @api_view(['POST'])
-def update(request):
+def delivered(request):
+    try:
+        query = Orders.objects.get(
+                id=request.data['order']
+                )
+        setattr(query, 'timeDelivered', datetime.now(pytz.timezone('US/Mountain')))
+        query.save()
+    except KeyError:
+        return Response({'error': 'BAD REQUEST'})
+    except Exception as err:
+        return Response({'error': str(err)})
+
     return Response({'Response': 'UPDATE_CONFIRMATION'})
 
 
@@ -68,4 +79,3 @@ def order_search(request):
         return Response({'error': 'BAD REQUEST'})
     except Exception as err:
         return Response({'error': str(err)})
-
