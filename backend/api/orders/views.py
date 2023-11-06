@@ -15,7 +15,10 @@ def delivered(request):
         query = Orders.objects.get(
                 id=request.data['order']
                 )
-        setattr(query, 'timeDelivered', datetime.now(pytz.timezone('US/Mountain')))
+        setattr(query,
+                'timeDelivered',
+                datetime.now(pytz.timezone('US/Mountain'))
+                )
         query.save()
     except KeyError:
         return Response({'error': 'BAD REQUEST'})
