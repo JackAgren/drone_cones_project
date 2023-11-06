@@ -88,25 +88,7 @@ data() {
   return {
     maxHeight: 500, // Max height in pixels
     selectedRowIndex: null, // Index of the selected row
-    rows: [
-        { col1: '1', col2: 'Vanilla Ice Cream', col3: 'Ice Cream', col4: '$1.00/Scoop', col5: 'In Stock' },
-        { col1: '2', col2: 'Chocolate Ice Cream', col3: 'Ice Cream', col4: '$1.50/Scoop', col5: 'In Stock' },
-        { col1: '3', col2: 'Mint Ice Cream', col3: 'Ice Cream', col4: '$1.25/Scoop', col5: 'Out of Stock' },
-        { col1: '4', col2: 'Strawberry Ice Cream', col3: 'Ice Cream', col4: '$2.00/Scoop', col5: 'In Stock' },
-        { col1: '5', col2: 'Waffle Cone', col3: 'Container', col4: '$0.50/Cone', col5: 'In Stock' },
-        { col1: '6', col2: 'Sugar Cone', col3: 'Container', col4: '$0.75/Cone', col5: 'In Stock' },
-        { col1: '7', col2: 'Bowl', col3: 'Container', col4: '$1.00/Bowl', col5: 'Out of Stock' },
-        { col1: '8', col2: 'Rainbow Sprinkles', col3: 'Topping', col4: '$0.10/Item', col5: 'In Stock' },
-        { col1: '9', col2: 'Chocolate Sprinkles', col3: 'Topping', col4: '$0.10/Item', col5: 'In Stock' },
-        { col1: '10', col2: 'Peanuts', col3: 'Topping', col4: '$0.20/Item', col5: 'Out of Stock' },
-        { col1: '11', col2: 'Watermelon Ice Cream', col3: 'Ice Cream', col4: '$41.00/Scoop', col5: 'In Stock' },
-        { col1: '12', col2: 'Orange Ice Cream', col3: 'Ice Cream', col4: '$15.00/Scoop', col5: 'Out of Stock' },
-        { col1: '13', col2: 'Rocky Road Ice Cream', col3: 'Ice Cream', col4: '$11.00/Scoop', col5: 'In Stock' },
-        { col1: '14', col2: 'Oreo Ice Cream', col3: 'Ice Cream', col4: '$15.00/Scoop', col5: 'In Stock' },
-        { col1: '15', col2: 'Mystery Ice Cream', col3: 'Ice Cream', col4: '$12.00/Scoop', col5: 'In Stock' },
-
-        // Add more rows as needed
-      ]
+    rows: []
   }
 },
 computed: {
@@ -119,6 +101,7 @@ computed: {
   },
 
   mounted() {
+    this.fetchMenu();
     // Add global click event listener
     document.addEventListener('click', this.deselectRow);
   },
@@ -144,7 +127,7 @@ computed: {
       this.selectedRowIndex = null;
     }
   },
-      getStatus(status) {
+    getStatus(status) {
       return status === 'In Stock' ? 'on' : 'off';
     },
     goBack() {
@@ -158,6 +141,40 @@ computed: {
     },
     gotoEditMenuItem() {
       this.$router.push({path: '/admin/manageMenu/edit', query: {}})
+    },
+    fetchMenu() {
+    // Use your preferred method to fetch data, here's a fetch API example
+    fetch('http://localhost:8000/inventory/get_inventory')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        this.processInventoryData(data);
+      })
+      .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+      });
+    },
+    
+    formatCurrency(value) {
+      return `$${parseFloat(value).toFixed(2)}`;
+    },
+
+    processInventoryData(inventoryData) {
+    // Assuming your inventory items do not include an Item ID or Type, 
+    // you may need to generate or retrieve these from somewhere if required.
+    this.rows = inventoryData.map((item, index) => {
+      return {
+          col1: index + 1, // Assuming the Item ID is the index + 1
+          col2: item.description,
+          col3: "Unknown", // Replace "Unknown" with actual item type if available
+          col4: this.formatCurrency(item.salesPrice), // Format cost per unit
+          col5: item.quantity > 0 ? 'In Stock' : 'Out of Stock',
+        };
+      });
     },
   }
 }
