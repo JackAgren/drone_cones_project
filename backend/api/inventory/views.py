@@ -8,6 +8,13 @@ from datetime import datetime
 
 @api_view(['GET'])
 def get_inventory(request):
+    '''
+    ** Returns item matching description  **
+    .inventory/get_inventory?description=<DESCRIPTION>
+
+    ** Returns all items matching description **
+    .inventory/get_inventory?description=<DESCRIPTION>
+    '''
     if request.query_params:
         try:
             query = Inventory.objects.get(description=request.query_params['description'])
@@ -25,9 +32,20 @@ def get_inventory(request):
     return Response(res.data)
 
 
-# ./add/description=<description>&cost=<cose-of-unit>&quantity=<quantity>
 @api_view(['POST'])
 def add_inventory(request):
+    '''
+    ** Add item matching description  **
+    .inventory/add
+
+    ** Request Body **
+    {
+        "description": "<DESCRIPTION>": String,
+        "salesPrice": "<SALESPRICE>": Float,
+        "costPerUnit": "<COSTPERUNIT>": Float,
+        "quantity": "<QUANTITY>": Float | Optional,
+    }
+    '''
     try:
         quantity = request.data['quantity'] if request.data['quantity'] else 0
         Inventory.objects.create(description=request.data['description'],
@@ -41,9 +59,15 @@ def add_inventory(request):
         return Response({'error': str(err)})
 
 
-# ./remove/description=<description>&cost=<cose-of-unit>&quantity=<quantity>
 @api_view(['POST'])
 def remove_inventory(request):
+    '''
+    ** Deletes item matching description  **
+    .inventory/remove
+
+    ** Request Body **
+    { "description": "<DESCRIPTION>" }
+    '''
     try:
         Inventory.objects.get(
                 description=request.data['description']).delete()
@@ -54,9 +78,20 @@ def remove_inventory(request):
         return Response({'error': str(err)})
 
 
-# ./increment/description=<description>&num_increment=<number-to-add>
+# .inventory/increment/description=<description>
+
 @api_view(['POST'])
 def increment_inventory(request):
+    '''
+    ** Increment item matching description **
+    .inventory/increment
+
+    ** Request Body **
+    {
+        "description": "<DESCRIPTION>": String,
+        "amount": <AMOUNT>: Integer
+    }
+    '''
     try:
         query = Inventory.objects.get(description=request.data['description'])
         setattr(query, 'quantity', query.quantity + request.data['amount'])
@@ -69,9 +104,18 @@ def increment_inventory(request):
         return Response({'error': str(err)})
 
 
-# ./decrement/description=<description>&num_increment=<number-to-remove>
 @api_view(['POST'])
 def decrement_inventory(request):
+    '''
+    ** Decrement item matching description **
+    .inventory/increment
+
+    ** Request Body **
+    {
+        "description": "<DESCRIPTION>": String,
+        "amount": <AMOUNT>: Integer
+    }
+    '''
     try:
         query = Inventory.objects.get(description=request.data['description'])
         setattr(query, 'quantity', query.quantity - request.data['amount'])
