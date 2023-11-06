@@ -17,8 +17,12 @@
       </div>
 
       <div id="section1ButtonArea">
+        <router-link :to="{ path: '/login' }">
         <VueButton id="section1LoginButton"> Login </VueButton>
+        </router-link>
+        <router-link :to="{ path: '/register' }">
         <VueButton id="section1LoginButton"> Register </VueButton>
+      </router-link>
       </div>
 
       <div id="droneIconArea">
