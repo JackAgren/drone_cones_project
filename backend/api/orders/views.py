@@ -1,10 +1,9 @@
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from .serializers import ConesSerializer, OrdersSerializer
+from .serializers import OrdersSerializer
 from .models import Orders, Cones
 from datetime import datetime
-import json
 import pytz
 
 
