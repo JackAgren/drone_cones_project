@@ -1,4 +1,5 @@
 <template>
+  <Background />
 
   <div class="center">
 
