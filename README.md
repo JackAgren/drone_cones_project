@@ -68,6 +68,14 @@ I'll get to this later
 **As of 26 Oct**
 You can now perfore `GET` requests from the inventory by the description, or simply get a list. You can fetch from `http://localhost:8000/inventory/get_inventory` to get JSON of all items in the inventory, or `http://localhost:8000/inventory/get_inventory/<description>` to get a specific item.
 
+
+### CORs Dependencies
+Make sure to pip install the following:
+
+pip install django-cors-headers
+
+This has code to circumvent CORs issues.
+
 ## Integrate with your tools
 
 - [ ] [Set up project integrations](https://gitlab.cs.usu.edu/drone-cones/project-cone-by-drone/-/settings/integrations)
