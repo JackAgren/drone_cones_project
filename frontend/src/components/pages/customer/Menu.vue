@@ -2,7 +2,7 @@
 
   <Background/>
 
-  <VueButton @click="moveToDashboard" class="dashboard-button">&#x25C0; &nbsp; Dashboard</VueButton>
+  <VueButton @mouseup="moveToDashboard" class="dashboard-button">&#x25C0; &nbsp; Dashboard</VueButton>
   <VueButton @click="moveToCheckout" class="checkout-button">
     Checkout
     <img class="cart-icon" src="../../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
@@ -19,10 +19,12 @@
       <tr>
 
         <td>
-          <FeaturedMenu/>
+          <FeaturedMenu v-on:addToCart="addToOrder"/>
+          <!--<FeaturedMenu/>-->
         </td>
 
         <td>
+          <!--<CYOMenu @addToCart($event)/>-->
           <CYOMenu/>
         </td>
 
@@ -58,14 +60,17 @@ export default {
     }
   },
   methods: {
+    addToOrder(item) {
+      console.log("we got it!");
+      console.log(item);
+    },
     moveToDashboard() {
-      this.$router.push({path: '/customer/dashboard', query: {}})
+      if (confirm("Are you sure you want to return to the dashboard? The contents of your cart will not be saved.")) {
+        this.$router.push({path: '/dashboard', query: {}})
+      }
     },
     moveToCheckout() {
       this.$router.push({path: '/customer/checkout', query: {}})
-    },
-    addToCart() {
-      //TODO: add to cart
     },
   },
 }

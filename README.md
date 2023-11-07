@@ -140,4 +140,5 @@ Use the built-in continuous integration in GitLab.
 * <a href="https://www.flaticon.com/free-icons/sprinkles" title="sprinkles icons">Sprinkles icons created by Freepik - Flaticon</a>
 * <a href="https://www.flaticon.com/free-icons/oreo" title="oreo icons">Oreo icons created by LAFS - Flaticon</a>
 * <a href="https://www.flaticon.com/free-icons/syrup" title="syrup icons">Syrup icons created by Freepik - Flaticon</a>
+* Ice cream scoop (all flavors): created by Emma Lynn
 
