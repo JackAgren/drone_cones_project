@@ -50,7 +50,7 @@ def add(request):
             ...
             ],
         "userID": <USERID>: Integer,
-        "droneID": <DRONEID>: Integer,
+        "droneID": [<DRONEID>: Integer, ...],
         "location": <LOCATIONS>: String
     }
 
@@ -67,7 +67,7 @@ def add(request):
             cones.append(cone.id)
         order = Orders.objects.create(
                 userID=request.data['userID'],
-                droneID=[request.data['droneID']],
+                droneID=request.data['droneID'],
                 location=request.data['location'],
                 timeOrdered=datetime.now(pytz.timezone('US/Mountain')),
                 cones=cones

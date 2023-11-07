@@ -82,49 +82,20 @@ def remove_inventory(request):
         return Response({'error': str(err)})
 
 
-# .inventory/increment/description=<description>
-
 @api_view(['POST'])
-def increment_inventory(request):
-    '''
-    ** Increment item matching description **
-    .inventory/increment
-
-    BODY:
-    {
-        "description": "<DESCRIPTION>": String,
-        "amount": <AMOUNT>: Integer
-    }
-    '''
+def update_item(request):
     try:
         query = Inventory.objects.get(description=request.data['description'])
-        setattr(query, 'quantity', query.quantity + request.data['amount'])
-        setattr(query, 'dateFilled', datetime.now())
+        if 'salesPrice' in request.data:
+            setattr(query, 'salesPrice', float(request.data['salesPrice']))
+        if 'quantity' in request.data:
+            setattr(query, 'quantity', query.quantity + float(request.data['quantity']))
+        if 'costPerUnit' in request.data:
+            setattr(query, 'salesPrice', float(request.data['costPerUnit']))
+        if 'category' in request.data:
+            setattr(query, 'category', request.data['category'])
         query.save()
-        return Response({'success': f"{request.data['amount']} units added to {request.data['description']}"})
-    except KeyError:
-        return Response({'error': 'BAD REQUEST'})
-    except Exception as err:
-        return Response({'error': str(err)})
-
-
-@api_view(['POST'])
-def decrement_inventory(request):
-    '''
-    ** Decrement item matching description **
-    .inventory/increment
-
-    BODY:
-    {
-        "description": "<DESCRIPTION>": String,
-        "amount": <AMOUNT>: Integer
-    }
-    '''
-    try:
-        query = Inventory.objects.get(description=request.data['description'])
-        setattr(query, 'quantity', query.quantity - request.data['amount'])
-        query.save()
-        return Response({'success': f"{request.data['amount']} units removed from {request.data['description']}"})
+        return Response({'success': f"{query.description} updated."})
     except KeyError:
         return Response({'error': 'BAD REQUEST'})
     except Exception as err:
