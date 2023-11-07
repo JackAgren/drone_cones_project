@@ -136,7 +136,7 @@ computed: {
 
     fetchInventory() {
     // Use your preferred method to fetch data, here's a fetch API example
-    fetch('http://localhost:8000/inventory/get_inventory')
+    fetch('http://localhost:8000/inventory/inventory_search?description=ALL')
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
