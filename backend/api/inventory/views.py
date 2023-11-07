@@ -17,7 +17,12 @@ def get_inventory(request):
     '''
     try:
         if 'description' in request.query_params:
-            query = Inventory.objects.all().filter(description=request.query_params['description'])
+            if request.query_params['description'] == 'ALL':
+                query = Inventory.objects.all()
+            else:
+                query = Inventory.objects.all().filter(description=request.query_params['description'])
+        elif 'category' in request.query_params:
+            query = Inventory.objects.all().filter(category=request.query_params['category'])
         elif 'lessThan' in request.query_params:
             query = Inventory.objects.all().filter(quantity__lt=request.query_params['lessThan'])
         elif 'greaterThan' in request.query_params:
@@ -50,6 +55,7 @@ def add_inventory(request):
         Inventory.objects.create(description=request.data['description'],
                                  salesPrice=request.data['salesPrice'],
                                  costPerUnit=request.data['costPerUnit'],
+                                 category=request.data['category'],
                                  quantity=quantity, dateFilled=datetime.now())
         return Response({'success': 'ADDED'})
     except KeyError:
