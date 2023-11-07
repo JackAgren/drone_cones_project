@@ -8,8 +8,8 @@ from .managers import CustomUserManager
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(
-        db_collation="und-x-icu",
-        unique=True,
+        db_collation="ucs_basic",
+        unique=True, 
         error_messages={"unique": "An account with that email already exists"}
     )
     REQUIRED_FIELDS = []
