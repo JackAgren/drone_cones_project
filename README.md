@@ -76,6 +76,10 @@ pip install django-cors-headers
 
 This has code to circumvent CORs issues.
 
+### settings.py
+Ensure for your local machine that you set the password value (found under DATABASES) in the settings.py file found within backend/api/api/settings.py matches the password set in the database found in pgAdmin4.  As of writing this, the default value of the password value is 'password'.
+
+
 ## Integrate with your tools
 
 - [ ] [Set up project integrations](https://gitlab.cs.usu.edu/drone-cones/project-cone-by-drone/-/settings/integrations)
