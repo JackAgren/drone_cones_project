@@ -9,8 +9,9 @@
 
         <div id="actionContentArea">
           <div id="infoArea1">
-            <p class="infoLabel">Item to edit: Peanuts</p>
-            <p class="infoLabel">Current Sales Price: $0.50</p>
+            <p class="infoLabel">Item to edit: {{ itemName }}</p>
+            <p class="infoLabel">Current Sales Price: {{ salesPrice }}</p>
+            <p class="infoLabel">Current Cost per Unit: {{ costPerUnit }}</p>
           </div>
 
           <div id="inputArea1">
@@ -32,11 +33,12 @@
 
         <div id="buttonArea">
           <VueButton
-            :class="{ 'button-disabled': !newSalesPrice }"
-            :disabled="!newSalesPrice"
+            :class="{ 'button-disabled': isPriceLowerThanCost }"
+            :disabled="isPriceLowerThanCost"
           >
             Apply
           </VueButton>
+
         </div>
       </div>
     </Background>
@@ -63,7 +65,9 @@ components: {
 },
 data() {
   return {
-    newSalesPrice: null, // New data property
+    newSalesPrice: null,
+    itemName: '',
+
   }
 },
 
@@ -93,6 +97,39 @@ methods: {
   goBack() {
       this.$router.push({path: '/admin/manageMenu', query: {}})
     },
+
+    fetchItem() {
+      const itemName = this.$route.params.description;
+      fetch(`http://localhost:8000/inventory/inventory_search?description=${itemName}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.processItemData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
+    },
+
+    formatCurrency(value) {
+      return `$${parseFloat(value).toFixed(2)}`;
+    },
+
+    processItemData(itemData) {
+      if (!itemData || itemData.length === 0) return;
+      const item = itemData[0]; // Assuming the first item is the one we need
+      // Update the data properties with the item details
+      this.itemName = item.description;
+      this.itemType = item.category; // Assuming the type is available
+      this.costPerUnit = this.formatCurrency(item.costPerUnit);
+      this.salesPrice = this.formatCurrency(item.salesPrice);
+  },
+
+
 },
 
 computed: {
@@ -102,9 +139,17 @@ computed: {
       const calculatedHeight = ((totalRows) * rowHeight);
       return Math.min(calculatedHeight, this.maxHeight); // Return the smaller of the two
     },
+
+    isPriceLowerThanCost() {
+      if (!this.newSalesPrice || !this.costPerUnit) return true;
+      const salesPrice = parseFloat(this.newSalesPrice);
+      const cost = parseFloat(this.costPerUnit.replace('$', ''));
+      return salesPrice < cost;
+    }
   },
 
   mounted() {
+    this.fetchItem();
     // Add global click event listener
     document.addEventListener('click', this.deselectRow);
   },

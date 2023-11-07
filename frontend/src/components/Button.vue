@@ -9,12 +9,6 @@ import '@/assets/style.css';
 
 export default {
   name: 'VueButton',
-
-  methods: {
-    onClick() {
-      this.$emit('click');
-    }
-  }
 };
 </script>
 

@@ -131,24 +131,27 @@ computed: {
       this.$router.push({path: '/dashboard', query: {focus: `admin`}})
     },
     gotoRestock() {
-      this.$router.push({path: '/admin/manageInventory/restock', query: {}})
+      const selectedItem = this.rows[this.selectedRowIndex];
+      const itemName = selectedItem ? selectedItem.col2 : ''; // Assuming col2 is the item name
+      this.$router.push({
+        path: `/admin/manageInventory/restock/${itemName}`
+      });
     },
 
     fetchInventory() {
-    // Use your preferred method to fetch data, here's a fetch API example
-    fetch('http://localhost:8000/inventory/get_inventory')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        this.processInventoryData(data);
-      })
-      .catch(error => {
-        console.error('There has been a problem with your fetch operation:', error);
-      });
+      fetch('http://localhost:8000/inventory/inventory_search?description=ALL')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.processInventoryData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
   },
 
   formatCurrency(value) {
