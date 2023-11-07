@@ -4,8 +4,7 @@ from .import views
 
 app_name = 'inventory'
 urlpatterns = [
-    path('get_inventory', views.get_inventory, name='list'),
-    path('get_inventory/<str:pk>', views.get_inventory, name='detail view'),
+    path('inventory_search', views.inventory_search, name='list'),
     path('increment', views.increment_inventory, name='increment_inventory'),
     path('decrement', views.decrement_inventory, name='decrement_inventory'),
     path('add', views.add_inventory, name='add_inventory'),

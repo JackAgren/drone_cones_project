@@ -7,17 +7,22 @@ from datetime import datetime
 
 
 @api_view(['GET'])
-def get_inventory(request):
+def inventory_search(request):
     '''
-    ** Returns item matching description  **
-    .inventory/get_inventory?description=<DESCRIPTION>
+    ** Returns all inventory **
+    .inventory/inventory_search?description=ALL
 
     ** Returns all items matching description **
-    .inventory/get_inventory?description=<DESCRIPTION>
+    .inventory/inventory_search?description=<DESCRIPTION>
     '''
     try:
         if 'description' in request.query_params:
-            query = Inventory.objects.all().filter(description=request.query_params['description'])
+            if request.query_params['description'] == 'ALL':
+                query = Inventory.objects.all()
+            else:
+                query = Inventory.objects.all().filter(description=request.query_params['description'])
+        elif 'category' in request.query_params:
+            query = Inventory.objects.all().filter(category=request.query_params['category'])
         elif 'lessThan' in request.query_params:
             query = Inventory.objects.all().filter(quantity__lt=request.query_params['lessThan'])
         elif 'greaterThan' in request.query_params:
@@ -36,8 +41,7 @@ def add_inventory(request):
     '''
     ** Add item matching description  **
     .inventory/add
-
-    ** Request Body **
+    BODY:
     {
         "description": "<DESCRIPTION>": String,
         "salesPrice": "<SALESPRICE>": Float,
@@ -50,6 +54,7 @@ def add_inventory(request):
         Inventory.objects.create(description=request.data['description'],
                                  salesPrice=request.data['salesPrice'],
                                  costPerUnit=request.data['costPerUnit'],
+                                 category=request.data['category'],
                                  quantity=quantity, dateFilled=datetime.now())
         return Response({'success': 'ADDED'})
     except KeyError:
@@ -64,7 +69,7 @@ def remove_inventory(request):
     ** Deletes item matching description  **
     .inventory/remove
 
-    ** Request Body **
+    BODY:
     { "description": "<DESCRIPTION>" }
     '''
     try:
@@ -85,7 +90,7 @@ def increment_inventory(request):
     ** Increment item matching description **
     .inventory/increment
 
-    ** Request Body **
+    BODY:
     {
         "description": "<DESCRIPTION>": String,
         "amount": <AMOUNT>: Integer
@@ -109,7 +114,7 @@ def decrement_inventory(request):
     ** Decrement item matching description **
     .inventory/increment
 
-    ** Request Body **
+    BODY:
     {
         "description": "<DESCRIPTION>": String,
         "amount": <AMOUNT>: Integer

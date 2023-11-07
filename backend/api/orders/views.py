@@ -10,6 +10,13 @@ import pytz
 # Create your views here.
 @api_view(['POST'])
 def delivered(request):
+    '''
+    ** Updates time delivered to time when function was called **
+    .orders/delivered
+
+    BODY:
+        { "order": <ORDER NUMBER> }
+    '''
     try:
         query = Orders.objects.get(
                 id=request.data['order']
@@ -28,7 +35,26 @@ def delivered(request):
 
 
 @api_view(['POST'])
-def new(request):
+def add(request):
+    '''
+    ./orders/add
+    BODY:
+    {
+        "cones": [
+            {
+            "cone": <CONE TYPE>: String,
+            "iceCream": <ICE CREAM>: String,
+            "toppings": [<TOPPINGS>: String,...],
+            "cost": <COST>: Float
+            },
+            ...
+            ],
+        "userID": <USERID>: Integer,
+        "droneID": <DRONEID>: Integer,
+        "location": <LOCATIONS>: String
+    }
+
+    '''
     try:
         cones = []
         for data in request.data['cones']:
@@ -54,7 +80,12 @@ def new(request):
 
 
 @api_view(['POST'])
-def delete(request):
+def remove(request):
+    '''
+    ./orders/remove
+    {
+    }
+    '''
     try:
         order = Orders.objects.get(id=request.data['order'])
         for cone in order.cones:
@@ -69,6 +100,9 @@ def delete(request):
 
 @api_view(['GET'])
 def order_search(request):
+    '''
+
+    '''
     try:
         if 'order' in request.query_params:
             query = Orders.objects.all().filter(id=request.query_params['order'])
