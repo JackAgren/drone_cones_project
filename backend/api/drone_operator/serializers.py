@@ -5,4 +5,9 @@ from .models import DroneInfo
 class DroneInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = DroneInfo
-        fields = ['id', 'ownerID', 'status', 'size']
+        fields = ['ownerID', 'status', 'size']
+
+class RegisterDroneSerializer(serializers.Serializer):
+    ownerID = serializers.CharField()
+    size = serializers.CharField()
+    status = serializers.CharField()

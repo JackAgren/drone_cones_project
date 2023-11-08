@@ -1,24 +1,25 @@
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from .serializers import DroneInfoSerializer
+from .serializers import DroneInfoSerializer, RegisterDroneSerializer
 from .models import DroneInfo
+from user.models import CustomUser
 from datetime import datetime
+from django.shortcuts import get_object_or_404
 
 
 @api_view(['POST'])
 def register_drone(request):
-    try:
+    serializer = RegisterDroneSerializer(data=request.data)
+    if serializer.is_valid():
+        user = get_object_or_404(CustomUser, email=request.data["ownerID"])
         DroneInfo.objects.create(
-                ownerID=request.data["ownerID"],
-                size=request.data["size"],
-                status="commissoned"
+                ownerID=user,
+                size=request.data['size'],
+                status=request.data['status']
                 )
-    except KeyError:
-        return Response({'error': 'BAD REQUEST'})
-    except Exception as err:
-        return Response({'error': str(err)})
-    return Response({'success': "DRONE REGISTERED"})
+        return Response(serializer.data, 201)
+    return Response(serializer.errors, 400)
 
 
 @api_view(['POST'])

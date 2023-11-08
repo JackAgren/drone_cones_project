@@ -6,4 +6,5 @@ urlpatterns = [
     path('add', views.add, name='new'),
     path('remove', views.remove, name='delete'),
     path('delivered', views.delivered, name='update'),
+    path('drone_earnings', views.get_drone_earnings, name='drone_earnings')
 ]

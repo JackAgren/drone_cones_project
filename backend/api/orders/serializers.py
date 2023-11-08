@@ -13,3 +13,10 @@ class OrdersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orders
         fields = ['id', 'userID', 'droneID', 'cones', 'location', 'timeOrdered', 'timeDelivered']
+
+
+class NewOrderSerializer(serializers.Serializer):
+    cones = ConesSerializer(many=True)
+    userID = serializers.CharField()
+    droneID = serializers.IntegerField()
+    location = serializers.CharField()
