@@ -3,7 +3,9 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from .serializers import InventorySerializer
 from .models import Inventory
-from datetime import datetime
+from datetime import date 
+from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 
 @api_view(['GET'])
@@ -46,21 +48,17 @@ def add_inventory(request):
         "description": "<DESCRIPTION>": String,
         "salesPrice": "<SALESPRICE>": Float,
         "costPerUnit": "<COSTPERUNIT>": Float,
-        "quantity": "<QUANTITY>": Float | Optional,
+        "quantity": "<QUANTITY>: Integer"
+        "category": "<CATEGORY>: String"
     }
     '''
-    try:
-        quantity = request.data['quantity'] if request.data['quantity'] else 0
-        Inventory.objects.create(description=request.data['description'],
-                                 salesPrice=request.data['salesPrice'],
-                                 costPerUnit=request.data['costPerUnit'],
-                                 category=request.data['category'],
-                                 quantity=quantity, dateFilled=datetime.now())
-        return Response({'success': 'ADDED'})
-    except KeyError:
-        return Response({'error': 'BAD REQUEST'})
-    except Exception as err:
-        return Response({'error': str(err)})
+    request.data.update({'quantity': 0})
+    request.data.update({'dateFilled': date.today()})
+    serializer = InventorySerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
 
 
 @api_view(['POST'])
@@ -72,14 +70,11 @@ def remove_inventory(request):
     BODY:
     { "description": "<DESCRIPTION>" }
     '''
-    try:
-        Inventory.objects.get(
-                description=request.data['description']).delete()
-        return Response({'success': 'DELETED'})
-    except KeyError:
-        return Response({'error': 'BAD REQUEST'})
-    except Exception as err:
-        return Response({'error': str(err)})
+    serializer = RemoveSerializer(data=request.data)
+    if serializer.is_valid():
+        get_object_or_404(Inventory, description=request.data['description']).delete()
+        return Response({'success': f"{request.data['description']} deleted."})
+    return Response(serializer.errors, status=400)
 
 
 @api_view(['POST'])

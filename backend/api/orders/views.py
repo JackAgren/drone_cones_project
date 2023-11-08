@@ -1,9 +1,12 @@
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from .serializers import OrdersSerializer
+from user.models import CustomUser
+from drone_operator.models import DroneInfo
+from .serializers import OrdersSerializer, NewOrderSerializer
 from .models import Orders, Cones
 from datetime import datetime
+from django.shortcuts import get_object_or_404, get_list_or_404
 import pytz
 
 
@@ -55,28 +58,31 @@ def add(request):
     }
 
     '''
-    try:
+    serializer = NewOrderSerializer(data=request.data)
+    if serializer.is_valid():
         cones = []
-        for data in request.data['cones']:
-            cone = Cones.objects.create(
-                        cone=data['cone'],
-                        iceCream=[data['iceCream']],
-                        toppings=[data['toppings']],
-                        cost=data['cost'],
-                        )
-            cones.append(cone.id)
+        total = 0
+        for cone in request.data["cones"]:
+            id = Cones.objects.create(
+                    toppings=cone['toppings'],
+                    cost=cone['cost'],
+                    cone=cone['cone']
+                    ).id
+            cones.append(id)
+            total += cone['cost']
+
+        userID = get_object_or_404(CustomUser, email=request.data['userID'])
+        droneID = get_object_or_404(DroneInfo, id=request.data['droneID'])
         order = Orders.objects.create(
-                userID=request.data['userID'],
-                droneID=request.data['droneID'],
+                userID=userID,
+                droneID=droneID,
                 location=request.data['location'],
                 timeOrdered=datetime.now(pytz.timezone('US/Mountain')),
-                cones=cones
+                cones=cones,
+                total=total
                 )
         return Response({'success': f"ORDER: #{order.id}"})
-    except KeyError:
-        return Response({'error': 'BAD REQUEST'})
-    except Exception as err:
-        return Response({'error': str(err)})
+    return Response(serializer.errors, status=400)
 
 
 @api_view(['POST'])
@@ -124,3 +130,15 @@ def order_search(request):
         return Response({'error': 'BAD REQUEST'})
     except Exception as err:
         return Response({'error': str(err)})
+
+
+@api_view(['GET'])
+def get_drone_earnings(request):
+    if 'droneID' in request.query_params:
+        drone = get_object_or_404(DroneInfo, id=request.query_params["droneID"])
+        orders = get_list_or_404(Orders, droneID=drone)
+        earnings = 0
+        for order in orders:
+            earnings += order.total
+        return Response({'earnings': f"{earnings}"})
+    return Response({'error': "BAD REQUEST"}, status=400)
