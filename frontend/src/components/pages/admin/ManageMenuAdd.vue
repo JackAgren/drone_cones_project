@@ -15,7 +15,7 @@
                 type="text"
                 placeholder="Enter item name"
                 id="itemNameInput"
-                v-model="itemNameInput"
+                v-model="itemName"
               />
             </div>
           </div>
@@ -72,8 +72,9 @@
 
         <div id="buttonArea">
           <VueButton
-            :class="{ 'button-disabled': !newSalesPrice || !newCostPerUnit || !itemType || !itemNameInput }"
-            :disabled="!newSalesPrice || !newCostPerUnit || !itemType || !itemNameInput"
+            :class="{ 'button-disabled': !newSalesPrice || !newCostPerUnit || !itemType || !itemName }"
+            :disabled="!newSalesPrice || !newCostPerUnit || !itemType || !itemName"
+            @click='addItem'
           >
             Add
           </VueButton>
@@ -103,10 +104,10 @@ components: {
 },
 data() {
   return {
-    newSalesPrice: null, // New data property
-    newCostPerUnit: null, // New data property for Cost per Unit
+    newSalesPrice: null,
+    newCostPerUnit: null,
     itemType: '',
-    itemNameInput: '',
+    itemName: '',
   };
 },
 
@@ -137,6 +138,37 @@ methods: {
   goBack() {
       this.$router.push({path: '/admin/manageMenu', query: {}})
     },
+
+
+  addItem() {
+  const options = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      description: this.itemName,
+      quantity: 0,
+      salesPrice: this.newSalesPrice,
+      costPerUnit: this.newCostPerUnit,
+      category: this.itemType
+      }),
+    };
+
+    fetch('http://localhost:8000/inventory/add', options)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Add successful:', data);
+      this.$router.push({path: '/admin/manageMenu', query: {}})
+    })
+    .catch(error => {
+      console.error('Add failed:', error);
+    });
+  },
+  
 },
 
   mounted() {

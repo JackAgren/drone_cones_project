@@ -166,11 +166,11 @@ methods: {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         description: this.itemName,
-        amount: this.quantityToPurchase,
+        quantity: this.quantityToPurchase,
         }),
       };
 
-      fetch('http://localhost:8000/inventory/increment', options)
+      fetch('http://localhost:8000/inventory/update_item', options)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -178,7 +178,6 @@ methods: {
         return response.json();
       })
       .then(data => {
-        console.log(this.quantityToPurchase);
         console.log('Restock successful:', data);
         // Handle successful restock here (e.g., show a success message, update UI)
         this.$router.push({path: '/admin/manageInventory', query: {}})

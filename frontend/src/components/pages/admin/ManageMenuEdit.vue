@@ -35,6 +35,7 @@
           <VueButton
             :class="{ 'button-disabled': isPriceLowerThanCost }"
             :disabled="isPriceLowerThanCost"
+            @click='updatePrice'
           >
             Apply
           </VueButton>
@@ -128,6 +129,39 @@ methods: {
       this.costPerUnit = this.formatCurrency(item.costPerUnit);
       this.salesPrice = this.formatCurrency(item.salesPrice);
   },
+
+
+  updatePrice() {
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        description: this.itemName,
+        salesPrice: this.newSalesPrice,
+        }),
+      };
+
+      fetch('http://localhost:8000/inventory/update_item', options)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Price Edit successful:', data);
+        this.$router.push({path: '/admin/manageMenu', query: {}})
+      })
+      .catch(error => {
+        console.error('Price Edit failed:', error);
+      });
+    },
+
+
+
+
+
+
 
 
 },

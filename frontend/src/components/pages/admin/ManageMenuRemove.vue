@@ -19,13 +19,13 @@
           <div id="actionContentArea">
             <div id="infoArea1">
               <p class="infoLabel">
-                Confirm removal of following item: Peanuts
+                Confirm removal of following item: {{ itemName }}
               </p>
             </div>
           </div>
 
           <div id="buttonArea">
-            <VueButton>Remove</VueButton>
+            <VueButton @click="removeItem">Remove</VueButton>
           </div>
         </div>
       </div>
@@ -52,7 +52,8 @@ components: {
 },
 data() {
   return {
-    newSalesPrice: null, // New data property
+    newSalesPrice: null,
+    itemName: '',
   }
 },
 
@@ -83,6 +84,60 @@ methods: {
   goBack() {
       this.$router.push({path: '/admin/manageMenu', query: {}})
     },
+
+    fetchItem() {
+      const itemName = this.$route.params.description;
+      fetch(`http://localhost:8000/inventory/inventory_search?description=${itemName}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.processItemData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
+    },
+
+    formatCurrency(value) {
+      return `$${parseFloat(value).toFixed(2)}`;
+    },
+
+    processItemData(itemData) {
+      if (!itemData || itemData.length === 0) return;
+      const item = itemData[0]; // Assuming the first item is the one we need
+      // Update the data properties with the item details
+      this.itemName = item.description;
+  },
+
+  removeItem() {
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        description: this.itemName,
+        }),
+      };
+
+      fetch('http://localhost:8000/inventory/remove', options)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Remove successful:', data);
+        this.$router.push({path: '/admin/manageMenu', query: {}})
+      })
+      .catch(error => {
+        console.error('Remove failed:', error);
+      });
+    },
+
 },
 
 computed: {
@@ -95,6 +150,7 @@ computed: {
   },
 
   mounted() {
+    this.fetchItem();
     // Add global click event listener
     document.addEventListener('click', this.deselectRow);
   },
