@@ -178,7 +178,7 @@ computed: {
       return {
           col1: index + 1, // Assuming the Item ID is the index + 1
           col2: item.description,
-          col3: "Unknown", // Replace "Unknown" with actual item type if available
+          col3: item.category,
           col4: this.formatCurrency(item.salesPrice), // Format cost per unit
           col5: item.quantity > 0 ? 'In Stock' : 'Out of Stock',
         };

@@ -77,7 +77,7 @@ components: {
 },
 data() {
   return {
-    quantityToPurchase: 0,
+    quantityToPurchase: null,
     restockCost: 0,
     tax: 0,
     totalCost: 0,
