@@ -134,17 +134,25 @@ computed: {
       this.$router.push({path: '/dashboard', query: {focus: `admin`}})
     },
     gotoAddMenuItem() {
-      this.$router.push({path: '/admin/manageMenu/add', query: {}})
+      this.$router.push({path: `/admin/manageMenu/add`});
     },
     gotoRemoveMenuItem() {
-      this.$router.push({path: '/admin/manageMenu/remove', query: {}})
+      const selectedItem = this.rows[this.selectedRowIndex];
+      const itemName = selectedItem ? selectedItem.col2 : ''; // Assuming col2 is the item name
+      this.$router.push({
+        path: `/admin/manageMenu/remove/${itemName}`
+      });
     },
     gotoEditMenuItem() {
-      this.$router.push({path: '/admin/manageMenu/edit', query: {}})
+      const selectedItem = this.rows[this.selectedRowIndex];
+      const itemName = selectedItem ? selectedItem.col2 : ''; // Assuming col2 is the item name
+      this.$router.push({
+        path: `/admin/manageMenu/edit/${itemName}`
+      });    
     },
     fetchMenu() {
     // Use your preferred method to fetch data, here's a fetch API example
-    fetch('http://localhost:8000/inventory/get_inventory')
+    fetch('http://localhost:8000/inventory/inventory_search?description=ALL')
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -170,7 +178,7 @@ computed: {
       return {
           col1: index + 1, // Assuming the Item ID is the index + 1
           col2: item.description,
-          col3: "Unknown", // Replace "Unknown" with actual item type if available
+          col3: item.category,
           col4: this.formatCurrency(item.salesPrice), // Format cost per unit
           col5: item.quantity > 0 ? 'In Stock' : 'Out of Stock',
         };

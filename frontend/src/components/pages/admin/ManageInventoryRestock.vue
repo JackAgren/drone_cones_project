@@ -9,10 +9,10 @@
 
         <div id="actionContentArea">
           <div id="infoArea1">
-            <p class="infoLabel">Item to restock: Vanilla Ice Cream</p>
-            <p class="infoLabel">Item Type: Ice Cream</p>
-            <p class="infoLabel">Current Quantity: 0 Gallons</p>
-            <p class="infoLabel">Cost per Unit: $5.67/Gallon</p>
+            <p class="infoLabel">Item to restock: {{ itemName }}</p> <!-- Binding itemName -->
+            <p class="infoLabel">Item Type: {{ itemType }}</p> <!-- Binding itemType -->
+            <p class="infoLabel">Current Quantity: {{ currentQuantity }} Gallons</p> <!-- Binding currentQuantity -->
+            <p class="infoLabel">Cost per Unit: {{ costPerUnit }}</p> <!-- Binding costPerUnit -->
           </div>
 
           <div id="inputArea1">
@@ -27,17 +27,17 @@
           </div>
 
           <div id="infoArea2">
-            <div class="infoWrapper">
-              <p class="infoLabel">Restock Cost:</p>
-              <p class="infoValue">$28.35</p>
-            </div>
-            <div class="infoWrapper">
-              <p class="infoLabel">Tax:</p>
-              <p class="infoValue">$0.86</p>
-            </div>
-            <div class="infoWrapper">
-              <p class="infoLabel">Total Cost:</p>
-              <p class="infoValue">$29.21</p>
+              <div class="infoWrapper">
+                <p class="infoLabel">Restock Cost:</p>
+                <p class="infoValue">{{ restockCost }}</p>
+              </div>
+              <div class="infoWrapper">
+                <p class="infoLabel">Tax:</p>
+                <p class="infoValue">{{ tax }}</p>
+              </div>
+              <div class="infoWrapper">
+                <p class="infoLabel">Total Cost:</p>
+                <p class="infoValue">{{ totalCost }}</p>
             </div>
           </div>
         </div>
@@ -46,10 +46,11 @@
           <VueButton
             :class="{ 'button-disabled': !quantityToPurchase }"
             :disabled="!quantityToPurchase"
-            @click="gotoRestock"
+            @click="restockItem"
           >
             Restock
           </VueButton>
+          
         </div>
       </div>
     </Background>
@@ -76,7 +77,22 @@ components: {
 },
 data() {
   return {
-    quantityToPurchase: null, // New data property
+    quantityToPurchase: null,
+    restockCost: 0,
+    tax: 0,
+    totalCost: 0,
+    itemName: '',
+    itemType: '',
+    currentQuantity: 0,
+    costPerUnit: 0,
+  }
+},
+
+watch: {
+  quantityToPurchase(newValue, oldValue) {
+    if (newValue !== oldValue) {
+      this.updateCosts();
+    }
   }
 },
 
@@ -87,15 +103,98 @@ methods: {
       event.preventDefault();
     }
   },
-  goBack() {
+    goBack() {
       this.$router.push({path: '/admin/manageInventory', query: {}})
     },
-    gotoRestock() {
-      this.$router.push({path: '/admin/manageInventory', query: {}})
+
+    fetchItem() {
+      const itemName = this.$route.params.description;
+      fetch(`http://localhost:8000/inventory/inventory_search?description=${itemName}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.processItemData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
     },
+
+    formatCurrency(value) {
+      return `$${parseFloat(value).toFixed(2)}`;
+    },
+
+    processItemData(itemData) {
+      if (!itemData || itemData.length === 0) return;
+      const item = itemData[0]; // Assuming the first item is the one we need
+      // Update the data properties with the item details
+      this.itemName = item.description;
+      this.itemType = item.category; // Assuming the type is available
+      this.currentQuantity = item.quantity;
+      this.costPerUnit = this.formatCurrency(item.costPerUnit);
+
+      // Assuming quantityToPurchase is defined and updated elsewhere in your component
+      const restockCost = this.quantityToPurchase * parseFloat(item.costPerUnit);
+      const taxRate = 0.03; // 3% tax rate for Utah
+      const tax = restockCost * taxRate;
+      const totalCost = restockCost + tax;
+
+      // Update the component's data properties
+      this.restockCost = this.formatCurrency(restockCost);
+      this.tax = this.formatCurrency(tax);
+      this.totalCost = this.formatCurrency(totalCost);
+  },
+
+  updateCosts() {
+      const restockCost = this.quantityToPurchase * parseFloat(this.costPerUnit.replace('$', ''));
+      const taxRate = 0.03; // Update tax rate as needed
+      const tax = restockCost * taxRate;
+      const totalCost = restockCost + tax;
+
+      this.restockCost = this.formatCurrency(restockCost);
+      this.tax = this.formatCurrency(tax);
+      this.totalCost = this.formatCurrency(totalCost);
+    },
+  
+    restockItem() {
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        description: this.itemName,
+        quantity: this.quantityToPurchase,
+        }),
+      };
+
+      fetch('http://localhost:8000/inventory/update_item', options)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Restock successful:', data);
+        // Handle successful restock here (e.g., show a success message, update UI)
+        this.$router.push({path: '/admin/manageInventory', query: {}})
+      })
+      .catch(error => {
+        console.error('Restock failed:', error);
+        // Handle errors here (e.g., show an error message)
+      });
+    },
+
+  
+
+
 },
 
   mounted() {
+    this.fetchItem();
     // Add global click event listener
     document.addEventListener('click', this.deselectRow);
   },
