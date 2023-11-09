@@ -30,9 +30,6 @@ import Background from '@/components/Background.vue'
 import VueButton from '@/components/Button.vue'
 import VueBackButton from '@/components/BackButton.vue'
 
-// var earnings = this.fetchInventory()
-
-
 export default {
 name: 'DroneEarnings',
 components: {
@@ -52,21 +49,27 @@ components: {
       this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
     },
     fetchEarnings() {
-      // this.earnings = "none"
-      // fetch('http://localhost:8000/drone_operator/get_all_owned_drones')
-      //   .then(response => {
-      //     if (!response.ok) {
-      //       throw new Error('Network response was not ok');
-      //     }
-      //   })
-      //   .then(data => {
-      //     this.earnings = "ew";
-      //   })
-      // .catch(error => {
-      //   console.error('There has been a problem with your fetch operation:', error);
-      // });
-      return "5"
-    }
+      fetch('http://localhost:8000/drone_operator/get_all_owned_drones')
+        .then(response => {
+          return response.json();
+        });
+    },
+    // fetchEarnings() {
+    //   let all_drones = "e"
+    //   fetch('http://localhost:8000/drone_operator/get_all_owned_drones')
+    //     .then(response => {
+    //       all_drones = "apple"
+    //       if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //       }
+    //       let ew = "AHHHH";
+    //       return ew
+    //     })
+    //     .catch(error => {
+    //       console.error('There has been a problem with your fetch operation:', error);
+    //     });
+    //     return all_drones
+    // }
   }
 }
 </script>
