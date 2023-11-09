@@ -3,7 +3,7 @@
     <img id="headerLogo" src="@/assets/headerLogo.png" />
     <div id="loginButtonArea" @click="toggleDropdown">
       <p class="headerText" id="usernameTag"
-      @click="isLoggedIn ? null : gotoLogin()">
+         @click="isLoggedIn ? null : gotoLogin()">
         {{ isLoggedIn ? username : 'Login' }}
       </p>
       <img
@@ -12,7 +12,6 @@
         :class="{ 'flipped': showDropdown }"
         src="@/assets/downTriangle.png"
       />
-      <!-- Dropdown Menu with Transition -->
       <transition name="expand">
         <div v-if="showDropdown" class="dropdown">
           <div class="headerText dropdownText" @click.stop="logout">Logout</div>
@@ -23,13 +22,14 @@
   </div>
 </template>
 
+
 <script>
 export default {
   name: 'AppHeader',
   data() {
     return {
       isLoggedIn: false,
-      username: 'Fred_Rodgers',
+      username: '',
       showDropdown: false
     };
   },
@@ -42,11 +42,28 @@ export default {
     logout() {
       this.isLoggedIn = false;
       this.showDropdown = false;
+      // Remove token and userEmail from localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('userEmail');
+      this.$router.push({path: '/'})
     },
+
     gotoLogin() {
       this.$router.push({path: '/login', query: {}})
     },
+  },
+
+  mounted() {
+  const token = localStorage.getItem('token');
+  if (token) {
+    this.isLoggedIn = true;
+    // Retrieve the stored email and update the username
+    const storedEmail = localStorage.getItem('userEmail');
+    if (storedEmail) {
+      this.username = storedEmail;
+    }
   }
+},
 };
 </script>
 
