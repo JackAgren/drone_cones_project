@@ -3,11 +3,12 @@
     <Background>
       <div id="tableContentArea">
         <div id="backButtonArea">
-          <VueBackButton id="backButton" @click="goBack"/>
+          <VueBackButton id="backButton" @click="goBack" />
           <p id="contentHeader">Login</p>
         </div>
 
-        <div id="actionContentArea">
+        <div v-if="!isLoggingIn" id="actionContentArea">
+          <!-- Email Input -->
           <div class="inputArea">
             <p>Email</p>
             <div class="input-wrapper2">
@@ -19,6 +20,7 @@
             </div>
           </div>
 
+          <!-- Password Input -->
           <div class="inputArea">
             <p>Password</p>
             <div class="input-wrapper2">
@@ -28,28 +30,33 @@
                 v-model="password"
               />
             </div>
+            <p v-if="loginError" class="errorText">{{ loginError }}</p>
+          </div>
+
+          <!-- Login Button -->
+          <div id="buttonArea2">
+            <VueButton
+              :class="{ 'button-disabled': !isFormComplete }"
+              :disabled="!isFormComplete"
+              @click="login"
+            >
+              Login
+            </VueButton>
+          </div>
+
+          <!-- Register Button -->
+          <div id="buttonArea1">
+            <VueButton @click="gotoRegister"> Register </VueButton>
+          </div>
+
+          <!-- Forgot Password Link -->
+          <div class="normalText">
+            <NoBackButton> Forgot Password? </NoBackButton>
           </div>
         </div>
-        <div id="buttonArea2">
-          <VueButton
-            :class="{ 'button-disabled': !isFormComplete }"
-            :disabled="!isFormComplete"
-            @click="gotoDashboard"
-          >
-            Login
-          </VueButton>
-        </div>
 
-        <div id="buttonArea1">
-          <VueButton
-          @click="gotoRegister">
-            Register
-          </VueButton>
-        </div>
-        <div class="normalText">
-          <NoBackButton>
-            Forgot Password?
-          </NoBackButton>
+        <div v-else class="processingContent">
+          <p>Processing . . .</p>
         </div>
       </div>
     </Background>
@@ -60,47 +67,87 @@
 import '@/assets/style.css';
 import AppHeader from '@/components/Header.vue';
 import AppFooter from '@/components/Footer.vue';
-import Background from '@/components/Background.vue'
-import VueButton from '@/components/Button.vue'
-import NoBackButton from '@/components/NoBackgroundButton.vue'
-import VueBackButton from '@/components/BackButton.vue'
+import Background from '@/components/Background.vue';
+import VueButton from '@/components/Button.vue';
+import NoBackButton from '@/components/NoBackgroundButton.vue';
+import VueBackButton from '@/components/BackButton.vue';
 
 export default {
-name: 'LoginContent',
-components: {
-  AppHeader,
-  AppFooter,
-  Background,
-  VueButton,
-  NoBackButton,
-  VueBackButton,
-},
-data() {
+  name: 'LoginContent',
+  components: {
+    AppHeader,
+    AppFooter,
+    Background,
+    VueButton,
+    NoBackButton,
+    VueBackButton
+  },
+  data() {
     return {
-        accountType: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
+      email: '',
+      password: '',
+      loginError: '',
+      isLoggingIn: false,
     };
   },
-  methods: {
-  gotoDashboard() {
-      this.$router.push({path: '/dashboard', query: {}})
-    },
-  gotoRegister() {
-    this.$router.push({path: '/register', query: {}})
-    },
-  goBack() {
-    this.$router.push({path: '/', query: {}})
-    },
-  },
   computed: {
-  isFormComplete() {
-    return this.email !== '' && this.password !== '';
+    isFormComplete() {
+      return this.email !== '' && this.password !== '';
+    }
+  },
+  methods: {
+    gotoRegister() {
+      this.$router.push({ path: '/register' });
+    },
+    goBack() {
+      this.$router.push({ path: '/' });
+    },
+    login() {
+      this.isLoggingIn = true;
+      this.loginError = '';
+
+      const loginData = {
+        email: this.email,
+        password: this.password,
+      };
+
+      const options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginData),
+      };
+
+      fetch('http://localhost:8000/user/login', options)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.token) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userEmail', this.email);
+            this.$router.push({ path: '/dashboard' });
+          }
+        })
+        .catch(error => {
+          console.error('Login failed:', error);
+          this.loginError = 'Invalid email or password. Please try again.';
+          this.isLoggingIn = false; // Reset the login state on failure
+        });
+    }
+  },
+  mounted() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.$router.push({ path: '/dashboard' });
+    }
   }
-},
 };
 </script>
+
+<!-- Style remains unchanged -->
 
 <style scoped>
 .tablePageContent {
@@ -130,7 +177,7 @@ data() {
   margin-left: auto;
   margin-right: auto;
   z-index: 1;
-  height: 450px;
+  height: 470px;
   width: 550px;
 }
 
@@ -148,8 +195,8 @@ data() {
   align-items: center;
   grid-column: 2/3;
   width: 400px;
-  left: -90px;
-  top: 330px;
+  left: -15px;
+  top: 340px;
 }
 
 #buttonArea2 {
@@ -159,8 +206,8 @@ data() {
   align-items: center;
   grid-column: 2/3;
   width: 400px;
-  right: -90px;
-  top: 330px;
+  right: -50px;
+  top: 340px;
 }
 
 #tableArea {
@@ -238,7 +285,8 @@ th {
   justify-content: center;
   align-items: center;
   grid-column: 2/3;
-  top: 110px;
+  top: 115px;
+  right: 20px;
 }
 
 .infoLabel {
@@ -282,7 +330,7 @@ input {
   border-radius: 25px; /* Makes the input corners rounded */
   padding: 10px 20px; /* Padding to make it look like a capsule */
   width: auto; /* Auto width to fit content */
-  min-width: 300px; /* Minimum width to fit placeholder text */
+  min-width: 400px; /* Minimum width to fit placeholder text */
   background-color: rgb(29, 29, 29); /* Sets the background color to black */
   color: white; /* Sets the input text color to white */
   font-family: sans-serif;
@@ -357,5 +405,23 @@ input:hover {
   transform: translate(283px, 2px);
   z-index: 1;
   pointer-events: none;
+}
+
+.errorText {
+  position: absolute;
+  color: red;
+  font-size: 14px;
+  padding-left: 20px;
+}
+
+.processingContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Adjust as needed */
+  font-size: 30px;
+  color: white;
+  padding-bottom: 80px;
+  user-select: none;
 }
 </style>
