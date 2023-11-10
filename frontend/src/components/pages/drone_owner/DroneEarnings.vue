@@ -6,13 +6,10 @@
           <VueBackButton id="backButton" @click="goBack" />
           <p id="contentHeader">Earnings</p>
         </div>
-
+        {{fetchEarnings()}}
         <div>
-          <!-- <script>
-            var earnings = this.fetchInventory()
-          </script> -->
           <div id="infoArea">
-            <p>Earnings to Date: ${{this.fetchEarnings()}}</p>
+            <p>Earnings to Date: ${{this.earnings}}</p>
           </div>
 
         </div>
@@ -41,7 +38,7 @@ components: {
 },
   data() {
     return {
-      earnings: "",
+      earnings: "111",
     }
   },
   methods: {
@@ -49,27 +46,13 @@ components: {
       this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
     },
     fetchEarnings() {
+      // updates this.earnings
       fetch('http://localhost:8000/drone_operator/get_all_owned_drones')
+        .then(response => response.json())
         .then(response => {
-          return response.json();
+          this.earnings = response
         });
     },
-    // fetchEarnings() {
-    //   let all_drones = "e"
-    //   fetch('http://localhost:8000/drone_operator/get_all_owned_drones')
-    //     .then(response => {
-    //       all_drones = "apple"
-    //       if (!response.ok) {
-    //         throw new Error('Network response was not ok');
-    //       }
-    //       let ew = "AHHHH";
-    //       return ew
-    //     })
-    //     .catch(error => {
-    //       console.error('There has been a problem with your fetch operation:', error);
-    //     });
-    //     return all_drones
-    // }
   }
 }
 </script>
