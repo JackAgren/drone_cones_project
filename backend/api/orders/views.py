@@ -10,7 +10,6 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 import pytz
 
 
-# Create your views here.
 @api_view(['POST'])
 def delivered(request):
     '''
@@ -113,11 +112,11 @@ def order_search(request):
         if 'order' in request.query_params:
             query = Orders.objects.all().filter(id=request.query_params['order'])
         elif 'userID' in request.query_params:
-            query = Orders.objects.all().filter(userID=request.query_params['userID'])
+            query = Orders.objects.all().filter(userID=get_object_or_404(CustomUser, email=request.query_params['userID']))
         elif 'droneID':
-            query = Orders.objects.all().filter(userID=request.query_params['droneID'])
+            query = Orders.objects.all().filter(droneID=get_object_or_404(DroneInfo, id=request.query_params['droneID']))
         elif 'location':
-            query = Orders.objects.all().filter(userID=request.query_params['location'])
+            query = Orders.objects.all().filter(location=request.query_params['location'])
 
         for order in query:
             cones = []
@@ -139,6 +138,6 @@ def get_drone_earnings(request):
         orders = get_list_or_404(Orders, droneID=drone)
         earnings = 0
         for order in orders:
-            earnings += order.total
+            earnings += order.total * .10
         return Response({'earnings': f"{earnings}"})
     return Response({'error': "BAD REQUEST"}, status=400)

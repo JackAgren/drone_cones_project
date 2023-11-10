@@ -107,7 +107,7 @@
           <VueButton
             :class="{ 'button-disabled': !isFormComplete }"
             :disabled="!isFormComplete"
-            @click="gotoDashboard"
+            @click="addUser"
           >
             Register
           </VueButton>
@@ -175,15 +175,58 @@ methods: {
   goBack() {
     this.$router.push({path: '/', query: {}})
   },
-  gotoDashboard() {
-    this.$router.push({path: '/dashboard', query: {}})
+  
+
+  addUser() {
+
+ // Construct the data object to send
+ const userData = {
+    email: this.email,
+    password: this.password,
+    confirmPassword: this.confirmPassword,
+    address: this.address,
+    city: this.city,
+    state: this.state,
+    zip: this.zip,
+    accountType: this.accountType
+  };
+
+  // Set up the options for the fetch request
+  const options = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData)
+  };
+
+    fetch('http://localhost:8000/user/create_account', options)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Registration successful:', data);
+
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
+
+      this.$router.push({path: '/dashboard', query: {}})
+    })
+    .catch(error => {
+      console.error('Registration failed:', error);
+    });
   },
+
 },
 
 computed: {
   isFormComplete() {
-    return this.email && this.password && this.confirmPassword && this.accountType !== ''
-      && this.address && this.city && this.state && this.zip;
+        return this.email && this.password && this.confirmPassword &&
+           this.password === this.confirmPassword && // Check if passwords match
+           this.accountType !== '' && this.address &&
+           this.city && this.state && this.zip;
   },
 },
 

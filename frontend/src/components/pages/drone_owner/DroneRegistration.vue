@@ -48,7 +48,7 @@
             Activate
           </VueButton>
         </div>
-        <div id="buttonArea2">
+        <div id="buttonArea2" @click="register_new">
           <WideButton>
             Register new drone
           </WideButton>
@@ -122,7 +122,9 @@ computed: {
     selectRow(index) {
       this.selectedRowIndex = index;
     },
-
+    register_new() {
+      this.$router.push({path: '/drone/registration/new', query: {}})
+    },
     deselectRow(event) {
       // Get the clicked element
       const clickedElement = event.target;
