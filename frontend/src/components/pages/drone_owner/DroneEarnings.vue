@@ -6,10 +6,10 @@
           <VueBackButton id="backButton" @click="goBack" />
           <p id="contentHeader">Earnings</p>
         </div>
-
+        {{fetchEarnings()}}
         <div>
           <div id="infoArea">
-            <p>Earnings to Date: $73.13</p>
+            <p>Earnings to Date: ${{this.earnings}}</p>
           </div>
 
         </div>
@@ -27,7 +27,6 @@ import Background from '@/components/Background.vue'
 import VueButton from '@/components/Button.vue'
 import VueBackButton from '@/components/BackButton.vue'
 
-
 export default {
 name: 'DroneEarnings',
 components: {
@@ -39,12 +38,20 @@ components: {
 },
   data() {
     return {
-      quantityToPurchase: null, // New data property
+      earnings: "111",
     }
   },
   methods: {
     goBack() {
       this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
+    },
+    fetchEarnings() {
+      // updates this.earnings
+      fetch('http://localhost:8000/drone_operator/get_all_owned_drones')
+        .then(response => response.json())
+        .then(response => {
+          this.earnings = response
+        });
     },
   }
 }
