@@ -6,5 +6,6 @@ urlpatterns = [
     path('add', views.add, name='new'),
     path('remove', views.remove, name='delete'),
     path('delivered', views.delivered, name='update'),
-    path('drone_earnings', views.get_drone_earnings, name='drone_earnings')
+    path('drone_earnings', views.get_drone_earnings, name='drone_earnings'),
+    path('company_balance', views.get_company_balance, name='company_balance')
 ]
