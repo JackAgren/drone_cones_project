@@ -45,6 +45,8 @@
 import Background from "@/components/Background.vue";
 import VueButton from "@/components/Button.vue";
 
+const SERVER_URL = "http://localhost:8000/"
+
 export default {
   name: 'OrderHistory',
   components: {
@@ -77,6 +79,26 @@ export default {
     if (this.$route.query.cart) {
       this.cart = JSON.parse(this.$route.query.cart);
     }
+
+    const id = localStorage.getItem('userEmail');
+    const token = localStorage.getItem('token');
+
+    fetch(SERVER_URL + `orders/order_search?userID=${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      }
+        })
+        .then(res => {
+          return res.json();
+        })
+        .then(resp => {
+          console.log(resp);
+        })
+        .catch(err => {
+          console.log(`An error occurred: ${err}`);
+        });
   },
   methods: {
     getTitle(name, qty) {
