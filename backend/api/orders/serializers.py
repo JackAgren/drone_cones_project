@@ -5,7 +5,7 @@ from .models import Orders, Cones
 class ConesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cones
-        fields = ['id', 'cone', 'toppings', 'cost',]
+        fields = ['id', 'cone', 'toppings', 'iceCream', 'cost',]
 
 
 class OrdersSerializer(serializers.ModelSerializer):

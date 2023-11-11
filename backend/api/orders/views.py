@@ -5,12 +5,13 @@ from user.models import CustomUser
 from drone_operator.models import DroneInfo
 from .serializers import OrdersSerializer, NewOrderSerializer
 from .models import Orders, Cones
+from inventory.models import Inventory
 from datetime import datetime
 from django.shortcuts import get_object_or_404, get_list_or_404
 import pytz
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def delivered(request):
     '''
     ** Updates time delivered to time when function was called **
@@ -36,7 +37,7 @@ def delivered(request):
     return Response({'success': 'UPDATE SUCCESS'})
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def add(request):
     '''
     ./orders/add
@@ -64,6 +65,7 @@ def add(request):
         for cone in request.data["cones"]:
             id = Cones.objects.create(
                     toppings=cone['toppings'],
+                    iceCream=cone['iceCream'],
                     cost=cone['cost'],
                     cone=cone['cone']
                     ).id
@@ -84,7 +86,7 @@ def add(request):
     return Response(serializer.errors, status=400)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def remove(request):
     '''
     ./orders/remove
@@ -103,7 +105,7 @@ def remove(request):
         return Response({'error': str(err)})
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def order_search(request):
     '''
 
@@ -131,7 +133,7 @@ def order_search(request):
         return Response({'error': str(err)})
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_drone_earnings(request):
     if 'droneID' in request.query_params:
         drone = get_object_or_404(DroneInfo, id=request.query_params["droneID"])
@@ -141,3 +143,21 @@ def get_drone_earnings(request):
             earnings += order.total * .10
         return Response({'earnings': f"{earnings}"})
     return Response({'error': "BAD REQUEST"}, status=400)
+
+@api_view(["GET"])
+def get_company_balance(request):
+    orders = get_list_or_404(Orders)
+    inventory = get_list_or_404(Inventory)
+    earnings = 0
+    expenses = 0
+    for order in orders:
+        earnings += order.total
+
+    for item in inventory:
+        expenses += item.costPerUnit * item.quantity
+
+    return Response({
+        "earnings": earnings,
+        "expenses": expenses,
+        "balance": earnings - expenses
+        })
