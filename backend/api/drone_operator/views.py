@@ -10,6 +10,15 @@ from django.shortcuts import get_object_or_404
 
 @api_view(['POST'])
 def register_drone(request):
+    '''
+    ./drone_operator/register_drone
+
+    {
+    "ownerID": <ID>,
+    "size": <size>,
+    status: <status>
+    }
+    '''
     serializer = RegisterDroneSerializer(data=request.data)
     if serializer.is_valid():
         user = get_object_or_404(CustomUser, email=request.data["ownerID"])
@@ -24,19 +33,50 @@ def register_drone(request):
 
 @api_view(['POST'])
 def update_status(request):
-    return Response({'Response': 'UPDATE_CONFIRMATION'})
+    '''
+        ./drone_operator/update_status
+        BODY:
+        {
+        "droneID": <id>, 
+        "status": <new status> 
+        }
+    '''
+    serializer = RegisterDroneSerializer(data=request.data)
+    if serializer.is_valid():
+        object = DroneInfo.objects.get(id = request.data["droneID"])
+        setattr(object, 'status', request.data["status"])
+        return Response({'success': f'Drone {request.droneID}\'s status is now {object.status}'})
+    return Response(serializer.errors, status=400)
 
 
 @api_view(['GET'])
 def get_status(request):
-    return Response({'Response': 'DRONE_STATUS'})
+    serializer = RegisterDroneSerializer(data=request.data)
+    if serializer.is_valid():
+        object = DroneInfo.objects.get(id = request.data["droneID"])
+        return Response({'status': f'{object.status}'})
+    return Response(serializer.errors, status=400)
 
 
 @api_view(['POST'])
 def decomission_drone(request):
-    return Response({'Response': 'DECOMISSION_CONFIRMATION'})
+    serializer = RegisterDroneSerializer(data=request.data)
+    if serializer.is_valid():
+        object = DroneInfo.objects.get(id = request.data["droneID"])
+        object.delete()
+        return Response({'success': f'Drone {request.droneID}\'s has been decommissioned.'})
+    return Response(serializer.errors, status=400)
 
 
 @api_view(['GET'])
 def get_all_owned_drones(request):
-    return Response({'Response': 'ALL_OWNED_DRONES'})
+    '''
+    {
+    'ownerID': <Owner Email>
+    }
+    '''
+    serializer = RegisterDroneSerializer(data=request.data)
+    if serializer.is_valid():
+        all_drones = DroneInfo.objects.filter(ownerID = request.data['ownerID'])
+        return Response(serializer(all_drones, many=True).data)
+    return Response(serializer.errors, status=400)

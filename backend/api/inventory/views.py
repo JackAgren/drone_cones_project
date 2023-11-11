@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from .serializers import InventorySerializer
+from .serializers import InventorySerializer, RemoveSerializer
 from .models import Inventory
 from datetime import date 
 from rest_framework import status

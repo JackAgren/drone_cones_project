@@ -6,3 +6,6 @@ class InventorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Inventory
         fields = ['quantity', 'costPerUnit', 'category', 'dateFilled', 'description', 'salesPrice']
+
+class RemoveSerializer(serializers.Serializer):
+    description = serializers.CharField()
