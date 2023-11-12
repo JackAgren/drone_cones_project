@@ -43,10 +43,11 @@ export default {
   created() {
     let numOfSections = TOTAL_TIME / UPDATE_RATE;
     let sectionLength = (TOTAL_TIME / numOfSections /*in minutes*/) * 60 * 1000; //into milliseconds
+    const orderID = this.$route.query.id;
     this.doTheWait(numOfSections, sectionLength)
         .then((resp) => {
           console.log(resp);
-          this.$router.push({path: '/customer/arrived', query: {}});
+          this.$router.push({path: '/customer/arrived', query: {id: orderID}});
         });
   },
   methods: {
