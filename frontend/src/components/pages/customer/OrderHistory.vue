@@ -18,7 +18,7 @@
         <tr v-for="item in orderHistory">
           <td style="padding-top: 20px;">
             <span style="font-weight: normal">{{item.order_date}} &nbsp;&nbsp;&nbsp;&nbsp;</span>
-            {{ item.qty }} {{ getTitle(item.name, item.qty) }} &nbsp;&nbsp;&nbsp;&nbsp; {{ Math.round(item.price * item.qty) / 100 }}
+            {{ item.qty }} {{ getTitle(item.name, item.qty) }} &nbsp;&nbsp;&nbsp;&nbsp; ${{ Math.round(item.price * item.qty) }}
             <br>
             <ul class="details" v-for="detail in formatDetails(item.details)">
               <li>{{ detail }}</li>
@@ -55,23 +55,7 @@ export default {
   },
   data() {
     return {
-      orderHistory: [
-        {name: 'Berry Blast cone', price: 259, qty: 2, order_date: '01-01-2000'},
-        {name: 'CYO cone', price: 499, qty: 1, order_date: '01-01-2000', details: {
-            cone: 'waffle', scoops: ['chocolate', 'strawberry'], toppings: ['sprinkles']
-          }
-        },
-        {name: 'Strawberry cheesecake cone', price: 259, qty: 1, order_date: '01-01-2000'},
-        {name: "S'mores cone", price: 259, qty: 1, order_date: '01-01-2000'},
-        {name: 'CYO cone', price: 499, qty: 1, order_date: '01-01-2000', details: {
-            cone: 'waffle', scoops: ['chocolate', 'strawberry'], toppings: ['sprinkles']
-          }
-        },
-        {name: 'CYO cone', price: 499, qty: 1, order_date: '01-01-2000', details: {
-            cone: 'waffle', scoops: ['chocolate', 'strawberry'], toppings: ['sprinkles']
-          }
-        },
-      ],
+      orderHistory: [],
       cart: [],
     }
   },
@@ -94,7 +78,25 @@ export default {
           return res.json();
         })
         .then(resp => {
-          console.log(resp);
+
+          for (let i = 0; i < resp.length; i++) {
+            const date = new Date(resp[i].timeOrdered);
+            for (let j = 0; j < resp[i].cones.length; j++) {
+              const thisCone = resp[i].cones[j];
+              this.orderHistory.push({
+                name: "CYO cone",
+                price: thisCone.cost,
+                qty: 1,
+                order_date: date.toLocaleDateString(),
+                details: {
+                  cone: thisCone.cone,
+                  scoops: ['??'],
+                  toppings: thisCone.toppings
+                }
+              });
+            }
+          }
+
         })
         .catch(err => {
           console.log(`An error occurred: ${err}`);

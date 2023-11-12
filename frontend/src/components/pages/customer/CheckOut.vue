@@ -20,7 +20,7 @@
               <li>{{ detail }}</li>
             </ul>
           </td>
-          <td class="price">{{ Math.round(item.price * item.qty) / 100 }}</td>
+          <td class="price">{{ Math.round(item.price * item.qty) }}</td>
         </tr>
 
         <tr class="taxBox">
@@ -71,12 +71,7 @@ export default {
   },
   data() {
     return {
-      orderInfo: [
-        {name: 'Berry Blast cone', price: 259, qty: 2},
-        {name: 'CYO cone', price: 499, qty: 1, details: {
-          cone: 'waffle', scoops: ['chocolate', 'strawberry'], toppings: ['sprinkles']
-          }}
-      ]
+      orderInfo: []
     }
   },
   created() {
@@ -124,7 +119,7 @@ export default {
     },
     tax() {
       let theTax = SALES_TAX_RATE * this.subTotal();
-      return Math.round(theTax * 100) / 100;
+      return Math.round(theTax * 100);
     },
   },
 }
