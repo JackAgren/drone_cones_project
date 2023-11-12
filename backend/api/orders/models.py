@@ -4,7 +4,7 @@ from django.contrib.postgres.fields import ArrayField
 
 class Cones(models.Model):
     cone = models.CharField(max_length=25)
-    iceCream = models.CharField(max_length=25) #number of scoops = size of iceCream
+    iceCream = ArrayField(models.CharField(max_length=25))
     toppings = ArrayField(models.CharField(max_length=25))
     cost = models.FloatField()
 

@@ -46,7 +46,7 @@ def add(request):
         "cones": [
             {
             "cone": <CONE TYPE>: String,
-            "iceCream": <ICE CREAM>: String,
+            "iceCream": [<ICE CREAM>: String,...],
             "toppings": [<TOPPINGS>: String,...],
             "cost": <COST>: Float
             },
