@@ -45,7 +45,7 @@
 import Background from "@/components/Background.vue";
 import VueButton from "@/components/Button.vue";
 
-const SERVER_URL = "http://localhost:8000/"
+const SERVER_URL = "http://localhost:8000/";
 
 export default {
   name: 'OrderHistory',
@@ -78,6 +78,8 @@ export default {
           return res.json();
         })
         .then(resp => {
+
+          console.log(resp);
 
           for (let i = 0; i < resp.length; i++) {
             const date = new Date(resp[i].timeOrdered);

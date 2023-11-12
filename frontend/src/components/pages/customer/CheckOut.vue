@@ -20,7 +20,7 @@
               <li>{{ detail }}</li>
             </ul>
           </td>
-          <td class="price">{{ Math.round(item.price * item.qty) }}</td>
+          <td class="price">{{ Math.round(item.price * item.qty * 100) / 100 }}</td>
         </tr>
 
         <tr class="taxBox">
@@ -48,7 +48,14 @@
 
     <div class="address-field">
       <p style="display: inline-block; font-weight: normal">&nbsp;&nbsp;Delivery address &nbsp;&nbsp;</p>
-      <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+      <input
+          type="text"
+          class="form-control"
+          aria-label="Small"
+          aria-describedby="inputGroup-sizing-sm"
+          autocomplete="off"
+          v-model.lazy.trim="address"
+      >
     </div>
 
     <VueButton @click="placeOrder" class="order-button">Purchase & Place Order</VueButton>
@@ -62,6 +69,7 @@ import Background from "@/components/Background.vue";
 import VueButton from "@/components/Button.vue";
 
 const SALES_TAX_RATE = .07; //source: https://www.avalara.com/taxrates/en/state-rates/utah/cities/logan.html
+const SERVER_URL = "http://localhost:8000/";
 
 export default {
   name: 'Checkout',
@@ -71,7 +79,8 @@ export default {
   },
   data() {
     return {
-      orderInfo: []
+      orderInfo: [],
+      address: '',
     }
   },
   created() {
@@ -87,8 +96,55 @@ export default {
       this.$router.push({path: '/customer/history', query: {cart: JSON.stringify(this.orderInfo)}})
     },
     placeOrder() {
-      //TODO: place order
-      this.$router.push({path: '/customer/track-order', query: {}})
+
+      if (this.address === "") {
+        alert("You must input a delivery address to place your order.");
+        return;
+      }
+
+      const id = localStorage.getItem('userEmail');
+      const token = localStorage.getItem('token');
+
+      const body = {
+        cones: [],
+        userID: id,
+        droneID: 1,
+        location: this.address,
+      }
+
+      for (let i = 0; i < this.orderInfo.length; i++) {
+        for (let j = 0; j < this.orderInfo[i].qty; j++) {
+          body.cones.push({
+            cone: this.orderInfo[i].details.cone,
+            toppings: this.orderInfo[i].details.toppings,
+            iceCream: '??',
+            cost: this.orderInfo[i].price,
+          });
+        }
+      }
+
+      console.log(body);
+
+      fetch(SERVER_URL + `orders/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`
+        },
+        body: JSON.stringify(body)
+      })
+          .then(res => {
+            return res.json();
+          })
+          .then(resp => {
+
+            const orderID = resp.success.slice(resp.success.lastIndexOf("#") + 1);
+            console.log(orderID);
+            this.$router.push({path: '/customer/track-order', query: {id: orderID}})
+          })
+          .catch(err => {
+            console.log(`An error occurred: ${err}`);
+          });
     },
     formatDetails(details) {
       if (details === undefined) {
@@ -115,11 +171,11 @@ export default {
       for (let i = 0; i < this.orderInfo.length; i++) {
         subTotal += (this.orderInfo[i].price * this.orderInfo[i].qty);
       }
-      return Math.round(subTotal) / 100;
+      return Math.round(subTotal * 100) / 100;
     },
     tax() {
       let theTax = SALES_TAX_RATE * this.subTotal();
-      return Math.round(theTax * 100);
+      return Math.round(theTax * 100) / 100;
     },
   },
 }
