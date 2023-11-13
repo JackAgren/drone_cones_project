@@ -1,90 +1,60 @@
 <template>
-  <header class="tablePageContent">
-    <Background>
-      <div id="tableContentArea">
-        <div id="backButtonArea">
-          <VueBackButton id="backButton" @click="goBack"/>
-          <p id="contentHeader">Edit Account Status</p>
+  <div id="standardLayout">
+    <AppHeader />
+    <header class="tablePageContent">
+      <div id="pageContent">
+        <div id="cloudsArea">
+          <img id="clouds1" src="@/assets/clouds1.png" />
+          <img id="clouds2" src="@/assets/clouds2.png" />
+          <img id="clouds3" src="@/assets/clouds3.png" />
+          <img id="clouds4" src="@/assets/clouds1.png" />
         </div>
 
-        <div id="actionContentArea">
-          <div id="infoArea1">
-            <p class="infoLabel">Current User ID: {{ userID }}</p>
-            <p class="infoLabel">email: {{ userEmail }}</p>
+        <div id="tableContentArea">
+          <div id="backButtonArea">
+            <VueBackButton id="backButton" @click="goBack" />
+            <p id="contentHeader">Remove</p>
           </div>
 
-          <div class="inputArea">
-            <p>Account Type</p>
-            <div class="input-wrapper3">
-              <img id="downIcon" src="@/assets/downTriangle.png" />
-              <select
-                v-model="accountType"
-                :class="{ 'placeholder-color': !accountType }"
-                class="dropdown"
-              >
-                <option disabled value="">Select account type</option>
-                <option>Customer</option>
-                <option>Drone Owner</option>
-                <option>Admin</option>
-              </select>
+          <div id="actionContentArea">
+            <div id="infoArea1">
+              <p class="infoLabel">
+                Confirm removal of following user account: {{ userEmail }}
+              </p>
             </div>
           </div>
 
-          <div class="inputArea">
-            <p>Account Status</p>
-            <div class="input-wrapper3">
-              <img id="downIcon" src="@/assets/downTriangle.png" />
-              <select
-                v-model="accountStatus"
-                :class="{ 'placeholder-color': !accountStatus }"
-                class="dropdown"
-              >
-                <option disabled value="">Select account status</option>
-                <option>Active</option>
-                <option>Banned</option>
-              </select>
-            </div>
+          <div id="buttonArea">
+            <VueButton @click="removeUser">Remove</VueButton>
           </div>
-        </div>
-
-        <div id="buttonArea">
-          <VueButton
-            :class="{ 'button-disabled': !accountType || !accountStatus }"
-            :disabled="!accountType || !accountStatus"
-          >
-            Apply
-          </VueButton>
         </div>
       </div>
-    </Background>
-  </header>
+    </header>
+    <AppFooter />
+  </div>
 </template>
 
 <script>
 import '../../../assets/style.css';
 import AppHeader from '@/components/Header.vue';
 import AppFooter from '@/components/Footer.vue';
-import Background from '@/components/Background.vue'
-import VueButton from '@/components/Button.vue'
-import VueBackButton from '@/components/BackButton.vue'
+import VueButton from '../../Button.vue'
+import VueBackButton from '../../BackButton.vue'
 
 
 export default {
-name: 'ManageAccountsEdit',
+name: 'ManageMenuRemove',
 components: {
   AppHeader,
   AppFooter,
-  Background,
   VueButton,
   VueBackButton,
 },
 data() {
   return {
-    userID: '',
+    newSalesPrice: null,
     userEmail: '',
-    accountType: '',
-    accountStatus: '',
-   };
+  }
 },
 
 methods: {
@@ -112,12 +82,10 @@ methods: {
   },
 
   goBack() {
-      this.$router.push({path: '/admin/manageAccounts', query: {}})
+      this.$router.push({path: '/admin/manageMenu', query: {}})
     },
 
-
-
-  fetchUser() {
+    fetchUser() {
     const itemName = this.$route.params.description;
     fetch(`http://localhost:8000/user/get_users?description=${itemName}`)
       .then(response => {
@@ -134,7 +102,6 @@ methods: {
       });
   },
 
-
   processUserData(itemData) {
       if (!itemData || itemData.length === 0) return;
       const item = itemData[0]; // Assuming the first item is the one we need
@@ -143,9 +110,41 @@ methods: {
       this.userEmail = item.email; // Assuming the type is available
   },
 
+  removeUser() {
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        description: this.userID,
+        }),
+      };
 
+      fetch('http://localhost:8000/user/delete_account', options)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Remove successful:', data);
+        this.$router.push({path: '/admin/manageAccounts', query: {}})
+      })
+      .catch(error => {
+        console.error('Remove failed:', error);
+      });
+    },
 
 },
+
+computed: {
+  tableHeight() {
+      const rowHeight = 40; // Height of one row in pixels
+      const totalRows = this.rows.length;
+      const calculatedHeight = ((totalRows) * rowHeight);
+      return Math.min(calculatedHeight, this.maxHeight); // Return the smaller of the two
+    },
+  },
 
   mounted() {
     this.fetchUser();
@@ -160,9 +159,94 @@ methods: {
 </script>
 
 <style scoped>
+#standardLayout {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+}
+
 .tablePageContent {
   display: grid;
   grid-template-rows: 1fr;
+}
+
+#pageContent {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  width: 100%;
+  background-image: url("@/assets/sky.png");
+  background-size: 100% 100%;
+  background-repeat: repeat-x;
+  overflow: hidden;
+}
+
+#cloudsArea {
+  position: absolute;
+  display: flex;
+  height: auto;
+  grid-column: 1/4;
+}
+
+#clouds1 {
+  position: absolute;
+  top: 150px;
+  animation: cloudAnimation1 60s linear infinite;
+  animation-delay: -10s;
+  padding-left: 40px;
+}
+
+#clouds2 {
+  animation: cloudAnimation2 60s linear infinite;
+  animation-delay: -25s;
+}
+
+#clouds3 {
+  position: absolute;
+  top: 240px;
+  animation: cloudAnimation3 80s linear infinite;
+  animation-delay: -25s;
+}
+
+#clouds4 {
+  animation: cloudAnimation3 60s linear infinite;
+  animation-delay: -40s;
+}
+
+@keyframes cloudAnimation1 {
+  from {
+    transform: translateX(-100%); /* Start off-screen to the left */
+  }
+  to {
+    transform: translateX(300%); /* Move off-screen to the right */
+  }
+}
+
+@keyframes cloudAnimation2 {
+  from {
+    transform: translateX(-100%); /* Start off-screen to the left */
+  }
+  to {
+    transform: translateX(500%); /* Move off-screen to the right */
+  }
+}
+
+@keyframes cloudAnimation3 {
+  from {
+    transform: translateX(-500%); /* Start off-screen to the left */
+  }
+  to {
+    transform: translateX(300%); /* Move off-screen to the right */
+  }
+}
+
+@keyframes cloudAnimation4 {
+  from {
+    transform: translateX(-500%); /* Start off-screen to the left */
+  }
+  to {
+    transform: translateX(500%); /* Move off-screen to the right */
+  }
 }
 
 #backButtonArea {
@@ -182,13 +266,13 @@ methods: {
   padding-top: 20px;
   padding-left: 20px;
   padding-right: 20px;
-  margin-top: 35px;
-  margin-bottom: 35px;
+  margin-top: 100px;
+  margin-bottom: 100px;
   margin-left: auto;
   margin-right: auto;
   z-index: 1;
-  height: 600px;
-  width: 550px;
+  height: 300px;
+  width: 500px;
 }
 
 #contentHeader {
@@ -206,71 +290,7 @@ methods: {
   grid-column: 2/3;
   width: 400px;
   right: -90px;
-  top: 530px;
-}
-
-#tableArea {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-left: 40px;
-  margin-right: 40px;
-  position: relative;
-}
-
-#tableContent {
-  overflow-y: auto;
-  height: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  user-select: none;
-}
-
-th,
-td {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  text-align: center;
-}
-
-th {
-  border-bottom: 3px solid white;
-  font-size: 18pt;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.even-row {
-  background-color: #00000094;
-}
-
-.odd-row {
-  background-color: #3535358f;
-}
-
-.selected-row {
-  background-color: rgb(0, 174, 255);
-}
-
-#tableContent tbody tr:not(.selected-row):hover {
-  background-color: rgba(173, 216, 230, 0.3);
-  transition: background-color 0.1s ease-in-out;
-}
-
-#tableContent tbody tr {
-  transition: background-color 0.1s ease-in-out;
-}
-
-.on {
-  color: rgb(115, 221, 67);
-}
-
-.off {
-  color: rgb(255, 57, 57);
+  top: 225px;
 }
 
 .button-disabled {
@@ -286,11 +306,11 @@ th {
   margin-left: 70px;
 }
 
-.inputArea {
+#inputArea1 {
   margin-top: 20px;
 }
 
-.inputArea p {
+#inputArea1 p {
   margin-bottom: 9px;
 }
 
@@ -335,17 +355,6 @@ input[type="text"] {
   transform: translateX(-16px);
 }
 
-.input-wrapper2 {
-  display: flex;
-  align-items: center;
-}
-
-.input-wrapper3 {
-  display: flex;
-  align-items: center;
-  transform: translateX(-16px);
-}
-
 .dollar-sign {
   margin-right: 5px;
   color: white;
@@ -365,36 +374,5 @@ input[type="text"]:focus {
 
 input[type="text"]:hover {
   background-color: rgb(50, 50, 50); /* Slightly lighter background color */
-}
-
-.dropdown {
-  border: none;
-  border-radius: 25px;
-  padding: 10px 20px;
-  width: auto;
-  min-width: 300px;
-  background-color: rgb(29, 29, 29);
-  color: white;
-  font-family: sans-serif;
-  font-weight: bold;
-  transition: background-color 0.15s ease-in-out;
-  appearance: none; /* Removes default arrow in some browsers */
-  transition: background-color 0.15s ease-in-out;
-}
-
-.dropdown:hover {
-  background-color: rgb(50, 50, 50); /* Slightly lighter background color */
-}
-
-.placeholder-color {
-  color: rgba(209, 209, 209, 0.5); /* Your placeholder color */
-}
-
-#downIcon {
-  height: 12px;
-  width: auto;
-  transform: translate(283px, 2px);
-  z-index: 1;
-  pointer-events: none;
 }
 </style>
