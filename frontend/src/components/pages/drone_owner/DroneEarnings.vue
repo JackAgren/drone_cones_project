@@ -6,9 +6,13 @@
           <VueBackButton id="backButton" @click="goBack" />
           <p id="contentHeader">Earnings</p>
         </div>
-        {{fetchEarnings()}}
+
         <div>
+          <!-- <script>
+            var earnings = this.fetchInventory()
+          </script> -->
           <div id="infoArea">
+            {{fetchEarnings()}}
             <p>Earnings to Date: ${{this.earnings}}</p>
           </div>
 
@@ -27,6 +31,9 @@ import Background from '@/components/Background.vue'
 import VueButton from '@/components/Button.vue'
 import VueBackButton from '@/components/BackButton.vue'
 
+// var earnings = this.fetchInventory()
+
+
 export default {
 name: 'DroneEarnings',
 components: {
@@ -38,7 +45,7 @@ components: {
 },
   data() {
     return {
-      earnings: "111",
+      earnings: "",
     }
   },
   methods: {
@@ -46,13 +53,20 @@ components: {
       this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
     },
     fetchEarnings() {
-      // updates this.earnings
-      fetch('http://localhost:8000/drone_operator/get_all_owned_drones')
-        .then(response => response.json())
-        .then(response => {
-          this.earnings = response
-        });
-    },
+      this.earnings = "none"
+      // fetch('http://localhost:8000/drone_operator/get_all_owned_drones')
+      //   .then(response => {
+      //     if (!response.ok) {
+      //       throw new Error('Network response was not ok');
+      //     }
+      //   })
+      //   .then(data => {
+      //     this.earnings = "ew";
+      //   })
+      // .catch(error => {
+      //   console.error('There has been a problem with your fetch operation:', error);
+      // });
+    }
   }
 }
 </script>
