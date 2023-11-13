@@ -4,7 +4,7 @@
       <div id="tableContentArea">
         <div id="backButtonArea">
           <VueBackButton id="backButton" @click="goBack" />
-          <p id="contentHeader">Manage Lease Payments</p>
+          <p id="contentHeader">Pending Drone Operator Lease Payments</p>
         </div>
 
         <div id="tableArea">
@@ -14,8 +14,7 @@
                 <th style="width: 10%">Drone ID</th>
                 <th style="width: 15%">Drone Owner ID</th>
                 <th style="width: 15%">Drone Size Class</th>
-                <th style="width: 15%">Payment Status</th>
-                <th style="width: 10%">Amount Due</th>
+                <th style="width: 10%">Earnings Due</th>
               </tr>
             </thead>
           </table>
@@ -29,13 +28,10 @@
                   :class="[{ 'selected-row': selectedRowIndex === index }, index % 2 === 0 ? 'even-row' : 'odd-row']"
                   @click.stop="selectRow(index)"
                 >
-                  <td style="width: 10%">{{ row.col1 }}</td>
-                  <td style="width: 15%">{{ row.col2 }}</td>
-                  <td style="width: 15%">{{ row.col3 }}</td>
-                  <td style="width: 15%" :class="getStatus(row.col4)">
-                    {{ row.col4 }}
-                  </td>
-                  <td style="width: 10%">{{ row.col5 }}</td>
+                  <td style="width: 10%">{{  }}</td>
+                  <td style="width: 15%">{{ ownerID }}</td>
+                  <td style="width: 15%">{{ size }}</td>
+                  <td style="width: 10%">{{ }}</td>
                 </tr>
               </tbody>
             </table>
@@ -76,16 +72,11 @@ components: {
 },
 data() {
   return {
+    ownerID:0,
+    size:'',
     maxHeight: 500, // Max height in pixels
     selectedRowIndex: null, // Index of the selected row
-    rows: [
-        { col1: '15', col2: '12', col3: 'Large', col4: 'Paid', col5: '$0.00' },
-        { col1: '17', col2: '1', col3: 'Medium', col4: 'Paid', col5: '$0.00' },
-        { col1: '23', col2: '5', col3: 'Small', col4: 'Unpaid', col5: '$10.00' },
-        { col1: '27', col2: '1', col3: 'Medium', col4: 'Paid', col5: '$0.00' },
-
-        // Add more rows as needed
-      ]
+    rows: []
   }
 },
 computed: {
@@ -138,6 +129,38 @@ computed: {
     gotoPayLease() {
       this.$router.push({path: '/admin/manageLeasePayments/paylease', query: {}})
     },
+
+    fetchDrones() {
+      fetch('http://localhost:8000/drone_operator/get_all_owned_drones')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.processDroneData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
+    },
+
+
+
+
+
+    processDroneData(itemData) {
+      if (!itemData || itemData.length === 0) return;
+      const item = itemData[0]; // Assuming the first item is the one we need
+      // Update the data properties with the item details
+      this.ownerID = item.ownerID;
+      this.size = item.size; // Assuming the type is available
+   
+  },
+
+
+
   }
 }
 </script>

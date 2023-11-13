@@ -42,11 +42,21 @@
 
         <div id="buttonArea">
           <VueButton
+            class="marginButton"
             :class="{ 'button-disabled': selectedRowIndex === null }"
             :disabled="selectedRowIndex === null"
             @click="gotoManageAccountsEdit"
           >
             Edit
+          </VueButton>
+
+          <VueButton
+            class="marginButton"
+            :class="{ 'button-disabled': selectedRowIndex === null }"
+            :disabled="selectedRowIndex === null"
+            @click="gotoManageAccountsRemove"
+          >
+            Remove
           </VueButton>
         </div>
       </div>
@@ -76,24 +86,7 @@ data() {
   return {
     maxHeight: 500, // Max height in pixels
     selectedRowIndex: null, // Index of the selected row
-    rows: [
-        { col1: '1', col2: 'Bob@gmail.com', col3: 'Customer', col4: 'Active'},
-        { col1: '2', col2: 'Fred@gmail.com', col3: 'Customer', col4: 'Banned'},
-        { col1: '3', col2: 'Joe@gmail.com', col3: 'Customer', col4: 'Banned'},
-        { col1: '4', col2: 'Mickey@gmail.com', col3: 'Admin', col4: 'Active'},
-        { col1: '5', col2: 'Donald@gmail.com', col3: 'Drone Owner', col4: 'Active'},
-        { col1: '6', col2: 'Goofy@gmail.com', col3: 'Customer', col4: 'Active'},
-        { col1: '7', col2: 'Gaben@valvesoftware.com', col3: 'Customer', col4: 'Active'},
-        { col1: '8', col2: 'Luke@gmail.com', col3: 'Customer', col4: 'Banned'},
-        { col1: '9', col2: 'Leia@gmail.com', col3: 'Admin', col4: 'Active'},
-        { col1: '10', col2: 'Hans@gmail.com', col3: 'Drone Owner', col4: 'Active'},
-        { col1: '11', col2: 'Chewy@gmail.com', col3: 'Customer', col4: 'Banned'},
-        { col1: '12', col2: 'Vader@gmail.com', col3: 'Customer', col4: 'Active'},
-        { col1: '13', col2: 'Palpatine@gmail.com', col3: 'Admin', col4: 'Active'},
-        { col1: '14', col2: 'Mario@gmail.com', col3: 'Drone Owner', col4: 'Active'},
-        { col1: '15', col2: 'Luigi@gmail.com', col3: 'Drone Owner', col4: 'Active'},
-        { col1: '16', col2: 'Bowser@gmail.com', col3: 'Customer', col4: 'Banned'},
-      ]
+    rows: []
   }
 },
 computed: {
@@ -106,6 +99,7 @@ computed: {
   },
 
   mounted() {
+    this.fetchUsers();
     // Add global click event listener
     document.addEventListener('click', this.deselectRow);
   },
@@ -141,9 +135,57 @@ computed: {
       this.$router.push({path: '/dashboard', query: {focus: `admin`}})
     },
 
+
+
     gotoManageAccountsEdit() {
-      this.$router.push({path: '/admin/manageAccounts/edit', query: {}})
+      const selectedItem = this.rows[this.selectedRowIndex];
+      const itemName = selectedItem ? selectedItem.col1 : ''; // Assuming col2 is the item name
+      this.$router.push({
+        path: `/admin/manageAccounts/edit/${itemName}`
+      });
     },
+
+    gotoManageAccountsRemove() {
+      const selectedItem = this.rows[this.selectedRowIndex];
+      const itemName = selectedItem ? selectedItem.col1 : ''; // Assuming col2 is the item name
+      this.$router.push({
+        path: `/admin/manageAccounts/remove/${itemName}`
+      });
+    },
+
+    fetchUsers() {
+      fetch('http://localhost:8000/user/get_users')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.processUsersData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
+    },
+
+
+
+
+
+    processUsersData(inventoryData) {
+    // Assuming your inventory items do not include an Item ID or Type, 
+    // you may need to generate or retrieve these from somewhere if required.
+    this.rows = inventoryData.map((item, index) => {
+      return {
+        col1: item.id, // Assuming the Item ID is the index + 1
+        col2: item.email,
+      };
+    });
+  },
+
+
+
   }
 }
 </script>
@@ -192,10 +234,15 @@ computed: {
   align-items: center;
   grid-column: 2/3;
   width: 400px;
-  right: -150px;
+  right: -60px;
   top: 738px;
   transform: translate(-50%, -50%);
 }
+
+.marginButton {
+  margin-left: 25px;
+}
+
 
 #tableArea {
   display: flex;
