@@ -210,6 +210,7 @@ methods: {
 
       if (data.token) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('userEmail', this.email);
       }
 
       this.$router.push({path: '/dashboard', query: {}})
