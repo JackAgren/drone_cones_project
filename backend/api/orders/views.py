@@ -1,5 +1,6 @@
-from rest_framework.decorators import api_view, authentication_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from user.models import CustomUser
 from drone_operator.models import DroneInfo
@@ -38,6 +39,8 @@ def delivered(request):
 
 
 @api_view(["POST"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def add(request):
     '''
     ./orders/add
@@ -87,6 +90,8 @@ def add(request):
 
 
 @api_view(["POST"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def remove(request):
     '''
     ./orders/remove
@@ -134,6 +139,8 @@ def order_search(request):
 
 
 @api_view(["GET"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_drone_earnings(request):
     if 'droneID' in request.query_params:
         drone = get_object_or_404(DroneInfo, id=request.query_params["droneID"])
@@ -145,6 +152,8 @@ def get_drone_earnings(request):
     return Response({'error': "BAD REQUEST"}, status=400)
 
 @api_view(["GET"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_company_balance(request):
     orders = get_list_or_404(Orders)
     inventory = get_list_or_404(Inventory)
