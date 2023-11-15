@@ -50,9 +50,11 @@ def login(request):
 def test_token(request):
     return Response(f"{request.user.email} has a valid token")
 
-
+@api_view(['DELETE'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def delete_account(request):
-    return JsonResponse({'Response': 'DELETE_ACCOUNT_CONFIRMATION'})
+    return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
 def edit_account(request):
