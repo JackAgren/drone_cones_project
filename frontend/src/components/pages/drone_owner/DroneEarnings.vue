@@ -53,7 +53,19 @@ components: {
       this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
     },
     fetchEarnings() {
-      this.earnings = "none"
+      // this.earnings = "none"
+      fetch('http://localhost:8000/drone_operator/get_all_owned_drones', {
+        method: "GET",
+        body: {
+          ownerID: "mattt@mail.com",
+          size: "small",
+          status: "active"
+        }
+      })
+      .then(response => {
+        console.log(response.json());
+        this.earnings = "yay"
+      });
       // fetch('http://localhost:8000/drone_operator/get_all_owned_drones')
       //   .then(response => {
       //     if (!response.ok) {
