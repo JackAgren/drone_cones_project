@@ -1,7 +1,7 @@
 <template>
-    <div id ="standardLayout">
-        <LoginContent/>  
-    </div>
+  <div id="standardLayout">
+    <LoginContent />
+  </div>
 </template>
 
 <script>
@@ -19,7 +19,6 @@ export default {
   },
   data() {
     return {
-      //add data for the page
     }
   },
   methods: {
@@ -32,8 +31,8 @@ export default {
 
 <style scoped>
 #standardLayout {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
 }
 </style>

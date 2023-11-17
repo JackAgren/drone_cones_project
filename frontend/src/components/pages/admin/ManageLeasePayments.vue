@@ -28,10 +28,10 @@
                   :class="[{ 'selected-row': selectedRowIndex === index }, index % 2 === 0 ? 'even-row' : 'odd-row']"
                   @click.stop="selectRow(index)"
                 >
-                  <td style="width: 10%">{{  }}</td>
+                  <td style="width: 10%">{{}}</td>
                   <td style="width: 15%">{{ ownerID }}</td>
                   <td style="width: 15%">{{ size }}</td>
-                  <td style="width: 10%">{{ }}</td>
+                  <td style="width: 10%">{{}}</td>
                 </tr>
               </tbody>
             </table>
@@ -156,7 +156,7 @@ computed: {
       // Update the data properties with the item details
       this.ownerID = item.ownerID;
       this.size = item.size; // Assuming the type is available
-   
+
   },
 
 

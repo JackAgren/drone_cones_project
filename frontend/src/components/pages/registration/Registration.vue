@@ -3,7 +3,7 @@
     <Background>
       <div id="tableContentArea">
         <div id="backButtonArea">
-          <VueBackButton id="backButton" @click="goBack"/>
+          <VueBackButton id="backButton" @click="goBack" />
           <p id="contentHeader">Register</p>
         </div>
 
@@ -17,6 +17,7 @@
                 v-model="email"
               />
             </div>
+            <p v-if="invalidEmail" style="color: red">Email is not valid.</p>
           </div>
 
           <div class="inputArea">
@@ -39,6 +40,9 @@
                 v-model="confirmPassword"
               />
             </div>
+            <p v-if="showPasswordMismatchMessage" style="color: red">
+              The passwords do not match.
+            </p>
           </div>
 
           <div class="inputArea">
@@ -55,11 +59,7 @@
           <div class="inputArea">
             <p>City</p>
             <div class="input-wrapper2">
-              <input
-                type="text"
-                placeholder="Enter your city"
-                v-model="city"
-              />
+              <input type="text" placeholder="Enter your city" v-model="city" />
             </div>
           </div>
 
@@ -104,7 +104,11 @@
         </div>
 
         <div id="buttonArea">
+          <div v-if="isProcessing" class="processing-text">
+            Processing . . .
+          </div>
           <VueButton
+            v-else
             :class="{ 'button-disabled': !isFormComplete }"
             :disabled="!isFormComplete"
             @click="addUser"
@@ -144,7 +148,12 @@ data() {
       address: '',
       city: '',
       state: '',
-      zip: ''
+      zip: '',
+      is_staff: '',
+      is_superuser: '',
+      showPasswordMismatchMessage: '',
+      isProcessing: '',
+      invalidEmail: '',
   };
 },
 
@@ -172,12 +181,49 @@ methods: {
     }
   },
 
+  isValidEmail() {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(this.email.toLowerCase());
+  },
+
   goBack() {
     this.$router.push({path: '/', query: {}})
   },
-  
+
 
   addUser() {
+
+    if (!this.isValidEmail()) {
+    this.invalidEmail = true;
+   }else{
+    this.invalidEmail = false;
+   }
+
+
+    if (this.password !== this.confirmPassword) {
+      this.showPasswordMismatchMessage = true;
+    }else{
+      this.showPasswordMismatchMessage = false;
+    }
+
+    this.isProcessing = true;
+
+    if(this.invalidEmail || this.showPasswordMismatchMessage)
+    {
+      this.isProcessing = false;
+      return;
+    }
+
+    if (this.accountType === 'Admin') {
+    this.is_superuser = true;
+    this.is_staff = false;
+  } else if (this.accountType === 'Drone Owner') {
+    this.is_superuser = false;
+    this.is_staff = true;
+  } else {
+    this.is_superuser = false;
+    this.is_staff = false;
+  }
 
  // Construct the data object to send
  const userData = {
@@ -188,10 +234,11 @@ methods: {
     city: this.city,
     state: this.state,
     zip: this.zip,
-    accountType: this.accountType
+    accountType: this.accountType,
+    is_staff: this.is_staff,
+    is_superuser: this.is_superuser
   };
 
-  // Set up the options for the fetch request
   const options = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -217,6 +264,9 @@ methods: {
     })
     .catch(error => {
       console.error('Registration failed:', error);
+    })
+    .finally(() => {
+      this.isProcessing = false;
     });
   },
 
@@ -225,7 +275,6 @@ methods: {
 computed: {
   isFormComplete() {
         return this.email && this.password && this.confirmPassword &&
-           this.password === this.confirmPassword && // Check if passwords match
            this.accountType !== '' && this.address &&
            this.city && this.state && this.zip;
   },
@@ -477,5 +526,13 @@ input:hover {
   transform: translate(283px, 2px);
   z-index: 1;
   pointer-events: none;
+}
+
+.processing-text {
+  color: white;
+  text-align: center;
+  font-size: 24px;
+  transform: translateX(-170px);
+  user-select: none;
 }
 </style>

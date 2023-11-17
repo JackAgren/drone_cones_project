@@ -47,7 +47,7 @@
                 type="text"
                 placeholder="Enter cost per unit"
                 min="0"
-                v-model="newSalesPrice"
+                v-model="newCostPerUnit"
                 @keypress="isPositiveDecimal($event)"
               />
             </div>
@@ -63,18 +63,19 @@
                 type="text"
                 placeholder="Enter sales price"
                 min="0"
-                v-model="newCostPerUnit"
+                v-model="newSalesPrice"
                 @keypress="isPositiveDecimal($event)"
               />
             </div>
+            <p v-if="isPriceLowerThanCost" class="price-warning">Sales price must be higher than cost</p>
           </div>
         </div>
 
         <div id="buttonArea">
           <VueButton
-            :class="{ 'button-disabled': !newSalesPrice || !newCostPerUnit || !itemType || !itemName }"
-            :disabled="!newSalesPrice || !newCostPerUnit || !itemType || !itemName"
-            @click='addItem'
+          :class="{ 'button-disabled': isPriceLowerThanCost || !newSalesPrice || !newCostPerUnit || !itemType || !itemName }"
+          :disabled="isPriceLowerThanCost || !newSalesPrice || !newCostPerUnit || !itemType || !itemName"
+          @click='addItem'
           >
             Add
           </VueButton>
@@ -140,10 +141,25 @@ methods: {
     },
 
 
-  addItem() {
-  const options = {
+    
+    addItem() {
+
+    // Correctly set the authorization header
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      // Handle the case where the token is missing
+      return;
+    }
+
+    const authorizationHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    };
+
+    const options = {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: authorizationHeaders,
     body: JSON.stringify({
       description: this.itemName,
       quantity: 0,
@@ -169,15 +185,21 @@ methods: {
     });
   },
   
+
+  
 },
 
-  mounted() {
-    // Add global click event listener
-    document.addEventListener('click', this.deselectRow);
-  },
-  beforeDestroy() {
-    // Remove global click event listener
-    document.removeEventListener('click', this.deselectRow);
+computed: {
+    isPriceLowerThanCost() {
+      if (this.newSalesPrice === '' || this.newSalesPrice === null || this.newCostPerUnit === '' || this.newCostPerUnit === null) {
+        return false;
+      }
+
+      if (!this.newSalesPrice || !this.newCostPerUnit) return true;
+      const salesPrice = parseFloat(this.newSalesPrice);
+      const cost = parseFloat(this.newCostPerUnit.replace('$', ''));
+      return salesPrice < cost;
+    }
   },
 }
 </script>
@@ -419,5 +441,10 @@ input[type="text"]:hover {
   transform: translate(283px, 2px);
   z-index: 1;
   pointer-events: none;
+}
+
+.price-warning {
+  color: red;
+  font-size: 14px;
 }
 </style>
