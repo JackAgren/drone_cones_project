@@ -3,7 +3,7 @@
     <Background>
       <div id="tableContentArea">
         <div id="backButtonArea">
-          <VueBackButton id="backButton" @click="goBack"/>
+          <VueBackButton id="backButton" @click="goBack" />
           <p id="contentHeader">Edit</p>
         </div>
 
@@ -17,9 +17,7 @@
           <div id="inputArea1">
             <p>New Sales Price</p>
             <div class="input-wrapper">
-              <!-- Wrapper div -->
               <span class="dollar-sign">$</span>
-              <!-- Dollar sign -->
               <input
                 type="text"
                 placeholder="Enter new sales price"
@@ -28,6 +26,9 @@
                 @keypress="isPositiveDecimal($event)"
               />
             </div>
+            <p v-if="isPriceLowerThanCost" class="price-warning">
+              Sales price must be higher than cost
+            </p>
           </div>
         </div>
 
@@ -35,11 +36,10 @@
           <VueButton
             :class="{ 'button-disabled': isPriceLowerThanCost }"
             :disabled="isPriceLowerThanCost"
-            @click='updatePrice'
+            @click="updatePrice"
           >
             Apply
           </VueButton>
-
         </div>
       </div>
     </Background>
@@ -68,7 +68,6 @@ data() {
   return {
     newSalesPrice: null,
     itemName: '',
-
   }
 },
 
@@ -100,8 +99,24 @@ methods: {
     },
 
     fetchItem() {
+       // Correctly set the authorization header
+       const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
+
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+
       const itemName = this.$route.params.description;
-      fetch(`http://localhost:8000/inventory/inventory_search?description=${itemName}`)
+      fetch(`http://localhost:8000/inventory/inventory_search?description=${itemName}`, {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -132,9 +147,23 @@ methods: {
 
 
   updatePrice() {
+
+    // Correctly set the authorization header
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      // Handle the case where the token is missing
+      return;
+    }
+
+    const authorizationHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    };
+
     const options = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authorizationHeaders,
       body: JSON.stringify({
         description: this.itemName,
         salesPrice: this.newSalesPrice,
@@ -156,25 +185,14 @@ methods: {
         console.error('Price Edit failed:', error);
       });
     },
-
-
-
-
-
-
-
-
 },
 
 computed: {
-  tableHeight() {
-      const rowHeight = 40; // Height of one row in pixels
-      const totalRows = this.rows.length;
-      const calculatedHeight = ((totalRows) * rowHeight);
-      return Math.min(calculatedHeight, this.maxHeight); // Return the smaller of the two
-    },
-
     isPriceLowerThanCost() {
+      if (this.newSalesPrice === '' || this.newSalesPrice === null || this.newCostPerUnit === '' || this.newCostPerUnit === null) {
+        return false;
+      }
+
       if (!this.newSalesPrice || !this.costPerUnit) return true;
       const salesPrice = parseFloat(this.newSalesPrice);
       const cost = parseFloat(this.costPerUnit.replace('$', ''));
@@ -184,13 +202,8 @@ computed: {
 
   mounted() {
     this.fetchItem();
-    // Add global click event listener
-    document.addEventListener('click', this.deselectRow);
   },
-  beforeDestroy() {
-    // Remove global click event listener
-    document.removeEventListener('click', this.deselectRow);
-  },
+
 }
 </script>
 
@@ -325,5 +338,10 @@ input[type="text"]:focus {
 
 input[type="text"]:hover {
   background-color: rgb(50, 50, 50); /* Slightly lighter background color */
+}
+
+.price-warning {
+  color: red;
+  font-size: 14px;
 }
 </style>

@@ -72,8 +72,8 @@ def test_token(request):
     return Response(f"{request.user.email} has a valid token")
 
 @api_view(['DELETE'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([SessionAuthentication, TokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def delete_account(request):
     try:
         user = get_object_or_404(CustomUser, email=request.data['email'])

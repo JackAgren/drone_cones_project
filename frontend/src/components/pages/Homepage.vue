@@ -22,9 +22,15 @@ export default {
   },
   data() {
     return {
-      //add data for the page
     }
   },
+
+  mounted() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.$router.push({ path: '/dashboard' });
+    }
+  }
 
 }
 </script>

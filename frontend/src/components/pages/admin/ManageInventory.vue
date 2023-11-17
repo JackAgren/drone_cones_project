@@ -8,7 +8,7 @@
         </div>
 
         <div id="tableArea">
-          <table>
+          <table v-if="!isTableEmpty">
             <thead>
               <tr>
                 <th style="width: 10%">Item ID</th>
@@ -20,6 +20,10 @@
               </tr>
             </thead>
           </table>
+
+          <div v-else class="emptyTableMessage">
+            No Menu Items exist, go to Manage Menu to add a new Menu Item.
+          </div>
 
           <div id="tableContent" :style="{ height: tableHeight + 'px' }">
             <table>
@@ -95,6 +99,10 @@ computed: {
       if (this.selectedRowIndex === null) return false;
       return this.rows[this.selectedRowIndex].col4 !== 'In Stock';
     },
+
+    isTableEmpty() {
+    return this.rows.length === 0;
+  },
   },
 
   mounted() {
@@ -139,7 +147,23 @@ computed: {
     },
 
     fetchInventory() {
-      fetch('http://localhost:8000/inventory/inventory_search?description=ALL')
+       // Correctly set the authorization header
+       const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
+
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+
+      fetch('http://localhost:8000/inventory/inventory_search?description=ALL', {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -159,7 +183,7 @@ computed: {
   },
 
   processInventoryData(inventoryData) {
-    // Assuming your inventory items do not include an Item ID or Type, 
+    // Assuming your inventory items do not include an Item ID or Type,
     // you may need to generate or retrieve these from somewhere if required.
     this.rows = inventoryData.map((item, index) => {
       return {
@@ -292,5 +316,12 @@ th {
 .button-disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.emptyTableMessage {
+  color: white;
+  text-align: center;
+  margin-top: 250px;
+  font-size: 30px;
 }
 </style>

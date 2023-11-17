@@ -12,9 +12,9 @@
             <thead>
               <tr>
                 <th style="width: 10%">User ID</th>
-                <th style="width: 15%">Email</th>
-                <th style="width: 15%">Account Type</th>
-                <th style="width: 10%">Account Status</th>
+                <th style="width: 10%">Email</th>
+                <th style="width: 10%">Account Type</th>
+                <!-- <th style="width: 10%">Account Status</th> -->
               </tr>
             </thead>
           </table>
@@ -29,11 +29,11 @@
                   @click.stop="selectRow(index)"
                 >
                   <td style="width: 10%">{{ row.col1 }}</td>
-                  <td style="width: 15%">{{ row.col2 }}</td>
-                  <td style="width: 15%">{{ row.col3 }}</td>
-                  <td style="width: 10%" :class="getStatus(row.col4)">
+                  <td style="width: 10%">{{ row.col2 }}</td>
+                  <td style="width: 10%">{{ row.col3 }}</td>
+                  <!-- <td style="width: 10%" :class="getStatus(row.col4)">
                     {{ row.col4 }}
-                  </td>
+                  </td> -->
                 </tr>
               </tbody>
             </table>
@@ -43,8 +43,8 @@
         <div id="buttonArea">
           <VueButton
             class="marginButton"
-            :class="{ 'button-disabled': selectedRowIndex === null }"
-            :disabled="selectedRowIndex === null"
+            :class="{ 'button-disabled': selectedRowIndex === null || isOwnAccountSelected }"
+            :disabled="selectedRowIndex === null || isOwnAccountSelected"
             @click="gotoManageAccountsEdit"
           >
             Edit
@@ -52,8 +52,8 @@
 
           <VueButton
             class="marginButton"
-            :class="{ 'button-disabled': selectedRowIndex === null }"
-            :disabled="selectedRowIndex === null"
+            :class="{ 'button-disabled': selectedRowIndex === null || isOwnAccountSelected }"
+            :disabled="selectedRowIndex === null || isOwnAccountSelected"
             @click="gotoManageAccountsRemove"
           >
             Remove
@@ -86,7 +86,8 @@ data() {
   return {
     maxHeight: 500, // Max height in pixels
     selectedRowIndex: null, // Index of the selected row
-    rows: []
+    rows: [],
+    isOwnAccountSelected: false,
   }
 },
 computed: {
@@ -109,7 +110,11 @@ computed: {
   },
   methods: {
     selectRow(index) {
+      const userEmail = localStorage.getItem('userEmail');
+      const selectedUserEmail = this.rows[index].col2; // Assuming col2 is the email
+
       this.selectedRowIndex = index;
+      this.isOwnAccountSelected = selectedUserEmail === userEmail;
     },
 
     deselectRow(event) {
@@ -153,8 +158,26 @@ computed: {
       });
     },
 
+
+
     fetchUsers() {
-      fetch('http://localhost:8000/user/get_users')
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
+
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+
+      fetch('http://localhost:8000/user/get_users',
+      {
+          method: 'GET',
+          headers: authorizationHeaders,
+      })
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -173,16 +196,25 @@ computed: {
 
 
 
-    processUsersData(inventoryData) {
-    // Assuming your inventory items do not include an Item ID or Type, 
-    // you may need to generate or retrieve these from somewhere if required.
-    this.rows = inventoryData.map((item, index) => {
-      return {
-        col1: item.id, // Assuming the Item ID is the index + 1
-        col2: item.email,
-      };
-    });
-  },
+    processUsersData(data) {
+  this.rows = data.user.map((item, index) => {
+    let accountType;
+    if (item.is_superuser) {
+      accountType = 'Admin';
+    } else if (item.is_staff) {
+      accountType = 'Drone Operator';
+    } else {
+      accountType = 'Customer';
+    }
+
+    return {
+      col1: item.id, // Assuming 'id' is the user ID
+      col2: item.email, // Assuming 'email' is the user email
+      col3: accountType, // Set based on is_superuser and is_staff
+      // col4: item.accountStatus // Assuming 'accountStatus' is the account status
+    };
+  });
+},
 
 
 
@@ -242,7 +274,6 @@ computed: {
 .marginButton {
   margin-left: 25px;
 }
-
 
 #tableArea {
   display: flex;

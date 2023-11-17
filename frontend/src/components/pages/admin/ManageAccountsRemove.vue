@@ -82,40 +82,70 @@ methods: {
   },
 
   goBack() {
-      this.$router.push({path: '/admin/manageMenu', query: {}})
+      this.$router.push({path: '/admin/manageAccounts', query: {}})
     },
 
     fetchUser() {
-    const itemName = this.$route.params.description;
-    fetch(`http://localhost:8000/user/get_users?description=${itemName}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        this.processUserData(data);
-      })
-      .catch(error => {
-        console.error('There has been a problem with your fetch operation:', error);
-      });
-  },
+     // Correctly set the authorization header
+     const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      // Handle the case where the token is missing
+      return;
+    }
 
-  processUserData(itemData) {
-      if (!itemData || itemData.length === 0) return;
-      const item = itemData[0]; // Assuming the first item is the one we need
-      // Update the data properties with the item details
-      this.userID = item.id;
-      this.userEmail = item.email; // Assuming the type is available
-  },
+    const authorizationHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    };
+  // Get userID from the URL parameters
+  const userID = this.$route.params.description;
+
+  fetch(`http://localhost:8000/user/get_users?id=${userID}`,{
+        method: 'GET',
+        headers: authorizationHeaders
+      })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(user => {
+      // Directly process the received user data
+      this.processUserData(user);
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    });
+},
+
+processUserData(userData) {
+  this.userID = userData.user.id;
+  this.userEmail = userData.user.email;
+},
 
   removeUser() {
+
+     // Correctly set the authorization header
+     const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      // Handle the case where the token is missing
+      return;
+    }
+
+    const authorizationHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    };
+
+
     const options = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'DELETE',
+      headers: authorizationHeaders,
       body: JSON.stringify({
-        description: this.userID,
+        email: this.userEmail,
         }),
       };
 
@@ -148,13 +178,8 @@ computed: {
 
   mounted() {
     this.fetchUser();
-    // Add global click event listener
-    document.addEventListener('click', this.deselectRow);
   },
-  beforeDestroy() {
-    // Remove global click event listener
-    document.removeEventListener('click', this.deselectRow);
-  },
+
 }
 </script>
 
