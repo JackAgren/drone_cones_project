@@ -1,17 +1,18 @@
-from rest_framework.decorators import api_view, authentication_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from user.models import CustomUser
 from drone_operator.models import DroneInfo
 from .serializers import OrdersSerializer, NewOrderSerializer
 from .models import Orders, Cones
+from inventory.models import Inventory
 from datetime import datetime
 from django.shortcuts import get_object_or_404, get_list_or_404
 import pytz
 
 
-# Create your views here.
-@api_view(['POST'])
+@api_view(["POST"])
 def delivered(request):
     '''
     ** Updates time delivered to time when function was called **
@@ -37,7 +38,9 @@ def delivered(request):
     return Response({'success': 'UPDATE SUCCESS'})
 
 
-@api_view(['POST'])
+@api_view(["POST"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def add(request):
     '''
     ./orders/add
@@ -46,7 +49,7 @@ def add(request):
         "cones": [
             {
             "cone": <CONE TYPE>: String,
-            "iceCream": <ICE CREAM>: String,
+            "iceCream": [<ICE CREAM>: String,...],
             "toppings": [<TOPPINGS>: String,...],
             "cost": <COST>: Float
             },
@@ -65,6 +68,7 @@ def add(request):
         for cone in request.data["cones"]:
             id = Cones.objects.create(
                     toppings=cone['toppings'],
+                    iceCream=cone['iceCream'],
                     cost=cone['cost'],
                     cone=cone['cone']
                     ).id
@@ -85,7 +89,9 @@ def add(request):
     return Response(serializer.errors, status=400)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def remove(request):
     '''
     ./orders/remove
@@ -104,7 +110,7 @@ def remove(request):
         return Response({'error': str(err)})
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def order_search(request):
     '''
 
@@ -113,11 +119,11 @@ def order_search(request):
         if 'order' in request.query_params:
             query = Orders.objects.all().filter(id=request.query_params['order'])
         elif 'userID' in request.query_params:
-            query = Orders.objects.all().filter(userID=request.query_params['userID'])
+            query = Orders.objects.all().filter(userID=get_object_or_404(CustomUser, email=request.query_params['userID']))
         elif 'droneID':
-            query = Orders.objects.all().filter(userID=request.query_params['droneID'])
+            query = Orders.objects.all().filter(droneID=get_object_or_404(DroneInfo, id=request.query_params['droneID']))
         elif 'location':
-            query = Orders.objects.all().filter(userID=request.query_params['location'])
+            query = Orders.objects.all().filter(location=request.query_params['location'])
 
         for order in query:
             cones = []
@@ -132,13 +138,35 @@ def order_search(request):
         return Response({'error': str(err)})
 
 
-@api_view(['GET'])
+@api_view(["GET"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_drone_earnings(request):
     if 'droneID' in request.query_params:
         drone = get_object_or_404(DroneInfo, id=request.query_params["droneID"])
         orders = get_list_or_404(Orders, droneID=drone)
         earnings = 0
         for order in orders:
-            earnings += order.total
+            earnings += order.total * .10
         return Response({'earnings': f"{earnings}"})
     return Response({'error': "BAD REQUEST"}, status=400)
+
+@api_view(["GET"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_company_balance(request):
+    orders = get_list_or_404(Orders)
+    inventory = get_list_or_404(Inventory)
+    earnings = 0
+    expenses = 0
+    for order in orders:
+        earnings += order.total
+
+    for item in inventory:
+        expenses += item.costPerUnit * item.quantity
+
+    return Response({
+        "earnings": earnings,
+        "expenses": expenses,
+        "balance": earnings - expenses
+        })

@@ -19,13 +19,13 @@
           <div id="actionContentArea">
             <div id="infoArea1">
               <p class="infoLabel">
-                Confirm removal of following item: {{ itemName }}
+                Confirm removal of following user account: {{ userEmail }}
               </p>
             </div>
           </div>
 
           <div id="buttonArea">
-            <VueButton @click="removeItem">Remove</VueButton>
+            <VueButton @click="removeUser">Remove</VueButton>
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@ components: {
 data() {
   return {
     newSalesPrice: null,
-    itemName: '',
+    userEmail: '',
   }
 },
 
@@ -82,56 +82,53 @@ methods: {
   },
 
   goBack() {
-      this.$router.push({path: '/admin/manageMenu', query: {}})
+      this.$router.push({path: '/admin/manageAccounts', query: {}})
     },
 
-    fetchItem() {
-      // Correctly set the authorization header
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('No token found');
-        // Handle the case where the token is missing
-        return;
-      }
+    fetchUser() {
+     // Correctly set the authorization header
+     const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      // Handle the case where the token is missing
+      return;
+    }
 
-      const authorizationHeaders = {
-        'Content-Type': 'application/json',
-        'Authorization': `Token ${token}`
-      };
+    const authorizationHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    };
+  // Get userID from the URL parameters
+  const userID = this.$route.params.description;
 
-      const itemName = this.$route.params.description;
-      fetch(`http://localhost:8000/inventory/inventory_search?description=${itemName}`, {
+  fetch(`http://localhost:8000/user/get_users?id=${userID}`,{
         method: 'GET',
         headers: authorizationHeaders
       })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-          this.processItemData(data);
-        })
-        .catch(error => {
-          console.error('There has been a problem with your fetch operation:', error);
-        });
-    },
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(user => {
+      // Directly process the received user data
+      this.processUserData(user);
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    });
+},
 
-    formatCurrency(value) {
-      return `$${parseFloat(value).toFixed(2)}`;
-    },
+processUserData(userData) {
+  this.userID = userData.user.id;
+  this.userEmail = userData.user.email;
+},
 
-    processItemData(itemData) {
-      if (!itemData || itemData.length === 0) return;
-      const item = itemData[0]; // Assuming the first item is the one we need
-      // Update the data properties with the item details
-      this.itemName = item.description;
-  },
+  removeUser() {
 
-  removeItem() {
-    // Correctly set the authorization header
-    const token = localStorage.getItem('token');
+     // Correctly set the authorization header
+     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found');
       // Handle the case where the token is missing
@@ -143,15 +140,16 @@ methods: {
       'Authorization': `Token ${token}`
     };
 
+
     const options = {
-      method: 'POST',
+      method: 'DELETE',
       headers: authorizationHeaders,
       body: JSON.stringify({
-        description: this.itemName,
+        email: this.userEmail,
         }),
       };
 
-      fetch('http://localhost:8000/inventory/remove', options)
+      fetch('http://localhost:8000/user/delete_account', options)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -160,7 +158,7 @@ methods: {
       })
       .then(data => {
         console.log('Remove successful:', data);
-        this.$router.push({path: '/admin/manageMenu', query: {}})
+        this.$router.push({path: '/admin/manageAccounts', query: {}})
       })
       .catch(error => {
         console.error('Remove failed:', error);
@@ -179,14 +177,9 @@ computed: {
   },
 
   mounted() {
-    this.fetchItem();
-    // Add global click event listener
-    document.addEventListener('click', this.deselectRow);
+    this.fetchUser();
   },
-  beforeDestroy() {
-    // Remove global click event listener
-    document.removeEventListener('click', this.deselectRow);
-  },
+
 }
 </script>
 

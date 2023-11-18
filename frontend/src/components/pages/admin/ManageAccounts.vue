@@ -12,9 +12,9 @@
             <thead>
               <tr>
                 <th style="width: 10%">User ID</th>
-                <th style="width: 15%">Email</th>
-                <th style="width: 15%">Account Type</th>
-                <th style="width: 10%">Account Status</th>
+                <th style="width: 10%">Email</th>
+                <th style="width: 10%">Account Type</th>
+                <!-- <th style="width: 10%">Account Status</th> -->
               </tr>
             </thead>
           </table>
@@ -29,11 +29,11 @@
                   @click.stop="selectRow(index)"
                 >
                   <td style="width: 10%">{{ row.col1 }}</td>
-                  <td style="width: 15%">{{ row.col2 }}</td>
-                  <td style="width: 15%">{{ row.col3 }}</td>
-                  <td style="width: 10%" :class="getStatus(row.col4)">
+                  <td style="width: 10%">{{ row.col2 }}</td>
+                  <td style="width: 10%">{{ row.col3 }}</td>
+                  <!-- <td style="width: 10%" :class="getStatus(row.col4)">
                     {{ row.col4 }}
-                  </td>
+                  </td> -->
                 </tr>
               </tbody>
             </table>
@@ -42,11 +42,21 @@
 
         <div id="buttonArea">
           <VueButton
-            :class="{ 'button-disabled': selectedRowIndex === null }"
-            :disabled="selectedRowIndex === null"
+            class="marginButton"
+            :class="{ 'button-disabled': selectedRowIndex === null || isOwnAccountSelected }"
+            :disabled="selectedRowIndex === null || isOwnAccountSelected"
             @click="gotoManageAccountsEdit"
           >
             Edit
+          </VueButton>
+
+          <VueButton
+            class="marginButton"
+            :class="{ 'button-disabled': selectedRowIndex === null || isOwnAccountSelected }"
+            :disabled="selectedRowIndex === null || isOwnAccountSelected"
+            @click="gotoManageAccountsRemove"
+          >
+            Remove
           </VueButton>
         </div>
       </div>
@@ -76,24 +86,8 @@ data() {
   return {
     maxHeight: 500, // Max height in pixels
     selectedRowIndex: null, // Index of the selected row
-    rows: [
-        { col1: '1', col2: 'Bob@gmail.com', col3: 'Customer', col4: 'Active'},
-        { col1: '2', col2: 'Fred@gmail.com', col3: 'Customer', col4: 'Banned'},
-        { col1: '3', col2: 'Joe@gmail.com', col3: 'Customer', col4: 'Banned'},
-        { col1: '4', col2: 'Mickey@gmail.com', col3: 'Admin', col4: 'Active'},
-        { col1: '5', col2: 'Donald@gmail.com', col3: 'Drone Owner', col4: 'Active'},
-        { col1: '6', col2: 'Goofy@gmail.com', col3: 'Customer', col4: 'Active'},
-        { col1: '7', col2: 'Gaben@valvesoftware.com', col3: 'Customer', col4: 'Active'},
-        { col1: '8', col2: 'Luke@gmail.com', col3: 'Customer', col4: 'Banned'},
-        { col1: '9', col2: 'Leia@gmail.com', col3: 'Admin', col4: 'Active'},
-        { col1: '10', col2: 'Hans@gmail.com', col3: 'Drone Owner', col4: 'Active'},
-        { col1: '11', col2: 'Chewy@gmail.com', col3: 'Customer', col4: 'Banned'},
-        { col1: '12', col2: 'Vader@gmail.com', col3: 'Customer', col4: 'Active'},
-        { col1: '13', col2: 'Palpatine@gmail.com', col3: 'Admin', col4: 'Active'},
-        { col1: '14', col2: 'Mario@gmail.com', col3: 'Drone Owner', col4: 'Active'},
-        { col1: '15', col2: 'Luigi@gmail.com', col3: 'Drone Owner', col4: 'Active'},
-        { col1: '16', col2: 'Bowser@gmail.com', col3: 'Customer', col4: 'Banned'},
-      ]
+    rows: [],
+    isOwnAccountSelected: false,
   }
 },
 computed: {
@@ -106,6 +100,7 @@ computed: {
   },
 
   mounted() {
+    this.fetchUsers();
     // Add global click event listener
     document.addEventListener('click', this.deselectRow);
   },
@@ -115,7 +110,11 @@ computed: {
   },
   methods: {
     selectRow(index) {
+      const userEmail = localStorage.getItem('userEmail');
+      const selectedUserEmail = this.rows[index].col2; // Assuming col2 is the email
+
       this.selectedRowIndex = index;
+      this.isOwnAccountSelected = selectedUserEmail === userEmail;
     },
 
     deselectRow(event) {
@@ -141,9 +140,84 @@ computed: {
       this.$router.push({path: '/dashboard', query: {focus: `admin`}})
     },
 
+
+
     gotoManageAccountsEdit() {
-      this.$router.push({path: '/admin/manageAccounts/edit', query: {}})
+      const selectedItem = this.rows[this.selectedRowIndex];
+      const itemName = selectedItem ? selectedItem.col1 : ''; // Assuming col2 is the item name
+      this.$router.push({
+        path: `/admin/manageAccounts/edit/${itemName}`
+      });
     },
+
+    gotoManageAccountsRemove() {
+      const selectedItem = this.rows[this.selectedRowIndex];
+      const itemName = selectedItem ? selectedItem.col1 : ''; // Assuming col2 is the item name
+      this.$router.push({
+        path: `/admin/manageAccounts/remove/${itemName}`
+      });
+    },
+
+
+
+    fetchUsers() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
+
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+
+      fetch('http://localhost:8000/user/get_users',
+      {
+          method: 'GET',
+          headers: authorizationHeaders,
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.processUsersData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
+    },
+
+
+
+
+
+    processUsersData(data) {
+  this.rows = data.user.map((item, index) => {
+    let accountType;
+    if (item.is_superuser) {
+      accountType = 'Admin';
+    } else if (item.is_staff) {
+      accountType = 'Drone Operator';
+    } else {
+      accountType = 'Customer';
+    }
+
+    return {
+      col1: item.id, // Assuming 'id' is the user ID
+      col2: item.email, // Assuming 'email' is the user email
+      col3: accountType, // Set based on is_superuser and is_staff
+      // col4: item.accountStatus // Assuming 'accountStatus' is the account status
+    };
+  });
+},
+
+
+
   }
 }
 </script>
@@ -192,9 +266,13 @@ computed: {
   align-items: center;
   grid-column: 2/3;
   width: 400px;
-  right: -150px;
+  right: -60px;
   top: 738px;
   transform: translate(-50%, -50%);
+}
+
+.marginButton {
+  margin-left: 25px;
 }
 
 #tableArea {

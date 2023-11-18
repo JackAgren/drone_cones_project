@@ -27,6 +27,7 @@
 <script>
 import Background from "@/components/Background.vue";
 import VueButton from "@/components/Button.vue";
+const SERVER_URL = "http://localhost:8000/";
 
 export default {
   name: 'Order Arrived',
@@ -37,6 +38,35 @@ export default {
   data() {
     return {
     }
+  },
+  created() {
+    const orderID = this.$route.query.id;
+    //TODO: mark order as delivered
+
+    const body = {
+      order: orderID
+    }
+
+    const token = localStorage.getItem('token');
+
+    fetch(SERVER_URL + `orders/delivered`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      },
+      body: JSON.stringify(body)
+    })
+        .then(res => {
+          return res.json();
+        })
+        .then(resp => {
+          console.log(resp);
+        })
+        .catch(err => {
+          console.log(`An error occurred: ${err}`);
+        });
+
   },
   methods: {
     moveToDashboard() {

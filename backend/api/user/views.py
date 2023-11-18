@@ -22,6 +22,27 @@ class UserList(generics.ListCreateAPIView):
 #     queryset = CustomUser.objects.all()
 #     serializer_class = UsersSerializer
 
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_users(request):
+    try:
+        if 'email' in request.query_params:
+            query = CustomUser.objects.get(email=request.query_params['email'])
+            many = False
+        elif 'id' in request.query_params:
+            query = CustomUser.objects.get(id=request.query_params['id'])
+            many = False
+        else:
+            query = CustomUser.objects.all()
+            many = True
+        serialized = UsersSerializer(query, many=many)
+        #if serialized.is_valid():
+        return Response({"user": serialized.data})
+    except Exception as e:
+        return Response({"detail": "Not found."}, status=status.HTTP_400_BAD_REQUEST)
+        
+
 
 @api_view(['POST'])
 def create_account(request):
@@ -50,9 +71,16 @@ def login(request):
 def test_token(request):
     return Response(f"{request.user.email} has a valid token")
 
-
+@api_view(['DELETE'])
+# @authentication_classes([SessionAuthentication, TokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def delete_account(request):
-    return JsonResponse({'Response': 'DELETE_ACCOUNT_CONFIRMATION'})
+    try:
+        user = get_object_or_404(CustomUser, email=request.data['email'])
+        user.delete()
+        return Response({"deleted": request.data['email']})
+    except CustomUser.DoesNotExist as e:
+        return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
 def edit_account(request):

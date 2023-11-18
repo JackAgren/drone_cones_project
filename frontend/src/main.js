@@ -18,6 +18,7 @@ import ManageMenuAdd from "@/components/pages/admin/ManageMenuAdd.vue"
 import ManageMenuRemove from "@/components/pages/admin/ManageMenuRemove.vue"
 import ManageAccounts from "@/components/pages/admin/ManageAccounts.vue"
 import ManageAccountsEdit from "@/components/pages/admin/ManageAccountsEdit.vue"
+import ManageAccountsRemove from "@/components/pages/admin/ManageAccountsRemove.vue"
 import FinancialRecords from "@/components/pages/admin/FinancialRecords.vue"
 
 import DroneRegistration from "@/components/pages/drone_owner/DroneRegistration.vue"
@@ -46,13 +47,14 @@ const router = createRouter({
         { path: '/admin/manageInventory', component: ManageInventory},
         { path: '/admin/manageInventory/restock/:description', component: ManageInventoryRestock},
         { path: '/admin/manageLeasePayments', component: ManageLeasePayments},
-        { path: '/admin/manageLeasePayments/payLease', component: ManageLeasePaymentsPayLease},
+        { path: '/admin/manageLeasePayments/payLease/:description', component: ManageLeasePaymentsPayLease},
         { path: '/admin/manageMenu', component: ManageMenu},
         { path: '/admin/manageMenu/edit/:description', component: ManageMenuEdit},
         { path: '/admin/manageMenu/remove/:description', component: ManageMenuRemove},
         { path: '/admin/manageMenu/add', component: ManageMenuAdd},
         { path: '/admin/manageAccounts', component: ManageAccounts},
-        { path: '/admin/manageAccounts/edit', component: ManageAccountsEdit},
+        { path: '/admin/manageAccounts/edit/:description', component: ManageAccountsEdit},
+        { path: '/admin/manageAccounts/remove/:description', component: ManageAccountsRemove},
         { path: '/admin/financialRecords', component: FinancialRecords},
 
         { path: '/customer/history', component: OrderHistory},

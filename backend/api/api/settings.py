@@ -88,8 +88,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'DroneConesDB', 
-        'USER': 'postgres',
-        'PASSWORD': '123',
+        'USER': '',
+        'PASSWORD': '',
         'HOST': '127.0.0.1', 
         'PORT': '5432',
     }
