@@ -80,3 +80,42 @@ def get_all_owned_drones(request):
         all_drones = DroneInfo.objects.filter(ownerID = request.data['ownerID'])
         return Response(serializer(all_drones, many=True).data)
     return Response(serializer.errors, status=400)
+
+@api_view(['GET'])
+def get_delivering_drones(request):
+    '''
+    {'cone_count': <number of cones>}
+    '''
+    LARGE_CAP = 8
+    MEDIUM_CAP = 4
+    SMALL_CAP = 1
+    serializer = RegisterDroneSerializer(data=request.data)
+    if serializer.is_valid():
+        curr_cap = 0
+        drone_list = []
+        cone_count = request.data["cone_count"]
+        objects = DroneInfo.objects.filter(status = "idle")
+        large = list(objects.filter(size = 'large'))
+        med = list(objects.filter(size = 'medium'))
+        small = list(objects.filter(size = 'small'))
+
+
+def drones_by_max(cone_count, large, med, small, drone_list):
+    LARGE_CAP = 8
+    MEDIUM_CAP = 4
+    SMALL_CAP = 1
+    while cone_count >= 0:
+        if cone_count >= LARGE_CAP and len(large) > 0:
+            drone_list.append(large.pop())
+            cone_count -= LARGE_CAP  
+        elif cone_count >= MEDIUM_CAP and len(med) > 0:
+            drone_list.append(med.pop())
+            cone_count -= MEDIUM_CAP
+        elif cone_count >= SMALL_CAP and len(small) > 0:
+            cone_count -= SMALL_CAP
+            drone_list.append(med.pop())
+        else:
+            return cone_count
+    return cone_count
+
+def drones_by_min(cone_count, large, med, small, drone_list):
