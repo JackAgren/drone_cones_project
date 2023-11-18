@@ -7,7 +7,7 @@ from .models import DroneInfo
 from user.models import CustomUser
 from datetime import datetime
 from django.shortcuts import get_object_or_404
-
+from rest_framework import generics
 
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
@@ -84,8 +84,13 @@ def get_all_owned_drones(request):
     'ownerID': <Owner Email>
     }
     '''
-    serializer = RegisterDroneSerializer(data=request.data)
-    if serializer.is_valid():
-        all_drones = DroneInfo.objects.filter(ownerID = request.data['ownerID'])
-        return Response(serializer(all_drones, many=True).data)
-    return Response(serializer.errors, status=400)
+    try:
+        if 'email' in request.query_params:
+            user = CustomUser.objects.get(email=request.query_params['email'])
+            all_drones = DroneInfo.objects.filter(ownerID = user)
+        else:
+            all_drones = DroneInfo.objects.all()
+        return Response(RegisterDroneSerializer(all_drones, many=True).data)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Not found."}, status=400)
