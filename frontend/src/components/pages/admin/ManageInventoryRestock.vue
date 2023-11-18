@@ -9,10 +9,16 @@
 
         <div id="actionContentArea">
           <div id="infoArea1">
-            <p class="infoLabel">Item to restock: {{ itemName }}</p> <!-- Binding itemName -->
-            <p class="infoLabel">Item Type: {{ itemType }}</p> <!-- Binding itemType -->
-            <p class="infoLabel">Current Quantity: {{ currentQuantity }} Gallons</p> <!-- Binding currentQuantity -->
-            <p class="infoLabel">Cost per Unit: {{ costPerUnit }}</p> <!-- Binding costPerUnit -->
+            <p class="infoLabel">Item to restock: {{ itemName }}</p>
+            <!-- Binding itemName -->
+            <p class="infoLabel">Item Type: {{ itemType }}</p>
+            <!-- Binding itemType -->
+            <p class="infoLabel">
+              Current Quantity: {{ currentQuantity }} Gallons
+            </p>
+            <!-- Binding currentQuantity -->
+            <p class="infoLabel">Cost per Unit: {{ costPerUnit }}</p>
+            <!-- Binding costPerUnit -->
           </div>
 
           <div id="inputArea1">
@@ -27,17 +33,17 @@
           </div>
 
           <div id="infoArea2">
-              <div class="infoWrapper">
-                <p class="infoLabel">Restock Cost:</p>
-                <p class="infoValue">{{ restockCost }}</p>
-              </div>
-              <div class="infoWrapper">
-                <p class="infoLabel">Tax:</p>
-                <p class="infoValue">{{ tax }}</p>
-              </div>
-              <div class="infoWrapper">
-                <p class="infoLabel">Total Cost:</p>
-                <p class="infoValue">{{ totalCost }}</p>
+            <div class="infoWrapper">
+              <p class="infoLabel">Restock Cost:</p>
+              <p class="infoValue">{{ restockCost }}</p>
+            </div>
+            <div class="infoWrapper">
+              <p class="infoLabel">Tax:</p>
+              <p class="infoValue">{{ tax }}</p>
+            </div>
+            <div class="infoWrapper">
+              <p class="infoLabel">Total Cost:</p>
+              <p class="infoValue">{{ totalCost }}</p>
             </div>
           </div>
         </div>
@@ -50,7 +56,6 @@
           >
             Restock
           </VueButton>
-          
         </div>
       </div>
     </Background>
@@ -108,8 +113,24 @@ methods: {
     },
 
     fetchItem() {
+      // Correctly set the authorization header
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      // Handle the case where the token is missing
+      return;
+    }
+
+    const authorizationHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    };
+
       const itemName = this.$route.params.description;
-      fetch(`http://localhost:8000/inventory/inventory_search?description=${itemName}`)
+      fetch(`http://localhost:8000/inventory/inventory_search?description=${itemName}`, {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -159,11 +180,24 @@ methods: {
       this.tax = this.formatCurrency(tax);
       this.totalCost = this.formatCurrency(totalCost);
     },
-  
+
     restockItem() {
+      // Correctly set the authorization header
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      // Handle the case where the token is missing
+      return;
+    }
+
+    const authorizationHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    };
+
     const options = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authorizationHeaders,
       body: JSON.stringify({
         description: this.itemName,
         quantity: this.quantityToPurchase,
@@ -188,7 +222,7 @@ methods: {
       });
     },
 
-  
+
 
 
 },

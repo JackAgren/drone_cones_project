@@ -3,12 +3,12 @@
     <Background>
       <div id="tableContentArea">
         <div id="backButtonArea">
-          <VueBackButton id="backButton" @click="goBack"/>
+          <VueBackButton id="backButton" @click="goBack" />
           <p id="contentHeader">Manage Menu</p>
         </div>
 
         <div id="tableArea">
-          <table>
+          <table v-if="!isTableEmpty">
             <thead>
               <tr>
                 <th style="width: 10%">Item ID</th>
@@ -19,6 +19,11 @@
               </tr>
             </thead>
           </table>
+
+          <div v-else class="emptyTableMessage">
+            No Menu Items exist. Add a menu item by clicking the Add button
+            below.
+          </div>
 
           <div id="tableContent" :style="{ height: tableHeight + 'px' }">
             <table>
@@ -98,6 +103,10 @@ computed: {
       const calculatedHeight = ((totalRows) * rowHeight);
       return Math.min(calculatedHeight, this.maxHeight); // Return the smaller of the two
     },
+
+    isTableEmpty() {
+      return this.rows.length === 0;
+    },
   },
 
   mounted() {
@@ -148,11 +157,33 @@ computed: {
       const itemName = selectedItem ? selectedItem.col2 : ''; // Assuming col2 is the item name
       this.$router.push({
         path: `/admin/manageMenu/edit/${itemName}`
-      });    
+      });
     },
+
+
+
+
+
+
     fetchMenu() {
+
+      // Correctly set the authorization header
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
+
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
     // Use your preferred method to fetch data, here's a fetch API example
-    fetch('http://localhost:8000/inventory/inventory_search?description=ALL')
+    fetch('http://localhost:8000/inventory/inventory_search?description=ALL', {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -166,14 +197,12 @@ computed: {
         console.error('There has been a problem with your fetch operation:', error);
       });
     },
-    
+
     formatCurrency(value) {
       return `$${parseFloat(value).toFixed(2)}`;
     },
 
     processInventoryData(inventoryData) {
-    // Assuming your inventory items do not include an Item ID or Type, 
-    // you may need to generate or retrieve these from somewhere if required.
     this.rows = inventoryData.map((item, index) => {
       return {
           col1: index + 1, // Assuming the Item ID is the index + 1
@@ -308,5 +337,12 @@ th {
 .button-disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.emptyTableMessage {
+  color: white;
+  text-align: center;
+  margin-top: 250px;
+  font-size: 30px;
 }
 </style>

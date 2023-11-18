@@ -3,7 +3,7 @@
     <Background>
       <div id="tableContentArea">
         <div id="backButtonArea">
-          <VueBackButton id="backButton" @click="goBack"/>
+          <VueBackButton id="backButton" @click="goBack" />
           <p id="contentHeader">Edit Account Status</p>
         </div>
 
@@ -31,7 +31,7 @@
           </div>
 
           <div class="inputArea">
-            <p>Account Status</p>
+            <!-- <p>Account Status</p>
             <div class="input-wrapper3">
               <img id="downIcon" src="@/assets/downTriangle.png" />
               <select
@@ -43,14 +43,14 @@
                 <option>Active</option>
                 <option>Banned</option>
               </select>
-            </div>
+            </div> -->
           </div>
         </div>
 
         <div id="buttonArea">
           <VueButton
-            :class="{ 'button-disabled': !accountType || !accountStatus }"
-            :disabled="!accountType || !accountStatus"
+            :class="{ 'button-disabled': !accountType }"
+            :disabled="!accountType"
           >
             Apply
           </VueButton>
@@ -88,28 +88,7 @@ data() {
 },
 
 methods: {
-  isPositiveDecimal(event) {
-    const charCode = (event.which) ? event.which : event.keyCode;
-    const value = event.target.value;
 
-    // Allow only one decimal point (46) and numbers (48-57)
-    if (charCode === 46 && value.indexOf('.') !== -1) {
-      event.preventDefault();
-      return;
-    }
-
-    if (charCode !== 46 && (charCode < 48 || charCode > 57)) {
-      event.preventDefault();
-    }
-
-    // Restrict to two decimal places
-    if (charCode === 46 || (charCode >= 48 && charCode <= 57)) {
-      const parts = value.split('.');
-      if (parts.length > 1 && parts[1].length >= 2) {
-        event.preventDefault();
-      }
-    }
-  },
 
   goBack() {
       this.$router.push({path: '/admin/manageAccounts', query: {}})
@@ -117,9 +96,70 @@ methods: {
 
 
 
-  fetchUser() {
-    const itemName = this.$route.params.description;
-    fetch(`http://localhost:8000/user/get_users?description=${itemName}`)
+    fetchUser() {
+     // Correctly set the authorization header
+     const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      // Handle the case where the token is missing
+      return;
+    }
+
+    const authorizationHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    };
+  // Get userID from the URL parameters
+  const userID = this.$route.params.description;
+
+  fetch(`http://localhost:8000/user/get_users?id=${userID}`,{
+        method: 'GET',
+        headers: authorizationHeaders
+      })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(user => {
+      // Directly process the received user data
+      this.processUserData(user);
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    });
+},
+
+processUserData(userData) {
+  this.userID = userData.user.id;
+  this.userEmail = userData.user.email;
+},
+
+
+    modifyUser() {
+    // Correctly set the authorization header
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      // Handle the case where the token is missing
+      return;
+    }
+
+    const authorizationHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    };
+
+    const options = {
+      method: 'POST',
+      headers: authorizationHeaders,
+      body: JSON.stringify({
+        description: this.itemName,
+        }),
+      };
+
+      fetch('http://localhost:8000/inventory/edit_user', options)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -127,35 +167,24 @@ methods: {
         return response.json();
       })
       .then(data => {
-        this.processUserData(data);
+        console.log('Remove successful:', data);
+        this.$router.push({path: '/admin/manageMenu', query: {}})
       })
       .catch(error => {
-        console.error('There has been a problem with your fetch operation:', error);
+        console.error('Remove failed:', error);
       });
-  },
+    },
 
 
-  processUserData(itemData) {
-      if (!itemData || itemData.length === 0) return;
-      const item = itemData[0]; // Assuming the first item is the one we need
-      // Update the data properties with the item details
-      this.userID = item.id;
-      this.userEmail = item.email; // Assuming the type is available
-  },
 
 
 
 },
 
-  mounted() {
+mounted() {
     this.fetchUser();
-    // Add global click event listener
-    document.addEventListener('click', this.deselectRow);
   },
-  beforeDestroy() {
-    // Remove global click event listener
-    document.removeEventListener('click', this.deselectRow);
-  },
+
 }
 </script>
 

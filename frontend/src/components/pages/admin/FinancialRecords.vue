@@ -21,12 +21,7 @@
                 <p>
                   Current Month Earnings:
                   <span :class="earningsInfo.tagDisplayMode" id="earningsTag"
-                    >{{ earningsInfo.sign
-
-
-
-                    }}{{ earningsInfo.absEarnings }}</span
-                  >
+                    >{{ earningsInfo.sign}}{{ earningsInfo.absEarnings }}</span>
                 </p>
               </div>
             </div>

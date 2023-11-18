@@ -36,4 +36,24 @@ DELETE http://127.0.0.1:8000/user/delete_account
 Content-Type: application/json
 Authorization: Token b0d5dac5a3f4c8c0bcc8d1740d1759c86b10ca27
 
-{ "email": "adam@mail.com" }
+{ "email": "user@user.com" }
+
+###
+
+GET http://127.0.0.1:8000/drone_operator/get_all_drones
+Content-Type: application/json
+Authorization: Token 4e16a114cfa154836409f80b464f6697b6d60d17
+
+###
+
+POST http://127.0.0.1:8000/drone_operator/register_drone
+Content-Type: application/json
+Authorization: Token a754a23db56da1b744ae7cf9b91fa3da135c93f4
+
+{"ownerID": "user@user.com", "size": "medium", "status": "inactive"}
+
+###
+
+GET http://127.0.0.1:8000/drone_operator/get_all_owned_drones
+Content-Type: application/json
+Authorization: Token a754a23db56da1b744ae7cf9b91fa3da135c93f4

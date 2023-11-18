@@ -86,8 +86,24 @@ methods: {
     },
 
     fetchItem() {
+      // Correctly set the authorization header
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
+
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+
       const itemName = this.$route.params.description;
-      fetch(`http://localhost:8000/inventory/inventory_search?description=${itemName}`)
+      fetch(`http://localhost:8000/inventory/inventory_search?description=${itemName}`, {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -114,9 +130,22 @@ methods: {
   },
 
   removeItem() {
+    // Correctly set the authorization header
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      // Handle the case where the token is missing
+      return;
+    }
+
+    const authorizationHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    };
+
     const options = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authorizationHeaders,
       body: JSON.stringify({
         description: this.itemName,
         }),
