@@ -60,12 +60,13 @@ export default {
     }
   },
   created() {
-    if (this.$route.query.cart) {
-      this.cart = JSON.parse(this.$route.query.cart);
-    }
 
     const id = localStorage.getItem('userEmail');
     const token = localStorage.getItem('token');
+
+    if (this.$route.query.cart) {
+      this.cart = JSON.parse(this.$route.query.cart);
+    }
 
     fetch(SERVER_URL + `orders/order_search?userID=${id}`, {
       method: 'GET',
