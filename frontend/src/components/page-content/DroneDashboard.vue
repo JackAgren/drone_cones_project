@@ -1,5 +1,4 @@
 <template>
-  <Background />
 
   <div class="center">
 
@@ -45,12 +44,12 @@ export default {
 
 .center {
   margin: auto;
-  width: 60%;
+  width: 70%;
   height: 30%;
   position: fixed;
   z-index: 1;
   top: 40%;
-  left: 325px;
+  left: 25%;
   color: white;
   font-weight: bold;
   text-align: center;

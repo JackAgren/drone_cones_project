@@ -10,8 +10,8 @@
           <img :class="item.css" :src="item.image" alt="Photo of featured cone.">
 
           <div>
-            <p class="featured-price">${{ Math.round(item.price) / 100 }}</p>
-            <div @click="addToCart" class="this-button">
+            <p class="featured-price">${{ Math.round(item.price * 100) / 100 }}</p>
+            <div @click="addToCart(item)" class="this-button">
               &nbsp;<img class="cart-icon" src="../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
             </div>
           </div>
@@ -35,6 +35,7 @@ import featured3 from '../../assets/img/featured3.png';
 
 export default {
   name: 'FeaturedMenu',
+  emits: ['sendToCart'],
   components: {
     Background,
     VueButton,
@@ -43,19 +44,30 @@ export default {
     return {
       featured: [
         [
-          {name: "S'mores", price: 123, image: featured0, css: 'featured-image f0'},
-          {name: 'Berry Blast', price: 123, image: featured1, css: 'featured-image f1'},
+          {name: "S'mores", price: 1.23, image: featured0, css: 'featured-image f0', details: {
+              cone: "Waffle", scoops: ["Vanilla", "Chocolate"], toppings: ["Smores", "Chocolate Sauce"]
+            }},
+          {name: 'Berry Blast', price: 1.23, image: featured1, css: 'featured-image f1', details: {
+              cone: "Waffle", scoops: ["Strawberry", "Strawberry"], toppings: ["Mixed Berries", "Sprinkles"]
+            }},
         ],
         [
-          {name: 'Strawberry Cheesecake', price: 123, image: featured2, css: 'featured-image f2'},
-          {name: 'Peanut Butter', price: 123, image: featured3, css: 'featured-image f3'},
+          {name: 'Strawberry Cheesecake', price: 1.23, image: featured2, css: 'featured-image f2', details: {
+              cone: "Waffle", scoops: ["Cheesecake", "Cheesecake"], toppings: ["Strawberries"]
+            }},
+          {name: 'Peanut Butter', price: 1.23, image: featured3, css: 'featured-image f3', details: {
+              cone: "Waffle", scoops: ["Peanut Butter", "Peanut Butter"], toppings: ["Oreo", "Chocolate Sauce"]
+            }},
         ],
       ],
     }
   },
   methods: {
-    addToCart() {
-      //TODO: add to cart
+    addToCart(cone) {
+      const item = {name: cone.name, price: cone.price, qty: 1, details: cone.details}
+
+      console.log(item);
+      this.$emit('sendToCart', item);
     },
   },
 }
