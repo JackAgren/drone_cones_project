@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .serializers import InventorySerializer, RemoveSerializer
+from .serializers import InventorySerializer, DescriptionSerializer 
 from .models import Inventory
 from datetime import date 
 from rest_framework import status
@@ -75,7 +75,7 @@ def remove_inventory(request):
     BODY:
     { "description": "<DESCRIPTION>" }
     '''
-    serializer = RemoveSerializer(data=request.data)
+    serializer = DescriptionSerializer(data=request.data)
     if serializer.is_valid():
         get_object_or_404(Inventory, description=request.data['description']).delete()
         return Response({'success': f"{request.data['description']} deleted."})
