@@ -65,7 +65,20 @@ def add(request):
     if serializer.is_valid():
         cones = []
         total = 0
+        
+        # Check current stock of ordered icecream flavors
         for cone in request.data["cones"]:
+            outOfStock = []
+            for iceCream in cone['iceCream']:
+                item = get_object_or_404(Inventory, description=iceCream)
+                if item.quantity <= 0:
+                    outOfStock.append(item.description)
+                else:
+                    setattr(item, 'quantity', item.quantity-1)
+                    item.save()
+            if not len(outOfStock) == 0:
+                return Response({ 'outofstock': outOfStock })
+
             id = Cones.objects.create(
                     toppings=cone['toppings'],
                     iceCream=cone['iceCream'],
