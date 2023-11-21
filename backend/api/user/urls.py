@@ -8,6 +8,7 @@ urlpatterns = [
     path('delete_account', views.delete_account, name='delete_account'),
     path('edit_account', views.edit_account, name='edit_account'),
     path('get_permissions', views.get_permissions, name='get_permissions'),
-    path('update_permissions', views.update_permissions, name='update_permissions'),
     path('get_users', views.get_users, name='list'),
+    path('create_guest', views.create_guest, name='create_guest'),
+    path('delete_guest', views.delete_guest, name='delete_guess'),
 ]

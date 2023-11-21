@@ -46,6 +46,8 @@ def get_users(request):
 
 @api_view(['POST'])
 def create_account(request):
+    if request.data['email'] == 'guest@guest.com':
+        return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
     serializer = UsersSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -72,8 +74,8 @@ def test_token(request):
     return Response(f"{request.user.email} has a valid token")
 
 @api_view(['DELETE'])
-# @authentication_classes([SessionAuthentication, TokenAuthentication])
-# @permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def delete_account(request):
     try:
         user = get_object_or_404(CustomUser, email=request.data['email'])
@@ -82,14 +84,49 @@ def delete_account(request):
     except CustomUser.DoesNotExist as e:
         return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_permissions(request):
+    print('hello')
+    try:
+        query = CustomUser.objects.get(email=request.query_params['email'])
+        serialized = UsersSerializer(query)
+        return Response({"is_staff": serialized.data['is_staff'], "is_superuser": serialized.data['is_superuser']})
+    except Exception as e:
+        return Response({"detail": "Not found."}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+@api_view(['POST'])
+def create_guest(request):
+    if CustomUser.objects.filter(email='guest@guest.com').exists():
+        user = get_object_or_404(CustomUser, email='guest@guest.com')
+        user.delete()
+    GUEST_DATA = {'password': 'SUPER_SECURE_FAKE_PASSWORD', 'email': 'guest@guest.com'}
+    serializer = UsersSerializer(data=GUEST_DATA)
+    if serializer.is_valid():
+        serializer.save()
+        user = CustomUser.objects.get(email='guest@guest.com')
+        user.set_password('SUPER_SECURE_FAKE_PASSWORD')
+        user.save()
+        token = Token.objects.create(user=user)
+        return Response({"token": token.key})
+    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_guest(request):
+    try:
+        user = get_object_or_404(CustomUser, email='guest@guest.com')
+        user.delete()
+        return Response({"deleted": "Guest Account"})
+    except CustomUser.DoesNotExist as e:
+        return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
 
 def edit_account(request):
     return JsonResponse({'Response': 'EDIT_ACCOUNT_CONFIRMATION'})
 
-
-def get_permissions(request):
-    return JsonResponse({'Response': 'ACCOUNT_PERMISSIONS'})
-
-
-def update_permissions(request):
+def logout(request):
     return JsonResponse({'Response': 'UPDATE_PERMISSIONS_CONFIRMATION'})
