@@ -53,31 +53,36 @@ components: {
       this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
     },
     fetchEarnings() {
-      // this.earnings = "none"
-      fetch('http://localhost:8000/drone_operator/get_all_owned_drones', {
-        method: "GET",
-        body: {
-          ownerID: "mattt@mail.com",
-          size: "small",
-          status: "active"
-        }
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+
+      fetch('http://localhost:8000/drone_operator/get_all_owned_drones',
+      {
+          method: 'GET',
+          headers: authorizationHeaders,
       })
       .then(response => {
-        console.log(response.json());
-        this.earnings = "yay"
-      });
-      // fetch('http://localhost:8000/drone_operator/get_all_owned_drones')
-      //   .then(response => {
-      //     if (!response.ok) {
-      //       throw new Error('Network response was not ok');
-      //     }
-      //   })
-      //   .then(data => {
-      //     this.earnings = "ew";
-      //   })
-      // .catch(error => {
-      //   console.error('There has been a problem with your fetch operation:', error);
-      // });
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          this.earnings = "test"
+          return
+          // return response.json();
+        })
+        .then(data => {
+          this.processUsersData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
     }
   }
 }
