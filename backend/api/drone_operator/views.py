@@ -7,7 +7,7 @@ from .models import DroneInfo
 from user.models import CustomUser
 from datetime import datetime
 from django.shortcuts import get_object_or_404
-
+from rest_framework import generics
 
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])

@@ -19,13 +19,12 @@
       <tr>
 
         <td>
-          <FeaturedMenu v-on:addToCart="addToOrder"/>
-          <!--<FeaturedMenu/>-->
+          <FeaturedMenu @sendToCart="addToOrder"/>
         </td>
 
         <td>
           <!--<CYOMenu @addToCart($event)/>-->
-          <CYOMenu/>
+          <CYOMenu @sendToCart="addToOrder"/>
         </td>
 
       </tr>
@@ -63,6 +62,7 @@ export default {
     addToOrder(item) {
       console.log("we got it!");
       console.log(item);
+      this.cart.push(item);
     },
     moveToDashboard() {
       if (confirm("Are you sure you want to return to the dashboard? The contents of your cart will not be saved.")) {
@@ -70,7 +70,7 @@ export default {
       }
     },
     moveToCheckout() {
-      this.$router.push({path: '/customer/checkout', query: {}})
+      this.$router.push({path: '/customer/checkout', query: {cart: JSON.stringify(this.cart)}})
     },
   },
 }

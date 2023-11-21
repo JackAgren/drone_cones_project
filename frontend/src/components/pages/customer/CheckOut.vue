@@ -112,12 +112,14 @@ export default {
         location: this.address,
       }
 
+      console.log(this.orderInfo);
+
       for (let i = 0; i < this.orderInfo.length; i++) {
         for (let j = 0; j < this.orderInfo[i].qty; j++) {
           body.cones.push({
             cone: this.orderInfo[i].details.cone,
             toppings: this.orderInfo[i].details.toppings,
-            iceCream: '??',
+            iceCream: this.orderInfo[i].details.scoops,
             cost: this.orderInfo[i].price,
           });
         }

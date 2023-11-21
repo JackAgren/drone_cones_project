@@ -36,8 +36,8 @@ export default {
   height: 60%;
   position: fixed;
   z-index: 1;
-  top: 150px;
-  left: 325px;
+  top: 20%;
+  left: 30%;
   color: white;
   font-weight: bold;
   text-align: center;
@@ -45,7 +45,7 @@ export default {
 
 .image-box {
   opacity: 100%;
-  width: 30%;
+  height: 90%;
 }
 
 .caption {

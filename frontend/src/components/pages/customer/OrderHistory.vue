@@ -18,7 +18,7 @@
         <tr v-for="item in orderHistory">
           <td style="padding-top: 20px;">
             <span style="font-weight: normal">{{item.order_date}} &nbsp;&nbsp;&nbsp;&nbsp;</span>
-            {{ item.qty }} {{ getTitle(item.name, item.qty) }} &nbsp;&nbsp;&nbsp;&nbsp; ${{ Math.round(item.price * item.qty) }}
+            {{ item.qty }} {{ getTitle(item.name, item.qty) }} &nbsp;&nbsp;&nbsp;&nbsp; ${{ Math.round(item.price * item.qty * 100) / 100 }}
             <br>
             <ul class="details" v-for="detail in formatDetails(item.details)">
               <li>{{ detail }}</li>
@@ -60,12 +60,13 @@ export default {
     }
   },
   created() {
-    if (this.$route.query.cart) {
-      this.cart = JSON.parse(this.$route.query.cart);
-    }
 
     const id = localStorage.getItem('userEmail');
     const token = localStorage.getItem('token');
+
+    if (this.$route.query.cart) {
+      this.cart = JSON.parse(this.$route.query.cart);
+    }
 
     fetch(SERVER_URL + `orders/order_search?userID=${id}`, {
       method: 'GET',
@@ -92,7 +93,7 @@ export default {
                 order_date: date.toLocaleDateString(),
                 details: {
                   cone: thisCone.cone,
-                  scoops: ['??'],
+                  scoops: thisCone.iceCream,
                   toppings: thisCone.toppings
                 }
               });
@@ -134,12 +135,16 @@ export default {
       return toReturn;
     },
     addToCart(item) {
+
+      //TODO: check if item is in stock
+
       console.log(`Adding ${item.qty} of ${item.name} to the cart`);
       this.cart.push({name: item.name, price: item.price, qty: item.qty, details: item.details});
       item.alreadyAdded = true;
     },
   },
 }
+
 </script>
 
 <style scoped>

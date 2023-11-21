@@ -94,8 +94,8 @@ const CONES = ['Waffle', 'Sugar', 'Waffle Bowl', 'Cup'];
 const TOPPINGS = ['Cookie Dough', 'A Very Famous Chocolate Cookie', 'Sprinkles', 'Chocolate Sauce'];
 
 export default {
-  name: 'Menu',
-  emits: 'sendToCart',
+  name: 'CYOMenu',
+  emits: ['sendToCart'],
   components: {
     Background,
     VueButton,
@@ -215,14 +215,14 @@ export default {
       return "";
     },
     calculatePrice() {
-      return 499;
+      return 4.99;
     },
     addToCart() {
       const item = {name: 'CYO cone', price: this.calculatePrice(), qty: 1, details: {
           cone: this.cone, scoops: this.scoops.slice(0, this.scoopCount), toppings: this.toppings
         }}
 
-      console.log(item);
+      //console.log(item);
       this.$emit('sendToCart', item);
     },
     increaseScoops() {
