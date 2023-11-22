@@ -83,7 +83,7 @@ export default {
 
           console.log(resp);
 
-          for (let i = 0; i < resp.length; i++) {
+          for (let i = resp.length - 1; i >= 0; i--) {
             const date = new Date(resp[i].timeOrdered);
             for (let j = 0; j < resp[i].cones.length; j++) {
               const thisCone = resp[i].cones[j];
@@ -124,19 +124,19 @@ export default {
 
       console.log(item);
 
-      if (this.inventory.find(obj => { return obj.description === item.cone}) === undefined) {
+      if (this.inventory.find(obj => { return obj.description === item.cone && obj.quantity > 0}) === undefined) {
         return false;
       }
 
       for (let i = 0; i < item.scoops.length; i++) {
-        if (this.inventory.find(obj => { return obj.description === item.scoops[i]}) === undefined) {
+        if (this.inventory.find(obj => { return obj.description === item.scoops[i] && obj.quantity > 0}) === undefined) {
           console.log(item.scoops[i]);
           return false;
         }
       }
 
       for (let i = 0; i < item.toppings.length; i++) {
-        if (this.inventory.find(obj => { return obj.description === item.toppings[i]}) === undefined) {
+        if (this.inventory.find(obj => { return obj.description === item.toppings[i] && obj.quantity > 0}) === undefined) {
           console.log(item.toppings[i]);
           return false;
         }

@@ -92,7 +92,7 @@ export default {
   methods: {
     removeFromCart(index) {
       if (confirm("Are you sure you want to remove this item from your cart?")) {
-        this.orderInfo = this.orderInfo.splice(index, 1);
+        this.orderInfo = this.orderInfo.slice(0, index).concat(this.orderInfo.slice(index + 1));
       }
     },
     moveToMenu() {
