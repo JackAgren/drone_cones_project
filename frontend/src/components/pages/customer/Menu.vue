@@ -23,7 +23,6 @@
         </td>
 
         <td>
-          <!--<CYOMenu @addToCart($event)/>-->
           <CYOMenu @sendToCart="addToOrder"/>
         </td>
 

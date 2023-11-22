@@ -66,7 +66,6 @@ export default {
           return res.json();
         })
         .then(resp => {
-          console.log(resp);
 
           this.isStaff = resp.is_staff;
           this.isAdmin = resp.is_superuser;
