@@ -3,8 +3,8 @@
 
   <div class="sidenav">
     <p id="customer" @click="changeSelection" :style="checkHighlight('customer')">Place an Order</p>
-    <p id="drones" @click="changeSelection" :style="checkHighlight('drones')">Manage Leased Drone</p>
-    <p id="admin" @click="changeSelection" :style="checkHighlight('admin')">Admin Tools</p>
+    <p v-if="isStaff" id="drones" @click="changeSelection" :style="checkHighlight('drones')">Manage Leased Drone</p>
+    <p v-if="isAdmin" id="admin" @click="changeSelection" :style="checkHighlight('admin')">Admin Tools</p>
   </div>
 
   <CustomerDashboard v-if="currentSelection==='customer'"/>
@@ -20,6 +20,8 @@ import CustomerDashboard from "@/components/page-content/CustomerDashboard.vue";
 import DroneDashboard from "@/components/page-content/DroneDashboard.vue";
 import AdminDashboard from "@/components/page-content/AdminDashboard.vue";
 
+const SERVER_URL = "http://localhost:8000/";
+
 export default {
   name: 'Dashboard',
   components: {
@@ -33,6 +35,8 @@ export default {
   data() {
     return {
       currentSelection: 'customer',
+      isStaff: false,
+      isAdmin: false,
     }
   },
   methods: {
@@ -51,10 +55,33 @@ export default {
     const token = localStorage.getItem('token');
 
     //TODO: check to see what pages the user is able to view given their account permissions
+    fetch(SERVER_URL + `user/get_permissions?email=${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      }
+    })
+        .then(res => {
+          return res.json();
+        })
+        .then(resp => {
+          console.log(resp);
 
-    if (this.$route.query.focus) {
-      this.currentSelection = this.$route.query.focus;
-    }
+          this.isStaff = resp.is_staff;
+          this.isAdmin = resp.is_superuser;
+
+          if (this.$route.query.focus) {
+
+            if (this.$route.query.focus === "drones" && !this.isStaff) {
+              alert("Sorry! You don't have permission to view staff pages.");
+            } else if (this.$route.query.focus === "admin" && !this.isAdmin) {
+              alert("Sorry! You don't have permission to view admin pages.");
+            } else {
+              this.currentSelection = this.$route.query.focus;
+            }
+          }
+        });
   },
 }
 </script>
