@@ -57,6 +57,7 @@ export default {
     return {
       orderHistory: [],
       cart: [],
+      inventory: undefined,
     }
   },
   created() {
@@ -100,12 +101,49 @@ export default {
             }
           }
 
+          return fetch('http://localhost:8000/inventory/inventory_search?description=ALL', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Token ${token}`
+            },
+          });
+        })
+        .then(res => {
+          return res.json();
+        })
+        .then(resp => {
+          this.inventory = resp;
         })
         .catch(err => {
           console.log(`An error occurred: ${err}`);
         });
   },
   methods: {
+    inStock(item) {
+
+      console.log(item);
+
+      if (this.inventory.find(obj => { return obj.description === item.cone}) === undefined) {
+        return false;
+      }
+
+      for (let i = 0; i < item.scoops.length; i++) {
+        if (this.inventory.find(obj => { return obj.description === item.scoops[i]}) === undefined) {
+          console.log(item.scoops[i]);
+          return false;
+        }
+      }
+
+      for (let i = 0; i < item.toppings.length; i++) {
+        if (this.inventory.find(obj => { return obj.description === item.toppings[i]}) === undefined) {
+          console.log(item.toppings[i]);
+          return false;
+        }
+      }
+
+      return true;
+    },
     getTitle(name, qty) {
       if (qty > 1) {
         return `${name}s`;
@@ -136,7 +174,9 @@ export default {
     },
     addToCart(item) {
 
-      //TODO: check if item is in stock
+      if (!this.inStock(item.details)) {
+        alert("We're so sorry, but this item is currently out of stock! Please try again later.")
+      }
 
       console.log(`Adding ${item.qty} of ${item.name} to the cart`);
       this.cart.push({name: item.name, price: item.price, qty: item.qty, details: item.details});
