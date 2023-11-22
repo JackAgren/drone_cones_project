@@ -42,10 +42,57 @@ export default {
     logout() {
       this.isLoggedIn = false;
       this.showDropdown = false;
-      // Remove token and userEmail from localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('userEmail');
-      this.$router.push({path: '/'})
+      if(localStorage.getItem('userEmail') === 'Guest') {
+        this.guestLogout();
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+      
+        this.$router.push({path: '/'})
+      }
+      else
+      {
+        // Remove token and userEmail from localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+      
+        this.$router.push({path: '/'})
+      }
+    },
+
+    guestLogout() {
+      // Correctly set the authorization header
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
+
+
+      const options = {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json','Authorization': `Token ${token}` },
+        // body: JSON.stringify(loginData),
+      };
+
+      fetch('http://localhost:8000/user/delete_guest',options)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.token) {
+            this.isLoggedIn = false;
+            this.showDropdown = false;
+            }
+        })
+        .catch(error => {
+          console.error('Login failed:', error);
+          this.loginError = 'Invalid email or password. Please try again.';
+          this.isLoggingIn = false; // Reset the login state on failure
+        });
     },
 
     gotoLogin() {
