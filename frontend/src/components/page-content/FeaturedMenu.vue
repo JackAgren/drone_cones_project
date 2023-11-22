@@ -85,21 +85,19 @@ export default {
     },
     inStock(item) {
 
-      console.log(item);
-
-      if (this.inventory.find(obj => { return obj.description === item.cone}) === undefined) {
+      if (this.inventory.find(obj => { return obj.description === item.cone  && obj.quantity > 0}) === undefined) {
         return false;
       }
 
       for (let i = 0; i < item.scoops.length; i++) {
-        if (this.inventory.find(obj => { return obj.description === item.scoops[i]}) === undefined) {
+        if (this.inventory.find(obj => { return obj.description === item.scoops[i] && obj.quantity > 0}) === undefined) {
           console.log(item.scoops[i]);
           return false;
         }
       }
 
       for (let i = 0; i < item.toppings.length; i++) {
-        if (this.inventory.find(obj => { return obj.description === item.toppings[i]}) === undefined) {
+        if (this.inventory.find(obj => { return obj.description === item.toppings[i] && obj.quantity > 0}) === undefined) {
           console.log(item.toppings[i]);
           return false;
         }
@@ -121,7 +119,6 @@ export default {
           return res.json();
         })
         .then(resp => {
-          console.log(resp);
           this.inventory = resp;
 
           for (let i = 0; i < this.featured.length; i++) {

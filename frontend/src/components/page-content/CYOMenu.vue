@@ -91,7 +91,7 @@ const MIN_SCOOPS = 1;
 const MAX_SCOOPS = 3;
 const FLAVORS = ['Chocolate', 'Strawberry', 'Vanilla', 'Aggie Blue Mint', 'Peanut Butter', 'Pistachio', 'Mystery'];
 const CONES = ['Waffle', 'Sugar', 'Waffle Bowl', 'Cup'];
-const TOPPINGS = ['Cookie Dough', 'A Very Famous Chocolate Cookie', 'Sprinkles', 'Chocolate Sauce'];
+const TOPPINGS = ['Cookie Dough', 'Oreo', 'Sprinkles', 'Chocolate Sauce'];
 
 export default {
   name: 'CYOMenu',
@@ -128,23 +128,22 @@ export default {
           return res.json();
         })
         .then(resp => {
-          console.log(resp);
           this.inventory = resp;
 
           for (let i = 0; i < FLAVORS.length; i++) {
-            if (this.inventory.find(obj => { return obj.description === FLAVORS[i]}) !== undefined) {
+            if (this.inventory.find(obj => { return obj.description === FLAVORS[i] && obj.quantity > 0}) !== undefined) {
               this.flavors.push(FLAVORS[i]);
             }
           }
 
           for (let i = 0; i < TOPPINGS.length; i++) {
-            if (this.inventory.find(obj => { return obj.description === TOPPINGS[i]}) !== undefined) {
+            if (this.inventory.find(obj => { return obj.description === TOPPINGS[i] && obj.quantity > 0}) !== undefined) {
               this.toppings_stock.push(TOPPINGS[i]);
             }
           }
 
           for (let i = 0; i < CONES.length; i++) {
-            if (this.inventory.find(obj => { return obj.description === CONES[i]}) !== undefined) {
+            if (this.inventory.find(obj => { return obj.description === CONES[i] && obj.quantity > 0}) !== undefined) {
               this.cones_stock.push(CONES[i]);
             }
           }
@@ -176,7 +175,7 @@ export default {
       switch(this.currentTopping) {
         case "Cookie Dough":
           return cookiedough;
-        case "A Very Famous Chocolate Cookie":
+        case "Oreo":
           return oreo;
         case "Chocolate Sauce":
           return sauce;
