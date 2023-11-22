@@ -65,10 +65,14 @@ components: {
         'Authorization': `Token ${token}`
       };
 
-      fetch('http://localhost:8000/user/get_users',
-      {
-          method: 'GET',
-          headers: authorizationHeaders,
+      fetch('http://localhost:8000/user/get_users', {
+        method: "GET",
+        headers: authorizationHeaders,
+        // body: {
+        //   ownerID: "evan@mail.com",
+        //   size: "small",
+        //   status: "active"
+        // }
       })
       .then(response => {
           if (!response.ok) {
@@ -82,7 +86,7 @@ components: {
   },
   beforeMount() {
       this.fetchEarnings();
-    }
+  }
 }
 </script>
 

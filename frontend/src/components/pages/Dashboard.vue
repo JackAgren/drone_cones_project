@@ -47,6 +47,11 @@ export default {
     }
   },
   created() {
+    const id = localStorage.getItem('userEmail');
+    const token = localStorage.getItem('token');
+
+    //TODO: check to see what pages the user is able to view given their account permissions
+
     if (this.$route.query.focus) {
       this.currentSelection = this.$route.query.focus;
     }

@@ -1,7 +1,8 @@
-from rest_framework.decorators import api_view, authentication_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .serializers import InventorySerializer, RemoveSerializer
+from .serializers import InventorySerializer, DescriptionSerializer 
 from .models import Inventory
 from datetime import date 
 from rest_framework import status
@@ -39,6 +40,8 @@ def inventory_search(request):
 
 
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def add_inventory(request):
     '''
     ** Add item matching description  **
@@ -62,6 +65,8 @@ def add_inventory(request):
 
 
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def remove_inventory(request):
     '''
     ** Deletes item matching description  **
@@ -70,7 +75,7 @@ def remove_inventory(request):
     BODY:
     { "description": "<DESCRIPTION>" }
     '''
-    serializer = RemoveSerializer(data=request.data)
+    serializer = DescriptionSerializer(data=request.data)
     if serializer.is_valid():
         get_object_or_404(Inventory, description=request.data['description']).delete()
         return Response({'success': f"{request.data['description']} deleted."})
@@ -78,6 +83,8 @@ def remove_inventory(request):
 
 
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def update_item(request):
     try:
         query = Inventory.objects.get(description=request.data['description'])

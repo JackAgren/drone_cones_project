@@ -1,17 +1,59 @@
 POST http://127.0.0.1:8000/user/create_account 
 Content-Type: application/json
 
-{"password": "Pass1234!", "email": "mattt@mail.com" }
+{"password": "password", "email": "admin@admin.com", "is_superuser": true }
 
-###
+### Creates admin account
+
+POST http://127.0.0.1:8000/user/create_account 
+Content-Type: application/json
+
+{"password": "password", "email": "user@user.com"}
+
+### Creates user account
+
+POST http://127.0.0.1:8000/user/create_account 
+Content-Type: application/json
+
+{"password": "password", "email": "drone@drone.com", "is_staff": true}
+
+### Creates drone owner account
 
 POST http://127.0.0.1:8000/user/login 
 Content-Type: application/json
 
-{ "email": "mattt@mail.com", "password": "Pass1234!" }
+{ "email": "adam@mail.com", "password": "Pass1234!" }
 
 ###
 
 GET http://127.0.0.1:8000/user/test_token 
 Content-Type: application/json
-Authorization: Token 1622830ec006c52edc4bd4a9bc949424d2b316d6
+Authorization: Token b0d5dac5a3f4c8c0bcc8d1740d1759c86b10ca27
+
+###
+
+DELETE http://127.0.0.1:8000/user/delete_account
+Content-Type: application/json
+Authorization: Token b0d5dac5a3f4c8c0bcc8d1740d1759c86b10ca27
+
+{ "email": "user@user.com" }
+
+###
+
+GET http://127.0.0.1:8000/drone_operator/get_all_drones
+Content-Type: application/json
+Authorization: Token 4e16a114cfa154836409f80b464f6697b6d60d17
+
+###
+
+POST http://127.0.0.1:8000/drone_operator/register_drone
+Content-Type: application/json
+Authorization: Token a754a23db56da1b744ae7cf9b91fa3da135c93f4
+
+{"ownerID": "user@user.com", "size": "medium", "status": "inactive"}
+
+###
+
+GET http://127.0.0.1:8000/drone_operator/get_all_owned_drones
+Content-Type: application/json
+Authorization: Token a754a23db56da1b744ae7cf9b91fa3da135c93f4

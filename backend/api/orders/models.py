@@ -10,8 +10,8 @@ class Cones(models.Model):
 
 
 class Orders(models.Model):
-    userID = models.ForeignKey('user.CustomUser', on_delete=models.CASCADE)
-    droneID = models.ForeignKey('drone_operator.DroneInfo', on_delete=models.CASCADE)
+    userID = models.ForeignKey('user.CustomUser', on_delete=models.SET_NULL, null=True)
+    droneID = models.ForeignKey('drone_operator.DroneInfo', on_delete=models.SET_NULL, null=True)
     cones = ArrayField(models.IntegerField())
     location = models.CharField(max_length=200)
     timeOrdered = models.DateTimeField()

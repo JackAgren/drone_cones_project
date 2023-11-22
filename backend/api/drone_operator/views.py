@@ -1,14 +1,17 @@
-from rest_framework.decorators import api_view, authentication_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .serializers import DroneInfoSerializer, RegisterDroneSerializer
 from .models import DroneInfo
 from user.models import CustomUser
 from datetime import datetime
 from django.shortcuts import get_object_or_404
-
+from rest_framework import generics
 
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def register_drone(request):
     '''
     ./drone_operator/register_drone
@@ -32,6 +35,8 @@ def register_drone(request):
 
 
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def update_status(request):
     '''
         ./drone_operator/update_status
@@ -59,6 +64,8 @@ def get_status(request):
 
 
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def decomission_drone(request):
     serializer = RegisterDroneSerializer(data=request.data)
     if serializer.is_valid():
@@ -69,14 +76,21 @@ def decomission_drone(request):
 
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_all_owned_drones(request):
     '''
     {
     'ownerID': <Owner Email>
     }
     '''
-    serializer = RegisterDroneSerializer(data=request.data)
-    if serializer.is_valid():
-        all_drones = DroneInfo.objects.filter(ownerID = request.data['ownerID'])
-        return Response(serializer(all_drones, many=True).data)
-    return Response(serializer.errors, status=400)
+    try:
+        if 'email' in request.query_params:
+            user = CustomUser.objects.get(email=request.query_params['email'])
+            all_drones = DroneInfo.objects.filter(ownerID = user)
+        else:
+            all_drones = DroneInfo.objects.all()
+        return Response(RegisterDroneSerializer(all_drones, many=True).data)
+    except Exception as e:
+        print(e)
+        return Response({"detail": "Not found."}, status=400)
