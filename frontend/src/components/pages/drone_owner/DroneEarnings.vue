@@ -12,7 +12,7 @@
             var earnings = this.fetchInventory()
           </script> -->
           <div id="infoArea">
-            {{fetchEarnings()}}
+            <!-- {{fetchEarnings()}} -->
             <p>Earnings to Date: ${{this.earnings}}</p>
           </div>
 
@@ -53,6 +53,7 @@ components: {
       this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
     },
     fetchEarnings() {
+      this.earnings = "test1"
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('No token found');
@@ -64,7 +65,7 @@ components: {
         'Authorization': `Token ${token}`
       };
 
-      fetch('http://localhost:8000/drone_operator/get_all_owned_drones',
+      fetch('http://localhost:8000/user/get_users',
       {
           method: 'GET',
           headers: authorizationHeaders,
@@ -76,15 +77,12 @@ components: {
           this.earnings = "test"
           return
           // return response.json();
-        })
-        .then(data => {
-          this.processUsersData(data);
-        })
-        .catch(error => {
-          console.error('There has been a problem with your fetch operation:', error);
         });
     }
-  }
+  },
+  beforeMount() {
+      this.fetchEarnings();
+    }
 }
 </script>
 
