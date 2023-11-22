@@ -15,6 +15,7 @@
         <tr v-for="item in orderInfo">
           <td>
             {{ item.qty }} {{ getTitle(item.name, item.qty) }}
+            &nbsp;&nbsp;&nbsp;<span @mouseup="removeFromCart(orderInfo.indexOf(item))">X</span>
             <br>
             <ul class="details" v-for="detail in formatDetails(item.details)">
               <li>{{ detail }}</li>
@@ -89,6 +90,11 @@ export default {
     }
   },
   methods: {
+    removeFromCart(index) {
+      if (confirm("Are you sure you want to remove this item from your cart?")) {
+        this.orderInfo = this.orderInfo.splice(index, 1);
+      }
+    },
     moveToMenu() {
       this.$router.push({path: '/customer/menu', query: {cart: JSON.stringify(this.orderInfo)}})
     },

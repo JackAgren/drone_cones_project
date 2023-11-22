@@ -121,7 +121,6 @@ export default {
           return res.json();
         })
         .then(resp => {
-          console.log(resp);
           this.inventory = resp;
 
           for (let i = 0; i < this.featured.length; i++) {
