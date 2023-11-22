@@ -55,7 +55,7 @@
 
 
         <VueButton @mouseup="addToCart()" class="add-to-cart">
-          Add to Cart
+          {{addButton}}
           <img class="cart-icon" src="../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
         </VueButton>
 
@@ -103,17 +103,62 @@ export default {
   data() {
     return {
       scoopCount: 2,
-      scoops: ["Chocolate", "Chocolate", "Chocolate"],
-      cone: "Sugar",
+      scoops: [],
+      cone: "",
       toppings: [],
       currentTopping: "Cookie Dough",
       toppingButton: "Add",
+      addButton: "Add to Cart",
+      inventory: undefined,
+      flavors: [],
+      toppings_stock: [],
+      cones_stock: [],
     }
+  },
+  created() {
+    const token = localStorage.getItem('token');
+    fetch('http://localhost:8000/inventory/inventory_search?description=ALL', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      },
+    })
+        .then(res => {
+          return res.json();
+        })
+        .then(resp => {
+          console.log(resp);
+          this.inventory = resp;
+
+          for (let i = 0; i < FLAVORS.length; i++) {
+            if (this.inventory.find(obj => { return obj.description === FLAVORS[i]}) !== undefined) {
+              this.flavors.push(FLAVORS[i]);
+            }
+          }
+
+          for (let i = 0; i < TOPPINGS.length; i++) {
+            if (this.inventory.find(obj => { return obj.description === TOPPINGS[i]}) !== undefined) {
+              this.toppings_stock.push(TOPPINGS[i]);
+            }
+          }
+
+          for (let i = 0; i < CONES.length; i++) {
+            if (this.inventory.find(obj => { return obj.description === CONES[i]}) !== undefined) {
+              this.cones_stock.push(CONES[i]);
+            }
+          }
+
+          this.scoops = [this.flavors[0], this.flavors[0], this.flavors[0]];
+          this.currentTopping = this.toppings_stock[0];
+          this.cone = this.cones_stock[0];
+        });
   },
   methods: {
     addTopping() {
       this.toppings.push(this.currentTopping);
       this.toppingButton = "Added!";
+      this.addButton = "Add to Cart";
     },
     getConeLink() {
       switch(this.cone) {
@@ -141,52 +186,58 @@ export default {
     },
     decreaseTopping() {
       this.toppingButton = "Add";
-      const currentIndex = TOPPINGS.indexOf(this.currentTopping);
+      this.addButton = "Add to Cart";
+      const currentIndex = this.toppings_stock.indexOf(this.currentTopping);
       if (currentIndex > 0) {
-        this.currentTopping = TOPPINGS[currentIndex - 1];
+        this.currentTopping = this.toppings_stock[currentIndex - 1];
       } else {
-        this.currentTopping = TOPPINGS[TOPPINGS.length - 1];
+        this.currentTopping = this.toppings_stock[this.toppings_stock.length - 1];
       }
     },
     advanceTopping() {
       this.toppingButton = "Add";
-      const currentIndex = TOPPINGS.indexOf(this.currentTopping);
-      if (currentIndex < TOPPINGS.length - 1) {
-        this.currentTopping = TOPPINGS[currentIndex + 1];
+      this.addButton = "Add to Cart";
+      const currentIndex = this.toppings_stock.indexOf(this.currentTopping);
+      if (currentIndex < this.toppings_stock.length - 1) {
+        this.currentTopping = this.toppings_stock[currentIndex + 1];
       } else {
-        this.currentTopping = TOPPINGS[0];
+        this.currentTopping = this.toppings_stock[0];
       }
     },
     decreaseCone() {
-      const currentIndex = CONES.indexOf(this.cone);
+      this.addButton = "Add to Cart";
+      const currentIndex = this.cones_stock.indexOf(this.cone);
       if (currentIndex > 0) {
-        this.cone = CONES[currentIndex - 1];
+        this.cone = this.cones_stock[currentIndex - 1];
       } else {
-        this.cone = CONES[CONES.length - 1];
+        this.cone = this.cones_stock[this.cones_stock.length - 1];
       }
     },
     advanceCone() {
-      const currentIndex = CONES.indexOf(this.cone);
-      if (currentIndex < CONES.length - 1) {
-        this.cone = CONES[currentIndex + 1];
+      this.addButton = "Add to Cart";
+      const currentIndex = this.cones_stock.indexOf(this.cone);
+      if (currentIndex < this.cones_stock.length - 1) {
+        this.cone = this.cones_stock[currentIndex + 1];
       } else {
-        this.cone = CONES[0];
+        this.cone = this.cones_stock[0];
       }
     },
     decreaseFlavor(index) {
-      const currentIndex = FLAVORS.indexOf(this.scoops[index]);
+      this.addButton = "Add to Cart";
+      const currentIndex = this.flavors.indexOf(this.scoops[index]);
       if (currentIndex > 0) {
-        this.scoops[index] = FLAVORS[currentIndex - 1];
+        this.scoops[index] = this.flavors[currentIndex - 1];
       } else {
-        this.scoops[index] = FLAVORS[FLAVORS.length - 1];
+        this.scoops[index] = this.flavors[this.flavors.length - 1];
       }
     },
     advanceFlavor(index) {
-      const currentIndex = FLAVORS.indexOf(this.scoops[index]);
-      if (currentIndex < FLAVORS.length - 1) {
-        this.scoops[index] = FLAVORS[currentIndex + 1];
+      this.addButton = "Add to Cart";
+      const currentIndex = this.flavors.indexOf(this.scoops[index]);
+      if (currentIndex < this.flavors.length - 1) {
+        this.scoops[index] = this.flavors[currentIndex + 1];
       } else {
-        this.scoops[index] = FLAVORS[0];
+        this.scoops[index] = this.flavors[0];
       }
     },
     getScoopLink(index) {
@@ -218,19 +269,24 @@ export default {
       return 4.99;
     },
     addToCart() {
+      if (this.toppings.length === 0) {
+        alert("It's no fun to have a cone with no toppings! Add at least one to continue :)");
+        return;
+      }
       const item = {name: 'CYO cone', price: this.calculatePrice(), qty: 1, details: {
           cone: this.cone, scoops: this.scoops.slice(0, this.scoopCount), toppings: this.toppings
         }}
-
-      //console.log(item);
       this.$emit('sendToCart', item);
+      this.addButton = "Added! Add again?";
     },
     increaseScoops() {
+      this.addButton = "Add to Cart";
       if (this.scoopCount < MAX_SCOOPS) {
         this.scoopCount++;
       }
     },
     decreaseScoops() {
+      this.addButton = "Add to Cart";
       if (this.scoopCount > MIN_SCOOPS) {
         this.scoopCount--;
       }

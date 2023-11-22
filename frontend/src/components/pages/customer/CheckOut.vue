@@ -139,6 +139,7 @@ export default {
             return res.json();
           })
           .then(resp => {
+            console.log(resp);
 
             const orderID = resp.success.slice(resp.success.lastIndexOf("#") + 1);
             console.log(orderID);
