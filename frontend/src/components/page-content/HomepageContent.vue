@@ -18,11 +18,13 @@
 
       <div id="section1ButtonArea">
         <router-link :to="{ path: '/login' }">
-        <VueButton id="section1LoginButton"> Login </VueButton>
+        <VueButton class="pageButton" id="section1LoginButton"> Login </VueButton>
         </router-link>
         <router-link :to="{ path: '/register' }">
-        <VueButton id="section1LoginButton"> Register </VueButton>
-      </router-link>
+        <VueButton class="pageButton" id="section1LoginButton"> Register </VueButton>
+        </router-link>
+
+        <VueButton class="pageButton" id="section1LoginButton" @click="guestLogin"> Login as Guest </VueButton>
       </div>
 
       <div id="droneIconArea">
@@ -67,6 +69,17 @@ export default {
   components:{
     VueButton
   },
+
+  data() {
+    return {
+      email: '',
+      password: '',
+      loginError: '',
+      isLoggingIn: false,
+    };
+  },
+
+
   methods: {
   gotoLogin() {
       this.$router.push({path: '/login', query: {}})
@@ -74,6 +87,45 @@ export default {
   gotoRegister() {
     this.$router.push({path: '/register', query: {}})
   },
+
+  guestLogin() {
+      this.isLoggingIn = true;
+      this.loginError = '';
+
+      const loginData = {
+        email: "guest@guest.com",
+        password: 999,
+      };
+
+      const options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginData),
+      };
+
+      fetch('http://localhost:8000/user/create_guest',options)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.token) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userEmail', "Guest");
+            this.$router.push({ path: '/dashboard' });
+          }
+        })
+        .catch(error => {
+          console.error('Login failed:', error);
+          this.loginError = 'Invalid email or password. Please try again.';
+          this.isLoggingIn = false; // Reset the login state on failure
+        });
+    }
+
+
+
   },
 };
 </script>
@@ -221,10 +273,10 @@ export default {
 #section1ButtonArea {
   position: absolute;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   grid-column: 2/3;
-  width: 400px;
+  width: 630px;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -251,6 +303,11 @@ export default {
   padding-left: 70px;
   padding-right: 70px;
   text-align: center;
+}
+
+.pageButton{
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 .subsectionIcon {

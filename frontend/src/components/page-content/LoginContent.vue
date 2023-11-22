@@ -33,26 +33,25 @@
             <p v-if="loginError" class="errorText">{{ loginError }}</p>
           </div>
 
-          <!-- Login Button -->
-          <div id="buttonArea2">
+          <div id="buttonArea1">
             <VueButton
               :class="{ 'button-disabled': !isFormComplete }"
               :disabled="!isFormComplete"
               @click="login"
+              class="pageButton"
             >
               Login
             </VueButton>
+
+            <VueButton class="pageButton" @click="gotoRegister"> Register </VueButton>
+
+            <VueButton class="pageButton" @click="guestLogin"> Login as Guest </VueButton>
           </div>
 
-          <!-- Register Button -->
-          <div id="buttonArea1">
-            <VueButton @click="gotoRegister"> Register </VueButton>
-          </div>
-
-          <!-- Forgot Password Link -->
+          <!-- Forgot Password Link
           <div class="normalText">
             <NoBackButton> Forgot Password? </NoBackButton>
-          </div>
+          </div> -->
         </div>
 
         <div v-else class="processingContent">
@@ -136,7 +135,45 @@ export default {
           this.loginError = 'Invalid email or password. Please try again.';
           this.isLoggingIn = false; // Reset the login state on failure
         });
+    },
+
+    guestLogin() {
+      this.isLoggingIn = true;
+      this.loginError = '';
+
+      const loginData = {
+        email: "guest",
+        password: 999,
+      };
+
+      const options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginData),
+      };
+
+      fetch('http://localhost:8000/user/create_guest',options)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.token) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userEmail', "Guest");
+            this.$router.push({ path: '/dashboard' });
+          }
+        })
+        .catch(error => {
+          console.error('Login failed:', error);
+          this.loginError = 'Invalid email or password. Please try again.';
+          this.isLoggingIn = false; // Reset the login state on failure
+        });
     }
+
+
   },
   mounted() {
     const token = localStorage.getItem('token');
@@ -178,7 +215,7 @@ export default {
   margin-right: auto;
   z-index: 1;
   height: 470px;
-  width: 550px;
+  width: 750px;
 }
 
 #contentHeader {
@@ -194,21 +231,12 @@ export default {
   justify-content: center;
   align-items: center;
   grid-column: 2/3;
-  width: 400px;
-  left: -15px;
+  width: 630px;
+  left: 50px;
   top: 340px;
 }
 
-#buttonArea2 {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  grid-column: 2/3;
-  width: 400px;
-  right: -50px;
-  top: 340px;
-}
+
 
 #tableArea {
   display: flex;
@@ -294,7 +322,7 @@ th {
 }
 
 #actionContentArea {
-  margin-left: 70px;
+  margin-left: 150px;
 }
 
 .inputArea {
@@ -423,5 +451,10 @@ input:hover {
   color: white;
   padding-bottom: 80px;
   user-select: none;
+}
+
+.pageButton{
+  margin-left: 15px;
+  margin-right: 15px;
 }
 </style>
