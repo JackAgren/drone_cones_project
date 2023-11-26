@@ -130,7 +130,10 @@ def order_search(request):
     '''
     try:
         if 'order' in request.query_params:
-            query = Orders.objects.all().filter(id=request.query_params['order'])
+            if request.query_params['order'] == 'all':
+                query = Orders.objects.all()
+            else:
+                query = Orders.objects.all().filter(id=request.query_params['order'])
         elif 'userID' in request.query_params:
             query = Orders.objects.all().filter(userID=get_object_or_404(CustomUser, email=request.query_params['userID']))
         elif 'droneID':
@@ -149,7 +152,6 @@ def order_search(request):
         return Response({'error': 'BAD REQUEST'})
     except Exception as err:
         return Response({'error': str(err)})
-
 
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
