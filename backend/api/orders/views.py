@@ -130,7 +130,7 @@ def order_search(request):
     '''
     try:
         if 'order' in request.query_params:
-            if request.query_params['order'] == 'all':
+            if request.query_params['order'] == 'ALL':
                 query = Orders.objects.all()
             else:
                 query = Orders.objects.all().filter(id=request.query_params['order'])
