@@ -48,6 +48,9 @@ components: {
       earnings: "",
     }
   },
+  mounted() {
+    this.fetchEarnings()
+  },
   methods: {
     goBack() {
       this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
@@ -78,9 +81,9 @@ components: {
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
-          this.earnings = "test"
+          this.earnings = response.json()
           return
-          // return response.json();
+          //return response.json();
         });
     }
   },
