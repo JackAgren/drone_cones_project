@@ -84,13 +84,70 @@ def get_all_owned_drones(request):
     'ownerID': <Owner Email>
     }
     '''
-    try:
-        if 'email' in request.query_params:
-            user = CustomUser.objects.get(email=request.query_params['email'])
-            all_drones = DroneInfo.objects.filter(ownerID = user)
+    serializer = RegisterDroneSerializer(data=request.data)
+    if serializer.is_valid():
+        all_drones = DroneInfo.objects.filter(ownerID = request.data['ownerID'])
+        return Response(serializer(all_drones, many=True).data)
+    return Response(serializer.errors, status=400)
+
+@api_view(['GET'])
+def get_delivering_drones(request):
+    '''
+    {'cone_count': <number of cones>}
+    '''
+    LARGE_CAP = 8
+    MEDIUM_CAP = 4
+    SMALL_CAP = 1
+    serializer = RegisterDroneSerializer(data=request.data)
+    if serializer.is_valid():
+        drone_list = []
+        cone_count = request.data["cone_count"]
+        objects = DroneInfo.objects.filter(status = "idle")
+        large = list(objects.filter(size = 'large'))
+        med = list(objects.filter(size = 'medium'))
+        small = list(objects.filter(size = 'small'))
+        cone_count = drones_by_max(cone_count, large, med, small, drone_list)
+        cone_count = drones_by_min(cone_count, large, med, small, drone_list)
+        if cone_count > 0:
+            return Response("{error: Not enough drones.}")
+        return Response(serializer(drone_list, many=True))
+
+
+def drones_by_max(cone_count, large, med, small, drone_list):
+    LARGE_CAP = 8
+    MEDIUM_CAP = 4
+    SMALL_CAP = 1
+    while cone_count >= 0:
+        if cone_count >= LARGE_CAP and len(large) > 0:
+            drone_list.append(large.pop())
+            cone_count -= LARGE_CAP  
+        elif cone_count >= MEDIUM_CAP and len(med) > 0:
+            drone_list.append(med.pop())
+            cone_count -= MEDIUM_CAP
+        elif cone_count >= SMALL_CAP and len(small) > 0:
+            cone_count -= SMALL_CAP
+            drone_list.append(med.pop())
+        else: #This line is where cone_count is less than a larger size but there are no more smaller drones.
+            return cone_count
+    return cone_count # We reach here if the cones all get drones.
+
+def drones_by_min(cone_count, large, med, small, drone_list):
+    LARGE_CAP = 8
+    MEDIUM_CAP = 4
+    SMALL_CAP = 1
+    while cone_count >= 0:
+        if cone_count <= MEDIUM_CAP:
+            if len(med) > 0:
+                drone_list.append(med.pop())
+                cone_count -= MEDIUM_CAP
+            elif len(large) > 0:
+                drone_list.append(large.pop())
+                cone_count -= LARGE_CAP
+        elif cone_count <= LARGE_CAP:
+            if len(large) > 0:
+                drone_list.append(large.pop())
+                cone_count -= LARGE_CAP
         else:
-            all_drones = DroneInfo.objects.all()
-        return Response(RegisterDroneSerializer(all_drones, many=True).data)
-    except Exception as e:
-        print(e)
-        return Response({"detail": "Not found."}, status=400)
+            return cone_count # Reached if all drones are exhausted
+    return cone_count
+
