@@ -49,7 +49,7 @@ components: {
     }
   },
   mounted() {
-    this.fetchEarnings()
+    this.fetchEarnings();
   },
   methods: {
     goBack() {
@@ -81,15 +81,25 @@ components: {
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
-          this.earnings = response.json()
-          return
-          //return response.json();
+          // this.earnings = response.json()
+          // return
+          return response.json();
+        })
+        .then(data => {
+          this.processDroneData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
         });
+    },
+
+    processDroneData(data) {
+      this.earnings = data
     }
-  },
-  beforeMount() {
-      this.fetchEarnings();
   }
+  // beforeMount() {
+  //     this.fetchEarnings();
+  // }
 }
 </script>
 
