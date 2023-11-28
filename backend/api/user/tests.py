@@ -1,34 +1,38 @@
-from django.shortcuts import get_object_or_404
+import json
 from django.test import TestCase
 from .models import CustomUser
-from .serializers import UsersSerializer
-
+from rest_framework import status
+from rest_framework.test import APIClient
 
 class userTesting(TestCase):
   def setUp(self):
     self.userData = {"password": "password", "email": "test@test.com"}
-    serializer = UsersSerializer(data=self.userData)
-    if serializer.is_valid():
-      serializer.save()
-      user = CustomUser.objects.get(email=self.userData['email'])
-      user.set_password(self.userData['password'])
-      user.save()
+    self.client = APIClient()
 
-  def test_user_exists(self):
+  def test_user_creation_and_deletion(self):
+    ## Create User ##
     try:
+       # Access the create_account function
+      createResponse = self.client.post('/user/create_account', data=self.userData)
+      self.assertEqual(createResponse.status_code, status.HTTP_200_OK)
+      userToken = json.loads(createResponse.content)['token']
+
       user = CustomUser.objects.get(email=self.userData['email'])
       self.assertEqual(user.email, self.userData['email'])
       self.assertEqual(user.is_staff, False)
       self.assertEqual(user.is_superuser, False)
       self.assertNotEqual(user.password, self.userData['password'])#shows hashing
     except Exception as e:
-      self.fail()
+      self.fail("Failed to create User")
 
-  def test_delete_user(self):
+    ## Delete User ##
     try:
       self.assertEqual(CustomUser.objects.all().count(), 1)
-      user = CustomUser.objects.get(email=self.userData['email'])
-      user.delete()
+
+      self.client.credentials(HTTP_AUTHORIZATION=f'Token {userToken}')
+      deleteResponse = self.client.delete('/user/delete_account', data=self.userData)
+      self.assertEqual(deleteResponse.status_code, status.HTTP_200_OK)
+
       self.assertEqual(CustomUser.objects.all().count(), 0)
     except Exception as e:
-      self.fail()
+      self.fail("Failed to delete User")
