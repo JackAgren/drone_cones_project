@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Inventory
+from .models import Inventory, RestockOrders
 
 
 class InventorySerializer(serializers.HyperlinkedModelSerializer):
@@ -9,3 +9,8 @@ class InventorySerializer(serializers.HyperlinkedModelSerializer):
 
 class DescriptionSerializer(serializers.Serializer):
     description = serializers.CharField()
+
+class RestockReportSerializer(serializers.Serializer):
+    cost = serializers.FloatField()
+    item = serializers.CharField()
+

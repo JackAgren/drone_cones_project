@@ -2,12 +2,17 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .serializers import InventorySerializer, DescriptionSerializer 
-from .models import Inventory
+from .serializers import InventorySerializer, DescriptionSerializer, RestockReportSerializer
+from .models import Inventory, RestockOrders
 from datetime import date 
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 
+
+@api_view(['GET'])
+def restock_report(request):
+    res = RestockReportSerializer(RestockOrders.objects.all(), many=True)
+    return Response(res.data)
 
 @api_view(['GET'])
 def inventory_search(request):
@@ -40,8 +45,8 @@ def inventory_search(request):
 
 
 @api_view(['POST'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
+#@authentication_classes([SessionAuthentication, TokenAuthentication])
+#@permission_classes([IsAuthenticated])
 def add_inventory(request):
     '''
     ** Add item matching description  **
@@ -65,8 +70,8 @@ def add_inventory(request):
 
 
 @api_view(['POST'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
+#@authentication_classes([SessionAuthentication, TokenAuthentication])
+#@permission_classes([IsAuthenticated])
 def remove_inventory(request):
     '''
     ** Deletes item matching description  **
@@ -83,8 +88,8 @@ def remove_inventory(request):
 
 
 @api_view(['POST'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
+#@authentication_classes([SessionAuthentication, TokenAuthentication])
+#@permission_classes([IsAuthenticated])
 def update_item(request):
     try:
         query = Inventory.objects.get(description=request.data['description'])
@@ -92,6 +97,7 @@ def update_item(request):
             setattr(query, 'salesPrice', float(request.data['salesPrice']))
         if 'quantity' in request.data:
             setattr(query, 'quantity', query.quantity + float(request.data['quantity']))
+            RestockOrders.objects.create(cost=(query.quantity * query.costPerUnit), item=query)
         if 'costPerUnit' in request.data:
             setattr(query, 'salesPrice', float(request.data['costPerUnit']))
         if 'category' in request.data:
@@ -102,3 +108,5 @@ def update_item(request):
         return Response({'error': 'BAD REQUEST'})
     except Exception as err:
         return Response({'error': str(err)})
+
+

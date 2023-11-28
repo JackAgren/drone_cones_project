@@ -8,6 +8,7 @@ urlpatterns = [
     path('update_item', views.update_item, name='update_item'),
     path('add', views.add_inventory, name='add_inventory'),
     path('remove', views.remove_inventory, name='remove_inventory'),
+    path('restock_report', views.restock_report, name='restock_report'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
