@@ -35,6 +35,8 @@
 1. Click **Login**
     - Username: customer@test.com
     - Password: 1234
+    <img src="screenshots/home.png" width="640" height="360" />
+    <img src="screenshots/login.png" width="640" height="360" />
 2. Click the main panel labeled **Place Order**
 3. There is a featured section and a create your own section
     - We will be using the create your own section
@@ -67,6 +69,8 @@
 1. Click **Login**
     - Username: customer@test.com
     - Password: 1234
+    <img src="screenshots/home.png" width="640" height="360" />
+    <img src="screenshots/login.png" width="640" height="360" />
 2. Click the panel under the main panel labeled **Order History**
 3. View your Order History
 
@@ -74,6 +78,8 @@
 1. Click **Login**
     - Username: drone@test.com
     - Password: 1234
+    <img src="screenshots/home.png" width="640" height="360" />
+    <img src="screenshots/login.png" width="640" height="360" />
 2. The panel on the left has three options 
     - Click manage leased drone
 3. Click the Drone registration panel to register a new drone
@@ -87,6 +93,8 @@
 1. Click **Login**
     - Username: drone@test.com
     - Password: 1234
+    <img src="screenshots/home.png" width="640" height="360" />
+    <img src="screenshots/login.png" width="640" height="360" />
 2. The panel on the left has three options 
     - Click manage leased drone
 3. Click the **Drone Activity** panel
