@@ -8,7 +8,7 @@
     <img src="screenshots/login.png" width="640" height="360" />
 2. The panel on the left has two options 
     - Click admin tools
-    <img src="screenshots/admin-tools.png" width="640" height="360"/>
+    <img src="screenshots/admin-tools-manage-inventory.png" width="640" height="360"/>
 3. Now navigate to Manage Inventory
     - There should now be a list of items that are currently available
     - Click on the **Strawberry** item to highlight it
@@ -22,10 +22,14 @@
 1. Click **Login**
     - Username: admin@test.com
     - Password: 1234
+    <img src="screenshots/home.png" width="640" height="360" />
+    <img src="screenshots/login.png" width="640" height="360" />
 2. The panel on the left has three options 
     - Click admin tools
+    <img src="screenshots/admin-tools.png" width="640" height="360"/>
 3. Navigate to financial records
     - Review Financials 
+    <img src="screenshots/admin-tools-financial-records.png" width="640" height="360"/>
 4. Generate the report
 
 ## As a guest place an order when one or more items are out of stock
