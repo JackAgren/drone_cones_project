@@ -2,7 +2,7 @@
 
 ## As a manager check on inventory and restock items
 1. Click **Login**
-    ![image](screenshots/home.png)
+    <img src="screenshots/home.png" width="400" height="200" />
     - Username: admin@test.com
     - Password: 1234
     <img src="screenshots/login.png" width="400" height="200" />
