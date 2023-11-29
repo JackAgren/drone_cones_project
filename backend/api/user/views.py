@@ -88,7 +88,6 @@ def delete_account(request):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_permissions(request):
-    print('hello')
     try:
         query = CustomUser.objects.get(email=request.query_params['email'])
         serialized = UsersSerializer(query)
