@@ -68,13 +68,15 @@ components: {
         'Authorization': `Token ${token}`
       };
 
-      fetch('http://localhost:8000/user/get_users', {
+      fetch('http://localhost:8000/orders/drone_earnings?droneID=1', {
         method: "GET",
+      // fetch("http://localhost:8000/orders/add?name='new'", {
+      // method: "POST",
         headers: authorizationHeaders,
         // body: {
         //   ownerID: "evan@mail.com",
-        //   size: "small",
-        //   status: "active"
+        //   // size: "small",
+        //   // status: "active"
         // }
       })
       .then(response => {
