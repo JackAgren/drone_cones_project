@@ -58,6 +58,7 @@ export default {
   height: 80%;
   font-size: 25pt;
   padding: 50px 0;
+  cursor: pointer;
 }
 
 .order-box:hover {
@@ -70,6 +71,7 @@ export default {
   height: 20%;
   font-size: 18pt;
   padding: 20px 0;
+  cursor: pointer;
 }
 
 .history-box:hover {

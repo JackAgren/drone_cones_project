@@ -211,7 +211,6 @@ computed: {
       col1: item.id, // Assuming 'id' is the user ID
       col2: item.email, // Assuming 'email' is the user email
       col3: accountType, // Set based on is_superuser and is_staff
-      // col4: item.accountStatus // Assuming 'accountStatus' is the account status
     };
   });
 },

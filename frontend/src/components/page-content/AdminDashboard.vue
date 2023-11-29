@@ -8,14 +8,14 @@
         <p class="caption">Financial Records</p>
       </div>
 
-      <div class="button-box" @click="toManageLeases">
+      <!-- <div class="button-box" @click="toManageLeases">
         <img class="image-box" alt="Money being passed." src="../../assets/img/money-hand.png">
         <p class="caption">Manage Lease Payments</p>
-      </div>
+      </div> -->
 
       <div class="button-box" @click="toManageInventory">
         <img class="image-box" alt="Boxes and a clip board." src="../../assets/img/inventory.png">
-        <p class="caption">Manage Inventory</p>
+        <p class="caption">Restock</p>
       </div>
     </div>
 
@@ -92,6 +92,7 @@ export default {
   font-size: 18pt;
   padding: 20px;
   margin: 10px 10px 10px 10px;
+  cursor: pointer;
 }
 
 .button-box:hover {

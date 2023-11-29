@@ -74,6 +74,7 @@ export default {
   font-size: 18pt;
   padding: 20px;
   margin: 10px 10px 10px 10px;
+  cursor: pointer;
 }
 
 .button-box:hover {
