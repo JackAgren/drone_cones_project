@@ -12,15 +12,20 @@
             <div id="balanceArea">
               <p id="contentHeader2">Balance</p>
               <div class="balanceTag">
-                <p>Current Balance: $1,00,000.00</p>
-              </div>
-              <div class="balanceTag">
-                <p>Starting Current Month Balance: $100,000.00</p>
-              </div>
+                <p> Current Balance:
+                    <span :class="balanceInfo.tagDisplayMode"
+                      >{{ balanceInfo.sign}}{{ balanceInfo.absBalance }}</span>
+                  </p>                    </div>
+                <div class="balanceTag">
+                  <p> Current Expenses:
+                    <span :class="expensesInfo.tagDisplayMode"
+                      >{{ expensesInfo.sign}}{{ expensesInfo.absExpenses }}</span>
+                  </p>              
+                </div>
               <div class="balanceTag">
                 <p>
-                  Current Month Earnings:
-                  <span :class="earningsInfo.tagDisplayMode" id="earningsTag"
+                  Current Earnings:
+                  <span :class="earningsInfo.tagDisplayMode"
                     >{{ earningsInfo.sign}}{{ earningsInfo.absEarnings }}</span>
                 </p>
               </div>
@@ -28,15 +33,13 @@
           </div>
 
           <div id="rightHalf">
-            <div id="tableArea">
-              <p id="contentHeader2">Transaction History</p>
+            <div id="salesHistoryTableArea" class="tableArea">
+              <p id="contentHeader2">Sales History</p>
               <table>
                 <thead>
                   <tr>
-                    <th style="width: 10%">Transaction ID</th>
-                    <th style="width: 15%">Transaction Type</th>
-                    <th style="width: 15%">Description</th>
-                    <th style="width: 10%">Amount</th>
+                    <th style="width: 5%">Transaction ID</th>
+                    <th style="width: 5%">Amount</th>
                   </tr>
                 </thead>
               </table>
@@ -45,19 +48,17 @@
                 <table>
                   <tbody>
                     <tr
-                      v-for="(row, index) in rows"
+                      v-for="(row, index) in salesRows"
                       :key="index"
                       :class="[{ 'selected-row': selectedRowIndex === index }, index % 2 === 0 ? 'even-row' : 'odd-row']"
                       @click.stop="selectRow(index)"
                     >
-                      <td style="width: 10%">{{ row.col1 }}</td>
-                      <td style="width: 15%">{{ row.col2 }}</td>
-                      <td style="width: 15%">{{ row.col3 }}</td>
+                      <td style="width: 5%">{{ row.col1 }}</td>
                       <td
-                        style="width: 10%"
+                        style="width: 5%"
                         :class="transactionColorings[index]"
                       >
-                        {{ row.col4 }}
+                        {{ row.col2 }}
                       </td>
                     </tr>
                   </tbody>
@@ -65,9 +66,42 @@
               </div>
             </div>
 
-            <div id="buttonArea">
-              <VueButton id="generateReportButton"> Generate Report </VueButton>
+            <div id="expensesHistoryTableArea" class="tableArea">
+              <p id="contentHeader3">Expenses History</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 5%">Transaction ID</th>
+                    <th style="width: 5%">Amount</th>
+                  </tr>
+                </thead>
+              </table>
+
+              <div id="tableContent" :style="{ height: tableHeight2 + 'px' }">
+                <table>
+                  <tbody>
+                    <tr
+                      v-for="(row, index) in expenseRows"
+                      :key="index"
+                      :class="[{ 'selected-row': selectedRowIndex === index }, index % 2 === 0 ? 'even-row' : 'odd-row']"
+                      @click.stop="selectRow(index)"
+                    >
+                      <td style="width: 5%">{{ row.col1 }}</td>
+                      <td
+                        style="width: 5%"
+                        :class="transactionColorings2[index]"
+                      >
+                        {{ row.col2 }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
+
+            <!-- <div id="buttonArea">
+              <VueButton id="generateReportButton"> Generate Report </VueButton>
+            </div> -->
           </div>
         </div>
       </div>
@@ -95,42 +129,185 @@ components: {
 },
 data() {
   return {
-    earnings: '900,000.00',
+    balance: '',
+    earnings: '',
+    expenses: '',
     maxHeight: 440, // Max height in pixels
     selectedRowIndex: null, // Index of the selected row
-    rows: [
-        { col1: '1512', col2: 'Order', col3: 'OrderID: 5153', col4: '+$10.42'},
-        { col1: '1511', col2: 'Order', col3: 'OrderID: 1234', col4: '+$15.42'},
-        { col1: '1510', col2: 'Order', col3: 'OrderID: 8642', col4: '+$5.11'},
-        { col1: '1509', col2: 'Order', col3: 'OrderID: 5152', col4: '+$1.99'},
-        { col1: '1508', col2: 'Lease Payment', col3: 'Lease payment to Drone Owner - 12', col4: '-$50.00'},
-        { col1: '1507', col2: 'Lease Payment', col3: 'Lease payment to Drone Owner - 57', col4: '-$25.00'},
-        { col1: '1506', col2: 'Menu Restock', col3: 'Vanilla Ice Cream refill', col4: '-$15.67'},
-        { col1: '1505', col2: 'Order', col3: 'OrderID: 5555', col4: '+$20.11'},
-        { col1: '1504', col2: 'Order', col3: 'OrderID: 6666', col4: '+$13.37'},
-        { col1: '1503', col2: 'Order', col3: 'OrderID: 2561', col4: '+$1.00'},
-        { col1: '1502', col2: 'Order', col3: 'OrderID: 5523', col4: '+$15.28'},
-        { col1: '1501', col2: 'Lease Payment', col3: 'Lease payment to Drone Owner - 42', col4: '-$50.00'},
-        { col1: '1500', col2: 'Menu Restock', col3: 'Chocolate Ice Cream refill', col4: '-$50.99'},
-        { col1: '1499', col2: 'Menu Restock', col3: 'Waffle Cone refill', col4: '-$10.00'},
-        { col1: '1498', col2: 'Lease Payment', col3: 'Lease payment to Drone Owner - 11', col4: '-$10.00'},
-        { col1: '1497', col2: 'Order', col3: 'OrderID: 5153', col4: '+$10.42'},
-
-      ]
+    salesRows: [],
+    expenseRows: [],
   }
 },
 methods: {
   goBack() {
       this.$router.push({path: '/dashboard', query: {focus: `admin`}})
     },
+    
+  fetchOrders() {
+       // Correctly set the authorization header
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
+
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+
+      fetch('http://localhost:8000/orders/order_search?order=ALL', {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.processOrdersData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
+  },
+
+  fetchRestocks() {
+       // Correctly set the authorization header
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
+
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+
+      fetch('http://localhost:8000/inventory/restock_report', {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.processRestockData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
+  },
+
+  fetchBalance() {
+       const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+
+      fetch('http://localhost:8000/orders/company_balance', {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.processBalanceData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
+  },
+
+  formatCurrency(value) {
+    return `$${parseFloat(value).toFixed(2)}`;
+  },
+
+  processOrdersData(orderData) {
+  this.salesRows = orderData.map(order => {
+     // Calculate the total cost of all cones in the order.
+     let totalCost = order.cones.reduce((sum, cone) => sum + cone.cost, 0);
+    
+    // Determine the prefix based on the cost being positive or negative.
+    let prefix = totalCost >= 0 ? '+' : '-';
+
+    return {
+        col1: order.id, // Display the order ID.
+        col2: prefix + this.formatCurrency(Math.abs(totalCost)) // Format the total cost with prefix.
+      };
+    });
+  },
+
+  processRestockData(restockData) {
+    let totalCost = -1;
+
+    let prefix = totalCost >= 0 ? '+' : '-';
+
+  this.expenseRows = restockData.map(restock => {
+
+    return {
+        col1: restock.item, // Display the order ID.
+        col2: prefix + this.formatCurrency(Math.abs(restock.cost)), // Format the total cost with prefix.
+      };
+    });
+  },
+
+  processBalanceData(data) {
+  // Check if the data object has the necessary properties
+  if (data.hasOwnProperty('balance') && data.hasOwnProperty('earnings')) {
+    this.balance = this.formatCurrency(data.balance);
+    this.earnings = this.formatCurrency(data.earnings);
+
+    // If the 'expenses' property is present in the data, process it.
+    if (data.hasOwnProperty('expenses')) {
+      this.expenses = this.formatCurrency(data.expenses);
+    } else {
+      // Handle the case where 'expenses' data is missing or undefined.
+      this.expenses = this.formatCurrency(0);
+    }
+  } else {
+    console.error('Data object is missing required properties');
+    this.balance = this.formatCurrency(0);
+    this.earnings = this.formatCurrency(0);
+    this.expenses = this.formatCurrency(0);
+  }
+},
+
+
   },
 computed: {
     tableHeight() {
-      const rowHeight = 40; // Height of one row in pixels
-      const totalRows = this.rows.length;
+      const rowHeight = 40; // Height of one row in pixels.
+      const totalRows = this.salesRows.length;
       const calculatedHeight = ((totalRows) * rowHeight);
-      return Math.min(calculatedHeight, this.maxHeight); // Return the smaller of the two
+      return Math.min(calculatedHeight, this.maxHeight); // Return the smaller of the two.
     },
+
+    tableHeight2() {
+      const rowHeight = 40; // Height of one row in pixels.
+      const totalRows = this.expenseRows.length;
+      const calculatedHeight = ((totalRows) * rowHeight);
+      return Math.min(calculatedHeight, this.maxHeight); // Return the smaller of the two.
+    },
+
     earningsInfo() {
       const earnings = parseFloat(this.earnings.replace(/[$,]/g, ''));
       const sign = earnings >= 0 ? '+' : '-';
@@ -141,11 +318,47 @@ computed: {
       });
       return { sign, tagDisplayMode, absEarnings };
     },
+
+    expensesInfo() {
+      const expenses = parseFloat(this.expenses.replace(/[$,]/g, ''));
+      const sign = expenses >= 0 ? '-' : '+';
+      const tagDisplayMode = expenses >= 0 ? 'off' : 'on';
+      const absExpenses = expenses.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      });
+      return { sign, tagDisplayMode, absExpenses };
+    },
+
+    balanceInfo() {
+      const balance = parseFloat(this.balance.replace(/[$,]/g, ''));
+      const sign = balance >= 0 ? '+' : '-';
+      const tagDisplayMode = balance >= 0 ? 'on' : 'off';
+      const absBalance = Math.abs(balance).toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      });
+      return { sign, tagDisplayMode, absBalance };
+    },
+    
+
     transactionColorings() {
-      return this.rows.map(row => {
-        return row.col4.startsWith('+') ? 'on' : 'off';
+      return this.salesRows.map(row => {
+        return row.col2.startsWith('+') ? 'on' : 'off';
       });
    },
+
+   transactionColorings2() {
+      return this.expenseRows.map(row => {
+        return row.col2.startsWith('+') ? 'on' : 'off';
+      });
+   },
+  },
+
+  mounted() {
+    this.fetchBalance();
+    this.fetchOrders();
+    this.fetchRestocks();
   },
 }
 </script>
@@ -163,6 +376,7 @@ computed: {
 .balanceTag p {
   margin: 0;
   padding: 0;
+  size: 40px;
 }
 
 #backButtonArea {
@@ -202,6 +416,13 @@ computed: {
   user-select: none;
 }
 
+#contentHeader3 {
+  margin-top: 40px;
+  font-size: 20pt;
+  pointer-events: none;
+  user-select: none;
+}
+
 #buttonArea {
   position: absolute;
   display: flex;
@@ -218,13 +439,15 @@ computed: {
   width: 220px;
 }
 
-#tableArea {
+.tableArea {
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin-left: 40px;
   margin-right: 20px;
   position: relative;
+  overflow-y: auto; 
+  max-height: 300px;
 }
 
 #tableContent {

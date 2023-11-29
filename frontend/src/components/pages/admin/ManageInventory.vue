@@ -4,7 +4,7 @@
       <div id="tableContentArea">
         <div id="backButtonArea">
           <VueBackButton id="backButton" @click="goBack" />
-          <p id="contentHeader">Manage Inventory</p>
+          <p id="contentHeader">Restock</p>
         </div>
 
         <div id="tableArea">

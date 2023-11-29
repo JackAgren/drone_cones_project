@@ -97,6 +97,7 @@ export default {
   opacity: 90%;
   overflow-x: hidden;
   padding-top: 20px;
+  user-select: none;
 }
 
 .sidenav p {
@@ -105,6 +106,7 @@ export default {
   font-size: 20px;
   color: #b7b7b7;
   display: block;
+  cursor: pointer;
 }
 
 .sidenav p:hover {
