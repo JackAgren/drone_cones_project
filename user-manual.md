@@ -17,6 +17,7 @@
 4. Enter an amount in the input box to restock
     - Now click restock
     ![image](screenshots/restock.png)
+    <img src="screenshots/restock.png" style="width:200px">
 
 ## As a manager run the revenue report to see if the business is profitable
 1. Click **Login**
