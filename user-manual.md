@@ -5,19 +5,18 @@
     ![image](screenshots/home.png)
     - Username: admin@test.com
     - Password: 1234
-    ![image](screenshots/login.png)
+    <img src="screenshots/login.png" width="400" height="200" />
 2. The panel on the left has two options 
     - Click admin tools
-    ![image](screenshots/admin-tools.png)
+    <img src="screenshots/admin-tools.png" width="400" height="200" />
 3. Now navigate to Manage Inventory
     - There should now be a list of items that are currently available
     - Click on the **Strawberry** item to highlight it
     - Now click the restock button
-    ![image](screenshots/inventory-management.png)
+    <img src="screenshots/inventory-management.png" width="400" height="200" />
 4. Enter an amount in the input box to restock
     - Now click restock 
-    <img src="screenshots/restock.png" width="200" height="200" />
-    ![image](screenshots/restock.png)
+    <img src="screenshots/restock.png" width="400" height="200" />
 
 ## As a manager run the revenue report to see if the business is profitable
 1. Click **Login**
