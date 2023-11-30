@@ -76,11 +76,13 @@ export default {
 .image-box {
   opacity: 100%;
   width: 50%;
+  user-select: none;
 }
 
 .caption {
   margin-top: 10px;
   font-size: 13pt;
+  user-select: none;
 }
 
 .button-box {

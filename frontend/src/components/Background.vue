@@ -72,11 +72,15 @@ export default {
   animation: cloudAnimation1 60s linear infinite;
   animation-delay: -10s;
   padding-left: 40px;
+  user-select: none;
+  pointer-events: none;
 }
 
 #clouds2 {
   animation: cloudAnimation2 60s linear infinite;
   animation-delay: -25s;
+  user-select: none;
+  pointer-events: none;
 }
 
 #clouds3 {
@@ -84,11 +88,15 @@ export default {
   top: 240px;
   animation: cloudAnimation3 80s linear infinite;
   animation-delay: -25s;
+  user-select: none;
+  pointer-events: none;
 }
 
 #clouds4 {
   animation: cloudAnimation3 60s linear infinite;
   animation-delay: -40s;
+  user-select: none;
+  pointer-events: none;
 }
 
 @keyframes cloudAnimation1 {

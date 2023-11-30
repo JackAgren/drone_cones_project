@@ -2,15 +2,18 @@
   <div class="header">
     <img id="headerLogo" src="@/assets/headerLogo.png" />
     <div id="loginButtonArea" @click="toggleDropdown">
-      <p class="headerText" id="usernameTag"
-         @click="isLoggedIn ? null : gotoLogin()">
+      <p :class="headerClass" id="usernameTag"
+         @click="isLoggedIn ? null : gotoLogin()"
+         @mouseenter="hover = true"
+         @mouseleave="hover = false">
         {{ isLoggedIn ? username : 'Login' }}
       </p>
       <img
         v-if="isLoggedIn"
         id="downIcon"
-        :class="{ 'flipped': showDropdown }"
+        :class="[headerClass, { 'flipped': showDropdown }]"
         src="@/assets/downTriangle.png"
+        @click="toggleDropdown"
       />
       <transition name="expand">
         <div v-if="showDropdown" class="dropdown">
@@ -30,8 +33,20 @@ export default {
     return {
       isLoggedIn: false,
       username: '',
-      showDropdown: false
+      showDropdown: false,
+      hover: false,
     };
+  },
+
+  computed: {
+    headerClass() {
+      if (this.isLoggedIn && this.showDropdown) {
+        return 'headerTextOpaque';
+      } else if (this.hover) {
+        return 'headerTextOpaque';
+      }
+      return 'headerTextTransparent';
+    }
   },
   methods: {
     toggleDropdown() {
@@ -39,6 +54,7 @@ export default {
         this.showDropdown = !this.showDropdown;
       }
     },
+   
     logout() {
       this.isLoggedIn = false;
       this.showDropdown = false;
@@ -168,12 +184,12 @@ export default {
   left: auto;
   width: calc(
     150px
-  ); /* Assuming that the parent container has 20px of padding on each side */
+  );
   background-color: #0f131dbb;
   color: white;
   text-align: center;
   z-index: 1000;
-  overflow: hidden; /* Required to properly animate max-height */
+  overflow: hidden;
   padding: 12px;
 }
 
@@ -181,9 +197,24 @@ export default {
   height: auto;
   width: 20px;
   transform: translate(10px, 6px);
+  user-select: none;
+  opacity: 0.7; /* Set default opacity to slightly transparent */
+  transition: opacity 0.3s ease; /* Transition effect for opacity change */
 }
 
-.headerText {
+
+.headerTextTransparent {
+  opacity: 0.7; 
+  transition: opacity 0.3s ease;
+  font-weight: bold;
+  font-size: 15pt;
+  cursor: pointer;
+  user-select: none;
+}
+
+.headerTextOpaque {
+  opacity: 1; 
+  transition: opacity 0.3s ease;
   font-weight: bold;
   font-size: 15pt;
   cursor: pointer;
@@ -193,7 +224,28 @@ export default {
 .dropdownText {
   transform: translate(5px, -2px);
   user-select: none;
+  opacity: 0.7; 
+  transition: opacity 0.3s ease; 
 }
+
+.dropdown:hover .dropdownText,
+.dropdown:hover #logoutIcon {
+  opacity: 1; /* Full opacity on hover of the container */
+  font-weight: bold;
+  font-size: 15pt;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropdownText, #logoutIcon {
+  opacity: 0.7; /* Set default opacity to slightly transparent */
+  transition: opacity 0.3s ease; /* Transition effect for opacity change */
+  font-weight: bold;
+  font-size: 15pt;
+  cursor: pointer;
+  user-select: none;
+}
+
 
 #usernameTag {
   transform: translate(-5px, 5px);

@@ -21,5 +21,7 @@ export default {
     width: 100%;
     padding: 0;
     margin:0;
+    pointer-events: none;
+    user-select: none;
   }
 </style>

@@ -46,10 +46,12 @@ export default {
 .image-box {
   opacity: 100%;
   height: 90%;
+  user-select: none;
 }
 
 .caption {
   margin-top: 10px;
+  user-select: none;
 }
 
 .order-box {
@@ -72,6 +74,7 @@ export default {
   font-size: 18pt;
   padding: 20px 0;
   cursor: pointer;
+  user-select: none;
 }
 
 .history-box:hover {
