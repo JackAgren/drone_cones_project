@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework.response import Response
 from .serializers import DroneInfoSerializer, RegisterDroneSerializer
 from .models import DroneInfo
@@ -12,6 +13,7 @@ from rest_framework import generics
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
+#@staff_member_required
 def register_drone(request):
     '''
     ./drone_operator/register_drone
@@ -84,11 +86,13 @@ def get_all_owned_drones(request):
     'ownerID': <Owner Email>
     }
     '''
-    serializer = RegisterDroneSerializer(data=request.data)
-    if serializer.is_valid():
-        all_drones = DroneInfo.objects.filter(ownerID = request.data['ownerID'])
-        return Response(serializer(all_drones, many=True).data)
-    return Response(serializer.errors, status=400)
+    try:
+        user = get_object_or_404(CustomUser, email=request.data["ownerID"])
+        all_drones = DroneInfo.objects.filter(ownerID = user)
+        serializer = RegisterDroneSerializer(all_drones, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response(e, status=400)
 
 @api_view(['GET'])
 def get_delivering_drones(request):
