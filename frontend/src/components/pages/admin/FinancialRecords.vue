@@ -34,11 +34,11 @@
 
           <div id="rightHalf">
             <div id="salesHistoryTableArea" class="tableArea">
-              <p id="contentHeader2">Sales History</p>
+              <p id="contentHeader2">Earnings History</p>
               <table>
                 <thead>
                   <tr>
-                    <th style="width: 5%">Transaction ID</th>
+                    <th style="width: 5%">Sale ID</th>
                     <th style="width: 5%">Amount</th>
                   </tr>
                 </thead>
@@ -71,7 +71,7 @@
               <table>
                 <thead>
                   <tr>
-                    <th style="width: 5%">Transaction ID</th>
+                    <th style="width: 5%">Restock Item</th>
                     <th style="width: 5%">Amount</th>
                   </tr>
                 </thead>
@@ -257,18 +257,24 @@ methods: {
   },
 
   processRestockData(restockData) {
-    let totalCost = -1;
 
-    let prefix = totalCost >= 0 ? '+' : '-';
+  let prefix = '-';
 
   this.expenseRows = restockData.map(restock => {
+    let itemName;
+    if (!restock.item) {
+      itemName = 'Unknown';
+    } else {
+      let match = restock.item.match(/\(([^)]+)\)/);
+      itemName = match ? match[1] : 'Unknown'; // Use the NAME part if available, otherwise 'Unknown'
+    }
 
     return {
-        col1: restock.item, // Display the order ID.
-        col2: prefix + this.formatCurrency(Math.abs(restock.cost)), // Format the total cost with prefix.
+        col1: itemName, // Use the extracted or default itemName for col1
+        col2: prefix + this.formatCurrency(Math.abs(restock.cost)), // Format the total cost with prefix
       };
     });
-  },
+},
 
   processBalanceData(data) {
   // Check if the data object has the necessary properties
@@ -373,6 +379,12 @@ computed: {
   margin-left: 20px;
 }
 
+#rightHalf {
+  display: flex; 
+  justify-content: space-around; 
+  align-items: flex-start;
+}
+
 .balanceTag p {
   margin: 0;
   padding: 0;
@@ -410,17 +422,11 @@ computed: {
   user-select: none;
 }
 
-#contentHeader2 {
+#contentHeader2, #contentHeader3 {
   font-size: 20pt;
   pointer-events: none;
   user-select: none;
-}
-
-#contentHeader3 {
-  margin-top: 40px;
-  font-size: 20pt;
-  pointer-events: none;
-  user-select: none;
+  text-align: center; /* Center the text horizontally */
 }
 
 #buttonArea {
@@ -440,14 +446,15 @@ computed: {
 }
 
 .tableArea {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 40px;
+  margin-left: 50px;
   margin-right: 20px;
   position: relative;
   overflow-y: auto; 
-  max-height: 300px;
+  max-height: 750px;
 }
 
 #tableContent {

@@ -11,7 +11,7 @@
           <table v-if="!isTableEmpty">
             <thead>
               <tr>
-                <th style="width: 10%">Item ID</th>
+                <!-- <th style="width: 10%">Item ID</th> -->
                 <th style="width: 15%">Item Name</th>
                 <th style="width: 15%">Item Type</th>
                 <th style="width: 15%">Cost per Unit</th>
@@ -34,7 +34,7 @@
                   :class="[{ 'selected-row': selectedRowIndex === index }, index % 2 === 0 ? 'even-row' : 'odd-row']"
                   @click.stop="selectRow(index)"
                 >
-                  <td style="width: 10%">{{ row.col1 }}</td>
+                  <!-- <td style="width: 10%">{{ row.col1 }}</td> -->
                   <td style="width: 15%">{{ row.col2 }}</td>
                   <td style="width: 15%">{{ row.col3 }}</td>
                   <td style="width: 15%">{{ row.col4 }}</td>
@@ -183,11 +183,10 @@ computed: {
   },
 
   processInventoryData(inventoryData) {
-    // Assuming your inventory items do not include an Item ID or Type,
-    // you may need to generate or retrieve these from somewhere if required.
-    this.rows = inventoryData.map((item, index) => {
+    const sortedData = inventoryData.sort((a, b) => a.description.localeCompare(b.description));
+    this.rows = sortedData.map((item, index) => {
       return {
-        col1: index + 1, // Assuming the Item ID is the index + 1
+        // col1: index + 1, // Assuming the Item ID is the index + 1
         col2: item.description,
         col3: item.category,
         col4: this.formatCurrency(item.costPerUnit), // Format cost per unit

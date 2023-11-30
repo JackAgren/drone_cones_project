@@ -58,11 +58,13 @@ export default {
 .image-box {
   opacity: 100%;
   width: 50%;
+  user-select: none;
 }
 
 .caption {
   margin-top: 10px;
   font-size: 18pt;
+  user-select: none;
 }
 
 .button-box {
@@ -75,6 +77,7 @@ export default {
   padding: 20px;
   margin: 10px 10px 10px 10px;
   cursor: pointer;
+  user-select: none;
 }
 
 .button-box:hover {

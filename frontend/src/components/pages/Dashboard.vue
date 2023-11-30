@@ -45,7 +45,7 @@ export default {
     },
     checkHighlight(button) {
       if (button === this.currentSelection) {
-        return "color: #FFF; opacity: 100%;";
+        return "color: #73CA25; opacity: 100%;";
       }
       return "";
     }
@@ -107,6 +107,7 @@ export default {
   color: #b7b7b7;
   display: block;
   cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .sidenav p:hover {
