@@ -1,3 +1,4 @@
+import json
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -19,7 +20,7 @@ def register_drone(request):
     ./drone_operator/register_drone
 
     {
-    "ownerID": <ID>,
+    "ownerID": <Owner Email>,
     "size": <size>,
     status: <status>
     }
@@ -27,12 +28,13 @@ def register_drone(request):
     serializer = RegisterDroneSerializer(data=request.data)
     if serializer.is_valid():
         user = get_object_or_404(CustomUser, email=request.data["ownerID"])
-        DroneInfo.objects.create(
+        drone = DroneInfo.objects.create(
                 ownerID=user,
                 size=request.data['size'],
                 status=request.data['status']
                 )
-        return Response(serializer.data, 201)
+        serialized = DroneInfoSerializer(drone)
+        return Response(serialized.data, 201)
     return Response(serializer.errors, 400)
 
 
@@ -48,33 +50,42 @@ def update_status(request):
         "status": <new status> 
         }
     '''
-    serializer = RegisterDroneSerializer(data=request.data)
-    if serializer.is_valid():
-        object = DroneInfo.objects.get(id = request.data["droneID"])
-        setattr(object, 'status', request.data["status"])
-        return Response({'success': f'Drone {request.droneID}\'s status is now {object.status}'})
-    return Response(serializer.errors, status=400)
+    try:
+        drone = DroneInfo.objects.get(id = request.data["droneID"])
+        drone.status = request.data["status"]
+        drone.save()
+        serialized = DroneInfoSerializer(drone)
+        return Response(serialized.data)
+    except Exception as e:
+        return Response({"error": str(e)}, status=400)
 
 
 @api_view(['GET'])
 def get_status(request):
-    serializer = RegisterDroneSerializer(data=request.data)
-    if serializer.is_valid():
-        object = DroneInfo.objects.get(id = request.data["droneID"])
-        return Response({'status': f'{object.status}'})
-    return Response(serializer.errors, status=400)
+    '''
+    {
+    'droneID': <Drone Id>
+    }
+    '''
+    try:
+        drone = DroneInfo.objects.get(id = request.query_params["droneID"])
+        serialized = DroneInfoSerializer(drone)
+        return Response({'status': serialized.data["status"]})
+    except Exception as e:
+        return Response({"error": str(e)}, status=400)
 
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def decomission_drone(request):
-    serializer = RegisterDroneSerializer(data=request.data)
-    if serializer.is_valid():
-        object = DroneInfo.objects.get(id = request.data["droneID"])
-        object.delete()
-        return Response({'success': f'Drone {request.droneID}\'s has been decommissioned.'})
-    return Response(serializer.errors, status=400)
+    try:
+        drone = DroneInfo.objects.get(id = request.data['id'])
+        drone.delete()
+        return Response({'deleted': request.data['id']})
+    except Exception as e:
+        return Response({"detail": e}, status=404)
+
 
 
 @api_view(['GET'])
@@ -87,12 +98,12 @@ def get_all_owned_drones(request):
     }
     '''
     try:
-        user = get_object_or_404(CustomUser, email=request.data["ownerID"])
+        user = get_object_or_404(CustomUser, email=request.query_params["ownerID"])
         all_drones = DroneInfo.objects.filter(ownerID = user)
-        serializer = RegisterDroneSerializer(all_drones, many=True)
+        serializer = DroneInfoSerializer(all_drones, many=True)
         return Response(serializer.data)
     except Exception as e:
-        return Response(e, status=400)
+        return Response({"error": str(e), "drone": request.data}, status=400)
 
 @api_view(['GET'])
 def get_delivering_drones(request):
