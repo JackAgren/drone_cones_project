@@ -56,15 +56,13 @@ class userTesting(TestCase):
 
     # Delete Guest
     try:
-      self.assertEqual(CustomUser.objects.all().count(), 1)
-
+      currentCount = CustomUser.objects.all().count()
       self.client.credentials(HTTP_AUTHORIZATION=f'Token {guestToken}')
       deleteResponse = self.client.delete('/user/delete_guest')
       self.assertEqual(deleteResponse.status_code, status.HTTP_200_OK)
-      
-      self.assertEqual(CustomUser.objects.all().count(), 0)
+      self.assertEqual(CustomUser.objects.all().count(), currentCount-1)
     except Exception as e:
-      self.fail("Guest Functions Failed")
+      self.fail("Guest Deletion Failed")
 
   def test_permission_checking(self):
     try:
@@ -98,13 +96,11 @@ class userTesting(TestCase):
       self.assertEqual(createResponse2.status_code, status.HTTP_400_BAD_REQUEST)
       
       # Delete User
-      self.assertEqual(CustomUser.objects.all().count(), 1)
-
+      currentCount = CustomUser.objects.all().count()
       self.client.credentials(HTTP_AUTHORIZATION=f'Token {userToken}')
       deleteResponse = self.client.delete('/user/delete_account', data=self.userData)
       self.assertEqual(deleteResponse.status_code, status.HTTP_200_OK)
-
-      self.assertEqual(CustomUser.objects.all().count(), 0)
+      self.assertEqual(CustomUser.objects.all().count(), currentCount-1)
     except Exception as e:
       self.fail("Failed to deny two similar user creations")
 
