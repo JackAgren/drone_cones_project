@@ -49,11 +49,16 @@ components: {
       user_id: 0,
     }
   },
-  created() {
+  async created() {
     // this.fetchUsers(); // Updates user_id
-    this.fetchEarnings();
+    // this.fetchEarnings();
     const id = localStorage.getItem('userEmail');
     const token = localStorage.getItem('token');
+    // this.fetchUsers().then(function() {
+    //   this.fetchEarnings()
+    // })
+    // this.fetchUsers();
+    this.fetchEarnings();
   },
   // mounted() {
   //   this.fetchEarnings();
@@ -62,6 +67,7 @@ components: {
     goBack() {
       this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
     },
+
     fetchEarnings() {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -74,9 +80,10 @@ components: {
         'Authorization': `Token ${token}`
       };
       // stuff = getUserID();
-      // var url = 'http://localhost:8000/orders/drone_earnings?droneID=' + this.user_id;
-      this.fetchUsers(); // Updates user_id
-      var url = 'http://localhost:8000/orders/drone_earnings?droneID=' + '1';
+      // this.fetchUsers();
+      this.earnings = this.fetchUsers()
+      var url = 'http://localhost:8000/orders/drone_earnings?droneID=' + this.fetchUsers();
+      // var url = 'http://localhost:8000/orders/drone_earnings?droneID=' + '1';
       fetch(url, {
         method: "GET",
       // fetch("http://localhost:8000/orders/add?name='new'", {
@@ -134,10 +141,12 @@ components: {
         })
         .then(data => {
           this.processUserData(data);
+          return this.user_id;
         })
         .catch(error => {
           console.error('There has been a problem with your fetch operation:', error);
         });
+      return this.user_id;
     },
 
     processUserData(data) {
