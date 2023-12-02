@@ -103,31 +103,29 @@ def get_all_owned_drones(request):
         serializer = DroneInfoSerializer(all_drones, many=True)
         return Response(serializer.data)
     except Exception as e:
-        return Response({"error": str(e), "drone": request.data}, status=400)
+        return Response({"error": str(e)}, status=400)
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_delivering_drones(request):
     '''
     {'cone_count': <number of cones>}
     '''
-    LARGE_CAP = 8
-    MEDIUM_CAP = 4
-    SMALL_CAP = 1
     drone_list = []
     cone_count = int(request.query_params["cone_count"])
-    objects = DroneInfo.objects.filter(status = "active")
-    large = list(objects.filter(size = 'large'))
-    med = list(objects.filter(size = 'medium'))
-    small = list(objects.filter(size = 'small'))
-    cone_count = drones_by_max(cone_count, large, med, small, drone_list)
-    cone_count = drones_by_min(cone_count, large, med, small, drone_list)
-    all_drones = DroneInfoSerializer(all_drones, many=True)
+    available_drones = DroneInfo.objects.filter(status = "active")
+    large = list(available_drones.filter(size = 'large'))
+    med = list(available_drones.filter(size = 'medium'))
+    small = list(available_drones.filter(size = 'small'))
+    cone_count = optimal_assignment(cone_count, large, med, small, drone_list)
+    cone_count = fill_assignment(cone_count, large, med, small, drone_list)
     if cone_count > 0:
-        return Response("{error: Not enough drones.}")
+        return Response({"error": "Not enough drones."})
+    all_drones = DroneInfoSerializer(drone_list, many=True)
     return Response(all_drones.data)
 
-
-def drones_by_max(cone_count, large, med, small, drone_list):
+def optimal_assignment(cone_count, large, med, small, drone_list):
     LARGE_CAP = 8
     MEDIUM_CAP = 4
     SMALL_CAP = 1
@@ -135,6 +133,7 @@ def drones_by_max(cone_count, large, med, small, drone_list):
         if cone_count >= LARGE_CAP and len(large) > 0:
             drone_list.append(large.pop())
             cone_count -= LARGE_CAP  
+        elif cone_count >= MEDIUM_CAP and len(med) > 0:
             drone_list.append(med.pop())
             cone_count -= MEDIUM_CAP
         elif cone_count >= SMALL_CAP and len(small) > 0:
@@ -144,23 +143,21 @@ def drones_by_max(cone_count, large, med, small, drone_list):
             return cone_count
     return cone_count # We reach here if the cones all get drones.
 
-def drones_by_min(cone_count, large, med, small, drone_list):
+def fill_assignment(cone_count, large, med, small, drone_list):
     LARGE_CAP = 8
     MEDIUM_CAP = 4
     SMALL_CAP = 1
     while cone_count >= 0:
-        if cone_count <= MEDIUM_CAP:
-            if len(med) > 0:
-                drone_list.append(med.pop())
-                cone_count -= MEDIUM_CAP
-            elif len(large) > 0:
-                drone_list.append(large.pop())
-                cone_count -= LARGE_CAP
-        elif cone_count <= LARGE_CAP:
-            if len(large) > 0:
-                drone_list.append(large.pop())
-                cone_count -= LARGE_CAP
-        else:
-            return cone_count # Reached if all drones are exhausted
-    return cone_count
+        if len(small) > 0:
+            cone_count -= SMALL_CAP
+            drone_list.append(small.pop())
+        elif len(med) > 0:
+            drone_list.append(med.pop())
+            cone_count -= MEDIUM_CAP
+        elif len(large) > 0:
+            drone_list.append(large.pop())
+            cone_count -= LARGE_CAP  
+        else: #This line is where cone_count is less than a larger size but there are no more smaller drones.
+            return cone_count
+    return cone_count # We reach here if the cones all get drones.
 

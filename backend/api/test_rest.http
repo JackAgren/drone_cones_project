@@ -50,15 +50,14 @@ POST http://127.0.0.1:8000/drone_operator/register_drone
 Content-Type: application/json
 Authorization: Token e8a569d7a3b95b66d14bc7ac1cf4a8d82aa939b1
 
-{"ownerID": "drone@drone.com", "size": "Very Big", "status": "inactive"}
+{"ownerID": "drone@drone.com", "size": "large", "status": "active"}
 
 ###
 
-GET http://127.0.0.1:8000/drone_operator/get_all_owned_drones
+GET http://127.0.0.1:8000/drone_operator/get_all_owned_drones?ownerID=drone@drone.com
 Content-Type: application/json
 Authorization: Token e8a569d7a3b95b66d14bc7ac1cf4a8d82aa939b1
 
-{"ownerID": "drone@drone.com"}
 
 ###
 
@@ -74,6 +73,12 @@ Content-Type: application/json
 Authorization: Token e8a569d7a3b95b66d14bc7ac1cf4a8d82aa939b1
 
 {"droneID": 6, "status": "active"}
+
+###
+
+GET http://127.0.0.1:8000/drone_operator/get_delivering_drones?cone_count=1
+Content-Type: application/json
+Authorization: Token e8a569d7a3b95b66d14bc7ac1cf4a8d82aa939b1
 
 ###
 
