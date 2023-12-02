@@ -7,8 +7,9 @@ from .models import DroneInfo
 class droneTesting(TestCase):
     def setUp(self):
         self.userDataStaff = {"password": "password", "email": "staff@staff.com", "is_staff": True}
-        self.userData = {"password": "password", "email": "user@user.com", "is_staff": False}
-        self.droneData = {"ownerID": self.userDataStaff['email'], "size": "small", "status": "active"}
+        self.droneDataL = {"ownerID": self.userDataStaff['email'], "size": "large", "status": "active"}
+        self.droneDataM = {"ownerID": self.userDataStaff['email'], "size": "medium", "status": "active"}
+        self.droneDataS = {"ownerID": self.userDataStaff['email'], "size": "small", "status": "active"}
         self.client = APIClient()
 
         response = self.client.post('/user/create_account', data=self.userDataStaff)
@@ -20,14 +21,14 @@ class droneTesting(TestCase):
         try:
             # Register Drone
             self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
-            registerResponse = self.client.post('/drone_operator/register_drone', data=self.droneData)
+            registerResponse = self.client.post('/drone_operator/register_drone', data=self.droneDataS)
             self.assertEqual(registerResponse.status_code, status.HTTP_201_CREATED)
             droneID = json.loads(registerResponse.content)['id']
 
             drone = DroneInfo.objects.get(id=droneID)
-            self.assertEqual(drone.ownerID.email, self.droneData['ownerID'])
-            self.assertEqual(drone.size, self.droneData['size'])
-            self.assertEqual(drone.status, self.droneData['status'])
+            self.assertEqual(drone.ownerID.email, self.droneDataS['ownerID'])
+            self.assertEqual(drone.size, self.droneDataS['size'])
+            self.assertEqual(drone.status, self.droneDataS['status'])
 
             # Delete Drone
             currentCount = DroneInfo.objects.all().count()
@@ -42,7 +43,7 @@ class droneTesting(TestCase):
         try:
             # Register Drone
             self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
-            registerResponse = self.client.post('/drone_operator/register_drone', data=self.droneData)
+            registerResponse = self.client.post('/drone_operator/register_drone', data=self.droneDataS)
             self.assertEqual(registerResponse.status_code, status.HTTP_201_CREATED)
 
             # Get Drone
@@ -55,7 +56,7 @@ class droneTesting(TestCase):
             self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
             statusResponse = self.client.get('/drone_operator/get_status', QUERY_STRING=f"droneID={droneID}")
             self.assertEqual(statusResponse.status_code, status.HTTP_200_OK)
-            self.assertEqual(self.droneData['status'],  json.loads(statusResponse.content)['status'])
+            self.assertEqual(self.droneDataS['status'],  json.loads(statusResponse.content)['status'])
 
             # Update Status
             self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
@@ -67,3 +68,45 @@ class droneTesting(TestCase):
 
         except Exception as e:
             self.fail(e)
+
+    def test_drone_assignment(self):
+        try:
+            # Register Drones
+            self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
+            registerResponse = self.client.post('/drone_operator/register_drone', data=self.droneDataS)
+            self.assertEqual(registerResponse.status_code, status.HTTP_201_CREATED)
+
+            self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
+            registerResponse = self.client.post('/drone_operator/register_drone', data=self.droneDataM)
+            self.assertEqual(registerResponse.status_code, status.HTTP_201_CREATED)
+
+            self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
+            registerResponse = self.client.post('/drone_operator/register_drone', data=self.droneDataL)
+            self.assertEqual(registerResponse.status_code, status.HTTP_201_CREATED)
+
+            # Get Drones
+            self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
+            droneResponse = self.client.get('/drone_operator/get_all_owned_drones', QUERY_STRING=f"ownerID={self.userDataStaff['email']}")
+            self.assertEqual(droneResponse.status_code, status.HTTP_200_OK)
+            droneIDSm = json.loads(droneResponse.content)[0]['id']
+            droneIDMd = json.loads(droneResponse.content)[1]['id']
+            droneIDLg = json.loads(droneResponse.content)[2]['id']
+
+            # Test Assignments
+            self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
+            assignResponse = self.client.get('/drone_operator/get_delivering_drones', QUERY_STRING=f"cone_count={1}")
+            self.assertEqual(droneIDSm , json.loads(assignResponse.content)[0]['id'])
+
+            self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
+            assignResponse = self.client.get('/drone_operator/get_delivering_drones', QUERY_STRING=f"cone_count={4}")
+            self.assertEqual(droneIDMd , json.loads(assignResponse.content)[0]['id'])
+
+            self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
+            assignResponse = self.client.get('/drone_operator/get_delivering_drones', QUERY_STRING=f"cone_count={8}")
+            self.assertEqual(droneIDLg , json.loads(assignResponse.content)[0]['id'])
+
+            self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.userToken}')
+            assignResponse = self.client.get('/drone_operator/get_delivering_drones', QUERY_STRING=f"cone_count={100}")
+            self.assertEqual('Not enough drones.' , json.loads(assignResponse.content)['error'])
+        except Exception as e:
+            self.fail()
