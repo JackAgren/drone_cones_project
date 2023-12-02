@@ -46,17 +46,23 @@ components: {
   data() {
     return {
       earnings: "",
+      user_id: 0,
     }
   },
-  mounted() {
+  created() {
+    // this.fetchUsers(); // Updates user_id
     this.fetchEarnings();
+    const id = localStorage.getItem('userEmail');
+    const token = localStorage.getItem('token');
   },
+  // mounted() {
+  //   this.fetchEarnings();
+  // },
   methods: {
     goBack() {
       this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
     },
     fetchEarnings() {
-      this.earnings = "test1"
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('No token found');
@@ -67,8 +73,11 @@ components: {
         'Content-Type': 'application/json',
         'Authorization': `Token ${token}`
       };
-
-      fetch('http://localhost:8000/orders/drone_earnings?droneID=1', {
+      // stuff = getUserID();
+      // var url = 'http://localhost:8000/orders/drone_earnings?droneID=' + this.user_id;
+      this.fetchUsers(); // Updates user_id
+      var url = 'http://localhost:8000/orders/drone_earnings?droneID=' + '1';
+      fetch(url, {
         method: "GET",
       // fetch("http://localhost:8000/orders/add?name='new'", {
       // method: "POST",
@@ -93,10 +102,54 @@ components: {
         .catch(error => {
           console.error('There has been a problem with your fetch operation:', error);
         });
+        
+      // this.processDroneData(localStorage.getItem('userEmail'));
     },
 
     processDroneData(data) {
-      this.earnings = data
+      // this.earnings = data;
+      this.earnings = this.user_id;
+    },
+
+    fetchUsers() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+      fetch('http://localhost:8000/user/get_users', {
+        method: "GET",
+        headers: authorizationHeaders,
+      })
+      .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.processUserData(data);
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        });
+    },
+
+    processUserData(data) {
+      // Sets user_id
+      const email = localStorage.getItem('userEmail');
+      for (var i = 0; i < data['user'].length; i++){
+        var user = data['user'][i]
+        if (user['email'] == email){
+          this.user_id = user['id']
+        }
+      }
+      // this.user_id = data['user'][0];
     }
   }
   // beforeMount() {
