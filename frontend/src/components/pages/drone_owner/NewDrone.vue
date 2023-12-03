@@ -28,8 +28,8 @@
 
         <div id="buttonArea">
           <VueButton
-            :class="{ 'button-disabled': !size || !droneNameInput }"
-            :disabled="!size || !droneNameInput"
+            :class="{ 'button-disabled': !size}"
+            :disabled="!size"
             @click="addDrone"
           >
             Register
