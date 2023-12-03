@@ -129,9 +129,7 @@ export default {
         })
         .then(resp => {
           this.inventory = resp;
-
-          console.log(this.inventory);
-
+          
           for (let i = 0; i < FLAVORS.length; i++) {
             if (this.inventory.find(obj => { return obj.description === FLAVORS[i] && obj.quantity > 0}) !== undefined) {
               this.flavors.push(FLAVORS[i]);
@@ -273,7 +271,6 @@ export default {
       for (let i = 0; i < this.scoopCount; i++) {
         //add price of this.scoops[i] to price
         let theCost = this.inventory.find(obj => { return obj.description === this.scoops[i]});
-        console.log(theCost);
         if (theCost !== undefined) {
           price += theCost.costPerUnit;
         }
@@ -282,7 +279,6 @@ export default {
       for (let i = 0; i < this.toppings.length; i++) {
         //add price of this.toppings[i] to price
         let theCost = this.inventory.find(obj => { return obj.description === this.toppings[i]});
-        console.log(theCost);
         if (theCost !== undefined) {
           price += theCost.costPerUnit;
         }
@@ -290,7 +286,6 @@ export default {
 
       //add price of this.cone to price
       let theCost = this.inventory.find(obj => { return obj.description === this.cone});
-      console.log(theCost);
       if (theCost !== undefined) {
         price += theCost.costPerUnit;
       }

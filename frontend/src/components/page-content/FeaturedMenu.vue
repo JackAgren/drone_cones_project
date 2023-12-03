@@ -55,18 +55,18 @@ export default {
     return {
       featured: [
         [
-          {name: "S'mores", price: 1.23, image: featured0, css: 'featured-image f0', details: {
+          {name: "S'mores", price: 0, image: featured0, css: 'featured-image f0', details: {
               cone: "Waffle", scoops: ["Vanilla", "Chocolate"], toppings: ["S'mores", "Chocolate Sauce"]
             }, inStock: false},
-          {name: 'Berry Blast', price: 1.23, image: featured1, css: 'featured-image f1', details: {
+          {name: 'Berry Blast', price: 0, image: featured1, css: 'featured-image f1', details: {
               cone: "Waffle", scoops: ["Strawberry", "Strawberry"], toppings: ["Mixed Berries", "Sprinkles"]
             }, inStock: false},
         ],
         [
-          {name: 'Strawberry Cheesecake', price: 1.23, image: featured2, css: 'featured-image f2', details: {
+          {name: 'Strawberry Cheesecake', price: 0, image: featured2, css: 'featured-image f2', details: {
               cone: "Waffle", scoops: ["Cheesecake", "Cheesecake"], toppings: ["Strawberries"]
             }, inStock: false},
-          {name: 'Peanut Butter', price: 1.23, image: featured3, css: 'featured-image f3', details: {
+          {name: 'Peanut Butter', price: 0, image: featured3, css: 'featured-image f3', details: {
               cone: "Waffle", scoops: ["Peanut Butter", "Peanut Butter"], toppings: ["Oreo", "Chocolate Sauce"]
             }, inStock: false},
         ],
@@ -124,6 +124,33 @@ export default {
           for (let i = 0; i < this.featured.length; i++) {
             this.featured[i][0].inStock = this.inStock(this.featured[i][0].details);
             this.featured[i][1].inStock = this.inStock(this.featured[i][1].details);
+
+
+            for (let j = 0; j < this.featured[i].length; j++) {
+              let thisFeatured = this.featured[i][j].details;
+              let price = 0;
+
+              for (let k = 0; k < thisFeatured.scoops.length; k++) {
+                let theCost = this.inventory.find(obj => { return obj.description === thisFeatured.scoops[k]});
+                if (theCost !== undefined) {
+                  price += theCost.costPerUnit;
+                }
+              }
+
+              for (let k = 0; k < thisFeatured.toppings.length; k++) {
+                let theCost = this.inventory.find(obj => { return obj.description === thisFeatured.toppings[k]});
+                if (theCost !== undefined) {
+                  price += theCost.costPerUnit;
+                }
+              }
+
+              let theCost = this.inventory.find(obj => { return obj.description === thisFeatured.cone});
+              if (theCost !== undefined) {
+                price += theCost.costPerUnit;
+              }
+
+              this.featured[i][j].price = price;
+            }
           }
         });
   }
