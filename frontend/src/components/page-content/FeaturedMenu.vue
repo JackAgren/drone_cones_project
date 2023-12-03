@@ -75,13 +75,54 @@ export default {
     }
   },
   methods: {
+    checkStockForOrder(item) {
+
+      console.log(item);
+
+      const cone = this.inventory.find(obj => { return obj.description === item.cone && obj.quantity > 0});
+      if (cone === undefined) {
+        console.log(cone);
+        return false;
+      } else {
+        const index = this.inventory.indexOf(cone);
+        this.inventory[index].quantity = this.inventory[index].quantity - 1;
+      }
+
+      for (let i = 0; i < item.scoops.length; i++) {
+        const scoop = this.inventory.find(obj => { return obj.description === item.scoops[i] && obj.quantity > 0});
+        if (scoop === undefined) {
+          console.log(item.scoops[i]);
+          return false;
+        } else {
+          const index = this.inventory.indexOf(scoop);
+          this.inventory[index].quantity = this.inventory[index].quantity - 1;
+        }
+      }
+
+      for (let i = 0; i < item.toppings.length; i++) {
+        const topping = this.inventory.find(obj => { return obj.description === item.toppings[i] && obj.quantity > 0});
+        if (topping === undefined) {
+          console.log(item.toppings[i]);
+          return false;
+        } else {
+          const index = this.inventory.indexOf(topping);
+          this.inventory[index].quantity = this.inventory[index].quantity - 1;
+        }
+      }
+
+      return true;
+    },
     addToCart(cone) {
       const item = {name: cone.name, price: cone.price, qty: 1, details: cone.details}
 
-      console.log(item);
-      this.$emit('sendToCart', item);
+      if (this.inStock(item.details)) {
+        console.log(item);
+        this.$emit('sendToCart', item);
 
-      alert("Added to cart!");
+        alert("Added to cart!");
+      } else {
+        alert("Unfortunately this item is now out of stock! Please try again later.");
+      }
     },
     inStock(item) {
 

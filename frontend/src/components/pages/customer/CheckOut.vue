@@ -176,7 +176,7 @@ export default {
             }
             console.log(resp);
 
-            const orderID = resp.success.slice(resp.success.lastIndexOf("#") + 1);
+            const orderID = resp.orderID;
             console.log(orderID);
             this.$router.push({path: '/customer/track-order', query: {id: orderID}})
           })

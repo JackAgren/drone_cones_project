@@ -154,6 +154,43 @@ export default {
         });
   },
   methods: {
+    inStock(item) {
+
+      console.log(item);
+
+      const cone = this.inventory.find(obj => { return obj.description === item.cone && obj.quantity > 0});
+      if (cone === undefined) {
+        console.log(cone);
+        return false;
+      } else {
+        const index = this.inventory.indexOf(cone);
+        this.inventory[index].quantity = this.inventory[index].quantity - 1;
+      }
+
+      for (let i = 0; i < item.scoops.length; i++) {
+        const scoop = this.inventory.find(obj => { return obj.description === item.scoops[i] && obj.quantity > 0});
+        if (scoop === undefined) {
+          console.log(item.scoops[i]);
+          return false;
+        } else {
+          const index = this.inventory.indexOf(scoop);
+          this.inventory[index].quantity = this.inventory[index].quantity - 1;
+        }
+      }
+
+      for (let i = 0; i < item.toppings.length; i++) {
+        const topping = this.inventory.find(obj => { return obj.description === item.toppings[i] && obj.quantity > 0});
+        if (topping === undefined) {
+          console.log(item.toppings[i]);
+          return false;
+        } else {
+          const index = this.inventory.indexOf(topping);
+          this.inventory[index].quantity = this.inventory[index].quantity - 1;
+        }
+      }
+
+      return true;
+    },
     addTopping() {
       this.toppings.push(this.currentTopping);
       this.toppingButton = "Added!";
@@ -299,9 +336,14 @@ export default {
       }
       const item = {name: 'CYO cone', price: this.calculatePrice(), qty: 1, details: {
           cone: this.cone, scoops: this.scoops.slice(0, this.scoopCount), toppings: this.toppings
-        }}
-      this.$emit('sendToCart', item);
-      this.addButton = "Added! Add again?";
+        }};
+
+      if (this.inStock(item.details)) {
+        this.$emit('sendToCart', item);
+        this.addButton = "Added! Add again?";
+      } else {
+        alert("Unfortunately this item is now out of stock! Please try again later.");
+      }
     },
     increaseScoops() {
       this.addButton = "Add to Cart";
