@@ -238,17 +238,17 @@ td {
 .dashboard-button {
   position: fixed;
   top: 12%;
-  left: 2%;
+  left: 20px;
 }
 
 .center {
   margin: auto;
-  width: 70%;
+  width: 90%;
   height: 70%;
   position: fixed;
   z-index: 1;
   top: 20%;
-  left: 15%;
+  left: 5%;
   color: white;
   font-weight: bold;
   text-align: center;
@@ -258,12 +258,12 @@ td {
 
 .small-center {
   margin: auto;
-  width: 50%;
+  width: 70%;
   height: 55%;
   position: fixed;
   z-index: 1;
   top: 30%;
-  left: 25%;
+  left: 15%;
   color: rgba(40, 40, 40);
   font-weight: bold;
   text-align: left;
@@ -278,7 +278,7 @@ h1 {
 .checkout-button {
   position: fixed;
   top: 12%;
-  left: 85%;
+  right: 20px;
 }
 
 .cart-icon {

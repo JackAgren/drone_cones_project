@@ -6,7 +6,7 @@
 
   <div class="center">
 
-    <div id="section1TextBlurbArea">
+    <div>
       <h2>Your Order Has Been Delivered!</h2>
     </div>
 
@@ -17,7 +17,7 @@
     <img class="person" alt="Person waving, holding an ice cream cone." src="../../../assets/img/Group%2037.png">
 
 
-    <p>Thanks for choosing Drone Cones!</p>
+    <p class="message">Thanks for choosing Drone Cones!</p>
 
   </div>
 
@@ -41,7 +41,6 @@ export default {
   },
   created() {
     const orderID = this.$route.query.id;
-    //TODO: mark order as delivered
 
     const body = {
       order: orderID
@@ -80,8 +79,8 @@ export default {
 
 .dashboard-button {
   position: fixed;
-  top: 12%;
-  left: 2%;
+  top: 90px;
+  left: 20px;
 }
 
 .person {
@@ -99,7 +98,7 @@ export default {
   height: 60%;
   position: fixed;
   z-index: 1;
-  top: 20%;
+  top: 15%;
   left: 15%;
   color: white;
   text-align: center;
@@ -122,7 +121,7 @@ p {
   grid-column: 2/3;
   width: auto;
   left: 75%;
-  top: 30%;
+  top: 25%;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -140,6 +139,12 @@ p {
   to {
     transform: translateY(-20px); /* Move off-screen to the right */
   }
+}
+
+.message {
+  bottom: 10%;
+  position: fixed;
+  left: 35%;
 }
 
 

@@ -3,7 +3,7 @@
   <Background/>
 
   <VueButton @click="moveToMenu" class="button0">&#x25C0; &nbsp; Menu</VueButton>
-  <VueButton @click="moveToHistory" class="button1">&#x25C0; &nbsp; Order History</VueButton>
+  <VueButton @click="moveToHistory" class="button1">&#x25C0; &nbsp; History</VueButton>
 
   <div class="center">
     <h1>Order Details</h1>
@@ -59,7 +59,7 @@
       >
     </div>
 
-    <VueButton @click="placeOrder" class="order-button">Purchase & Place Order</VueButton>
+    <VueButton @mouseup="placeOrder" class="order-button">Purchase & Place Order</VueButton>
 
   </div>
 
@@ -263,15 +263,15 @@ td {
 .button0 {
   position: fixed;
   top: 12%;
-  left: 2%;
-  width: 200px;
+  left: 20px;
+  width: 150px;
 }
 
 .button1 {
   position: fixed;
   top: 20%;
-  left: 2%;
-  width: 200px;
+  left: 20px;
+  width: 150px;
 }
 
 .order-button {
@@ -286,7 +286,7 @@ td {
   position: fixed;
   top: 76%;
   left: 25%;
-  width: 800px;
+  width: 600px;
   font-weight: bolder;
   font-size: 16pt;
 }
@@ -294,11 +294,11 @@ td {
 .center {
   margin: auto;
   width: 70%;
-  height: 70%;
+  height: 78%;
   position: fixed;
   z-index: 1;
-  top: 20%;
-  left: 15%;
+  top: 15%;
+  left: 20%;
   color: white;
   font-weight: bold;
   text-align: center;
@@ -308,12 +308,12 @@ td {
 
 .small-center {
   margin: auto;
-  width: 50%;
-  height: 45%;
+  width: 64%;
+  height: 40%;
   position: fixed;
   z-index: 1;
   top: 30%;
-  left: 25%;
+  left: 23%;
   color: rgba(40, 40, 40);
   font-weight: bold;
   text-align: left;

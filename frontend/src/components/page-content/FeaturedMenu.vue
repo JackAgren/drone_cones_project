@@ -1,7 +1,7 @@
 <template>
 
   <table>
-    <tr v-for="row in featured" style="height: 40%;">
+    <tr v-for="row in featured" style="height: 50%;">
 
       <td v-for="item in row" style="width: 50%;">
         <div class="small-center">
@@ -200,7 +200,7 @@ export default {
 }
 
 .f2 {
-  width: 55%;
+  width: 60%;
 }
 
 .f3 {
@@ -213,7 +213,7 @@ export default {
 }
 
 h3 {
-  font-size: 12pt;
+  font-size: 11pt;
   text-align: center;
   margin-top: 2mm;
 }
@@ -226,6 +226,8 @@ h3 {
   text-align: left;
   background-color: rgba(244, 255, 256, .95);
   position: relative;
+  height: 100%;
+  outline: hotpink solid;
 }
 
 .cart-icon {

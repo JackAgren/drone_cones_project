@@ -13,7 +13,7 @@
     <table class="outer-table">
       <tr>
         <td style="width: 50%"><h2>Featured</h2></td>
-        <td><h2>Create Your Own</h2></td>
+        <td style="width: 50%"><h2>Create Your Own</h2></td>
       </tr>
 
       <tr>
@@ -98,20 +98,22 @@ hr {
 }
 
 .outer-table {
-  margin: 20px 20px 20px 20px;
-  width: 95%;
+  margin: 2% 2% 2% 2%;
+  width: 96%;
+  height: 96%;
+  outline: red solid;
 }
 
 .dashboard-button {
   position: fixed;
-  top: 12%;
-  left: 2%;
+  top: 90px;
+  left: 20px;
 }
 
 .checkout-button {
   position: fixed;
-  top: 12%;
-  left: 85%;
+  top: 90px;
+  right: 20px;
 }
 
 .center {

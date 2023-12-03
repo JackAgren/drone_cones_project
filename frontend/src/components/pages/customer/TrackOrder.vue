@@ -97,7 +97,7 @@ export default {
   height: 60%;
   position: fixed;
   z-index: 1;
-  top: 20%;
+  top: 15%;
   left: 15%;
   color: white;
   text-align: center;
@@ -120,7 +120,7 @@ p {
   grid-column: 2/3;
   width: auto;
   left: 50%;
-  top: 45%;
+  top: 35%;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }

@@ -4,7 +4,7 @@
     <tr>
       <td>
 
-        <div class="small-center">
+        <div class="small-center scoops">
           <h3>Number of Scoops</h3>
 
           <div style="padding-left: 25%;" class="no-highlight">
@@ -129,7 +129,7 @@ export default {
         })
         .then(resp => {
           this.inventory = resp;
-          
+
           for (let i = 0; i < FLAVORS.length; i++) {
             if (this.inventory.find(obj => { return obj.description === FLAVORS[i] && obj.quantity > 0}) !== undefined) {
               this.flavors.push(FLAVORS[i]);
@@ -320,6 +320,12 @@ export default {
 </script>
 
 <style scoped>
+
+.scoops {
+  border: goldenrod solid;
+  height: 100%;
+  margin-top: 1px;
+}
 
 .add-topping {
   width: 45%;
