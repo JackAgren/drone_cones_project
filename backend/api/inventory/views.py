@@ -45,8 +45,8 @@ def inventory_search(request):
 
 
 @api_view(['POST'])
-#@authentication_classes([SessionAuthentication, TokenAuthentication])
-#@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def add_inventory(request):
     '''
     ** Add item matching description  **
@@ -60,9 +60,9 @@ def add_inventory(request):
         "category": "<CATEGORY>: String"
     }
     '''
-    request.data.update({'quantity': 0})
-    request.data.update({'dateFilled': date.today()})
-    serializer = InventorySerializer(data=request.data)
+    data = request.data.copy()
+    data.update({'dateFilled': date.today(), 'quantity': 0})
+    serializer = InventorySerializer(data=data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=201)
@@ -70,8 +70,8 @@ def add_inventory(request):
 
 
 @api_view(['POST'])
-#@authentication_classes([SessionAuthentication, TokenAuthentication])
-#@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def remove_inventory(request):
     '''
     ** Deletes item matching description  **
@@ -88,8 +88,8 @@ def remove_inventory(request):
 
 
 @api_view(['POST'])
-#@authentication_classes([SessionAuthentication, TokenAuthentication])
-#@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def update_item(request):
     try:
         query = Inventory.objects.get(description=request.data['description'])
