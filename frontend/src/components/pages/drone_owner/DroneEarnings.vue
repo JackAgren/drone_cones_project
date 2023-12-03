@@ -32,101 +32,95 @@ export default {
     }
   },
   mounted() {
-    this.fetchUserID();
+    this.fetchEarnings();
   },
   methods: {
     goBack() {
       this.$router.push({ path: '/dashboard', query: { focus: 'drones' } })
     },
 
+    fetchEarnings() {
+      // Correctly set the authorization header
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
 
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
 
+      // Use template literals to insert the email variable into the URL
+      // fetch(`http://localhost:8000/orders/drone_earnings?droneID=${localStorage.getItem('userEmail')}`, {
+        fetch("http://localhost:8000/drone_operator/get_all_owned_drones?ownerID=" + localStorage.getItem('userEmail'), {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        this.earnings = "millions";
+        // this.earnings = this.formatCurrency(data.earnings);
+        
+      })
+      .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+      });
+    },
 
-    fetchEarnings(userID) {
-  // Correctly set the authorization header
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.error('No token found');
-    // Handle the case where the token is missing
-    return;
-  }
+    //   fetchUserID() {
+    //   // Correctly set the authorization header
+    //   const token = localStorage.getItem('token');
+    //   if (!token) {
+    //     console.error('No token found');
+    //     // Handle the case where the token is missing
+    //     return;
+    //   }
 
-  const authorizationHeaders = {
-    'Content-Type': 'application/json',
-    'Authorization': `Token ${token}`
-  };
+    //   const authorizationHeaders = {
+    //     'Content-Type': 'application/json',
+    //     'Authorization': `Token ${token}`
+    //   };
 
-  // Use template literals to insert the email variable into the URL
-  fetch(`http://localhost:8000/orders/drone_earnings?droneID=${userID}`, {
-    method: 'GET',
-    headers: authorizationHeaders
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    this.earnings = this.formatCurrency(data.earnings);
-    
-  })
-  .catch(error => {
-    console.error('There has been a problem with your fetch operation:', error);
-  });
-},
+    //   const email = localStorage.getItem('userEmail'); 
+    //   console.log(email);
+    //   // Check if email is not null or undefined
+    //   if (!email) {
+    //     console.error('No id found');
+    //     // Handle the case where the email is missing
+    //     return;
+    //   }
 
-  fetchUserID() {
-  // Correctly set the authorization header
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.error('No token found');
-    // Handle the case where the token is missing
-    return;
-  }
-
-  const authorizationHeaders = {
-    'Content-Type': 'application/json',
-    'Authorization': `Token ${token}`
-  };
-
-  const email = localStorage.getItem('userEmail'); 
-  console.log(email);
-  // Check if email is not null or undefined
-  if (!email) {
-    console.error('No id found');
-    // Handle the case where the email is missing
-    return;
-  }
-
-  // Use template literals to insert the email variable into the URL
-  fetch(`http://localhost:8000/user/get_users?email=${email}`, {
-    method: 'GET',
-    headers: authorizationHeaders
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log(data.user.id);
-    var userID = data.user.id; // -1 to account for ID offset by DJango.
-    this.fetchEarnings(userID);
-  })
-  .catch(error => {
-    console.error('There has been a problem with your fetch operation:', error);
-  });
-},
-
-
+    //   // Use template literals to insert the email variable into the URL
+    //   fetch(`http://localhost:8000/user/get_users?email=${email}`, {
+    //     method: 'GET',
+    //     headers: authorizationHeaders
+    //   })
+    //   .then(response => {
+    //     if (!response.ok) {
+    //       throw new Error('Network response was not ok');
+    //     }
+    //     return response.json();
+    //   })
+    //   .then(data => {
+    //     console.log(data.user.id);
+    //     var userID = data.user.id; // -1 to account for ID offset by DJango.
+    //     this.fetchEarnings(userID);
+    //   })
+    //   .catch(error => {
+    //     console.error('There has been a problem with your fetch operation:', error);
+    //   });
+    // },
     formatCurrency(value) {
       return `${parseFloat(value).toFixed(2)}`;
     },
-
-
-
 
   }
 }
