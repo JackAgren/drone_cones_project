@@ -14,7 +14,7 @@ from rest_framework import generics
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-#@staff_member_required
+@staff_member_required
 def register_drone(request):
     '''
     ./drone_operator/register_drone
@@ -132,7 +132,7 @@ def optimal_assignment(cone_count, large, med, small, drone_list):
     while cone_count >= 0:
         if cone_count >= LARGE_CAP and len(large) > 0:
             drone_list.append(large.pop())
-            cone_count -= LARGE_CAP  
+            cone_count -= LARGE_CAP
         elif cone_count >= MEDIUM_CAP and len(med) > 0:
             drone_list.append(med.pop())
             cone_count -= MEDIUM_CAP
@@ -156,7 +156,7 @@ def fill_assignment(cone_count, large, med, small, drone_list):
             cone_count -= MEDIUM_CAP
         elif len(large) > 0:
             drone_list.append(large.pop())
-            cone_count -= LARGE_CAP  
+            cone_count -= LARGE_CAP
         else: #This line is where cone_count is less than a larger size but there are no more smaller drones.
             return cone_count
     return cone_count # We reach here if the cones all get drones.

@@ -7,10 +7,10 @@
       <p class="caption">Drone Registration</p>
     </div>
 
-    <div class="button-box" @click="toActivity">
+    <!-- <div class="button-box" @click="toActivity">
       <img class="image-box" alt="Icon of binoculars." src="../../assets/img/binoculars.png">
       <p class="caption">Drone Activity</p>
-    </div>
+    </div> -->
 
     <div class="button-box" @click="toEarnings">
       <img class="image-box" alt="Icon of a stack of cash." src="../../assets/img/money.png">

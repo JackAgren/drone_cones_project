@@ -98,7 +98,7 @@ def add(request):
                 cones=cones,
                 total=total
                 )
-        return Response({'success': f"ORDER: #{order.id}"})
+        return Response({'orderID': order.id})
     return Response(serializer.errors, status=400)
 
 

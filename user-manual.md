@@ -4,29 +4,39 @@
 1. Click **Login**
     - Username: admin@test.com
     - Password: 1234
-2. The panel on the left has three options 
+    <img src="screenshots/home.png" width="640" height="360" />
+    <img src="screenshots/login.png" width="640" height="360" />
+2. The panel on the left has two options 
     - Click admin tools
+    <img src="screenshots/admin-tools-manage-inventory.png" width="640" height="360"/>
 3. Now navigate to Manage Inventory
     - There should now be a list of items that are currently available
     - Click on the **Strawberry** item to highlight it
     - Now click the restock button
+    <img src="screenshots/inventory-management.png" width="640" height="360"/>
 4. Enter an amount in the input box to restock
-    - Now click restock
+    - Now click restock 
+    <img src="screenshots/restock.png" width="640" height="360"/>
 
 ## As a manager run the revenue report to see if the business is profitable
 1. Click **Login**
     - Username: admin@test.com
     - Password: 1234
-2. The panel on the left has three options 
+    <img src="screenshots/home.png" width="640" height="360" />
+    <img src="screenshots/login.png" width="640" height="360" />
+2. The panel on the left has two options 
     - Click admin tools
 3. Navigate to financial records
     - Review Financials 
+    <img src="screenshots/admin-tools-financial-records.png" width="640" height="360"/>
 4. Generate the report
 
 ## As a guest place an order when one or more items are out of stock
 1. Click **Login**
     - Username: customer@test.com
     - Password: 1234
+    <img src="screenshots/home.png" width="640" height="360" />
+    <img src="screenshots/login.png" width="640" height="360" />
 2. Click the main panel labeled **Place Order**
 3. There is a featured section and a create your own section
     - We will be using the create your own section
@@ -59,6 +69,8 @@
 1. Click **Login**
     - Username: customer@test.com
     - Password: 1234
+    <img src="screenshots/home.png" width="640" height="360" />
+    <img src="screenshots/login.png" width="640" height="360" />
 2. Click the panel under the main panel labeled **Order History**
 3. View your Order History
 
@@ -66,6 +78,8 @@
 1. Click **Login**
     - Username: drone@test.com
     - Password: 1234
+    <img src="screenshots/home.png" width="640" height="360" />
+    <img src="screenshots/login.png" width="640" height="360" />
 2. The panel on the left has three options 
     - Click manage leased drone
 3. Click the Drone registration panel to register a new drone
@@ -79,6 +93,8 @@
 1. Click **Login**
     - Username: drone@test.com
     - Password: 1234
+    <img src="screenshots/home.png" width="640" height="360" />
+    <img src="screenshots/login.png" width="640" height="360" />
 2. The panel on the left has three options 
     - Click manage leased drone
 3. Click the **Drone Activity** panel

@@ -7,71 +7,45 @@
           <p id="contentHeader">Earnings</p>
         </div>
 
-        <div>
-          <!-- <script>
-            var earnings = this.fetchInventory()
-          </script> -->
-          <div id="infoArea">
-            <!-- {{fetchEarnings()}} -->
-            <p>Earnings to Date: ${{this.earnings}}</p>
-          </div>
-
+        <div id="infoArea">
+          <p>Earnings to Date: ${{ earnings }}</p>
         </div>
-
       </div>
     </Background>
   </header>
 </template>
 
 <script>
-import '../../../assets/style.css';
-import AppHeader from '@/components/Header.vue';
-import AppFooter from '@/components/Footer.vue';
 import Background from '@/components/Background.vue'
-import VueButton from '@/components/Button.vue'
 import VueBackButton from '@/components/BackButton.vue'
 
-// var earnings = this.fetchInventory()
-
-
 export default {
-name: 'DroneEarnings',
-components: {
-  AppHeader,
-  AppFooter,
-  Background,
-  VueButton,
-  VueBackButton,
-},
+  name: 'DroneEarnings',
+  components: {
+    Background,
+    VueBackButton,
+  },
   data() {
     return {
-      earnings: "",
-      user_id: 0,
+      earnings: 0,
+      userID: 0
     }
   },
-  async created() {
-    // this.fetchUsers(); // Updates user_id
-    // this.fetchEarnings();
-    const id = localStorage.getItem('userEmail');
-    const token = localStorage.getItem('token');
-    // this.fetchUsers().then(function() {
-    //   this.fetchEarnings()
-    // })
-    // this.fetchUsers();
+  mounted() {
     this.fetchEarnings();
   },
-  // mounted() {
-  //   this.fetchEarnings();
-  // },
   methods: {
     goBack() {
-      this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
+      this.$router.push({ path: '/dashboard', query: { focus: 'drones' } })
     },
 
-    fetchEarnings() {
+    // For getting earning of a single drone
+    fetchDroneEarnings(droneID) {
+      // Correctly set the authorization header
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('No token found');
+        // Handle the case where the token is missing
         return;
       }
 
@@ -79,91 +53,73 @@ components: {
         'Content-Type': 'application/json',
         'Authorization': `Token ${token}`
       };
-      // stuff = getUserID();
-      // this.fetchUsers();
-      this.earnings = this.fetchUsers()
-      var url = 'http://localhost:8000/orders/drone_earnings?droneID=' + this.fetchUsers();
-      // var url = 'http://localhost:8000/orders/drone_earnings?droneID=' + '1';
-      fetch(url, {
-        method: "GET",
-      // fetch("http://localhost:8000/orders/add?name='new'", {
-      // method: "POST",
-        headers: authorizationHeaders,
-        // body: {
-        //   ownerID: "evan@mail.com",
-        //   // size: "small",
-        //   // status: "active"
-        // }
-      })
-      .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          // this.earnings = response.json()
-          // return
-          return response.json();
-        })
-        .then(data => {
-          this.processDroneData(data);
-        })
-        .catch(error => {
-          console.error('There has been a problem with your fetch operation:', error);
-        });
-        
-      // this.processDroneData(localStorage.getItem('userEmail'));
-    },
-
-    processDroneData(data) {
-      // this.earnings = data;
-      this.earnings = this.user_id;
-    },
-
-    fetchUsers() {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
       
+      fetch("http://localhost:8000/drone_operator/drone_earnings?droneID=" + droneID, {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+      })
+      .then(data => {
+        this.earnings = this.formatCurrency(data.earnings);
+        return this.earnings
+      })
+      .catch(error => {
+        // If this throws a 404 error it could mean the drone has not made any money yet
+        console.error(("Could not get earnings for drone " + data[i]['id']), error);
+
+      });
+    },
+
+    // For getting earnings of ALL drones
+    fetchEarnings() {
+      // Correctly set the authorization header
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
+
       const authorizationHeaders = {
         'Content-Type': 'application/json',
         'Authorization': `Token ${token}`
       };
-      fetch('http://localhost:8000/user/get_users', {
-        method: "GET",
-        headers: authorizationHeaders,
+        fetch("http://localhost:8000/drone_operator/get_all_owned_drones?ownerID=" + localStorage.getItem('userEmail'), {
+        method: 'GET',
+        headers: authorizationHeaders
       })
       .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        for (var i = 0; i < data.length; i++){
+          console.log(data[i]['id']);
+          try {
+            var single_earnings = this.fetchDroneEarnings(data[i]['id'])
           }
-          return response.json();
-        })
-        .then(data => {
-          this.processUserData(data);
-          return this.user_id;
-        })
-        .catch(error => {
-          console.error('There has been a problem with your fetch operation:', error);
-        });
-      return this.user_id;
+          catch(err) {
+            console.log("Could not get earnings for drone " + data[i]['id']);
+          }
+          if (typeof single_earnings === 'number') {
+            this.earnings = this.earnings + single_earnings
+          }
+        }
+        return single_earnings
+        
+      })
+    },
+    formatCurrency(value) {
+      return `${parseFloat(value).toFixed(2)}`;
     },
 
-    processUserData(data) {
-      // Sets user_id
-      const email = localStorage.getItem('userEmail');
-      for (var i = 0; i < data['user'].length; i++){
-        var user = data['user'][i]
-        if (user['email'] == email){
-          this.user_id = user['id']
-        }
-      }
-      // this.user_id = data['user'][0];
-    }
   }
-  // beforeMount() {
-  //     this.fetchEarnings();
-  // }
 }
 </script>
 
