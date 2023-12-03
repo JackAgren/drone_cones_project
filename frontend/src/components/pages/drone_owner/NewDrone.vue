@@ -9,18 +9,6 @@
 
         <div id="actionContentArea">
           <div class="inputArea">
-            <p>Drone Name</p>
-            <div class="input-wrapper2">
-              <input
-                type="text"
-                placeholder="Enter drone name"
-                id="droneNameInput"
-                v-model="droneNameInput"
-              />
-            </div>
-          </div>
-
-          <div class="inputArea">
             <p>Drone Size</p>
             <div class="input-wrapper3">
               <img id="downIcon" src="@/assets/downTriangle.png" />
@@ -40,8 +28,8 @@
 
         <div id="buttonArea">
           <VueButton
-            :class="{ 'button-disabled': !size || !droneNameInput }"
-            :disabled="!size || !droneNameInput"
+            :class="{ 'button-disabled': !size}"
+            :disabled="!size"
             @click="addDrone"
           >
             Register
