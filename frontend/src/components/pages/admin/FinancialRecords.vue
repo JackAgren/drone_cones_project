@@ -276,26 +276,23 @@ methods: {
     });
 },
 
-  processBalanceData(data) {
-  // Check if the data object has the necessary properties
-  if (data.hasOwnProperty('balance') && data.hasOwnProperty('earnings')) {
-    this.balance = this.formatCurrency(data.balance);
-    this.earnings = this.formatCurrency(data.earnings);
+processBalanceData(data) {
+    if (data.hasOwnProperty('balance') && data.hasOwnProperty('earnings')) {
+      this.balance = this.formatCurrency(parseFloat(data.balance));
+      this.earnings = this.formatCurrency(parseFloat(data.earnings));
 
-    // If the 'expenses' property is present in the data, process it.
-    if (data.hasOwnProperty('expenses')) {
-      this.expenses = this.formatCurrency(data.expenses);
+      if (data.hasOwnProperty('expenses')) {
+        this.expenses = this.formatCurrency(parseFloat(data.expenses));
+      } else {
+        this.expenses = this.formatCurrency(0);
+      }
     } else {
-      // Handle the case where 'expenses' data is missing or undefined.
+      // Default handling
+      this.balance = this.formatCurrency(0);
+      this.earnings = this.formatCurrency(0);
       this.expenses = this.formatCurrency(0);
     }
-  } else {
-    console.error('Data object is missing required properties');
-    this.balance = this.formatCurrency(0);
-    this.earnings = this.formatCurrency(0);
-    this.expenses = this.formatCurrency(0);
-  }
-},
+  },
 
 
   },
