@@ -12,9 +12,8 @@
             <thead>
               <tr>
                 <th style="width: 10%">Drone ID</th>
-                <th style="width: 15%">Name</th>
                 <th style="width: 15%">Size</th>
-                <th style="width: 10%">Status</th>
+                <!-- <th style="width: 10%">Status</th> -->
               </tr>
             </thead>
           </table>
@@ -30,24 +29,23 @@
                 >
                   <td style="width: 10%">{{ row.col1 }}</td>
                   <td style="width: 15%">{{ row.col2 }}</td>
-                  <td style="width: 15%">{{ row.col3 }}</td>
 
-                  <template v-if="row.col4 === 'Active'">
-                    <td style="width: 10%;color:#7FFF00">{{ row.col4 }}</td>
+                  <!-- <template v-if="row.col3 === 'Active'">
+                    <td style="width: 10%;color:#7FFF00">{{ row.col3 }}</td>
                   </template>
-                  <template v-else="row.col4 === 'Inactive'">
-                    <td style="width: 10%;color:#FF4A3F">{{ row.col4 }}</td>
-                  </template>
+                  <template v-else="row.col3 === 'Inactive'">
+                    <td style="width: 10%;color:#FF4A3F">{{ row.col3 }}</td>
+                  </template> -->
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-        <div id="buttonArea1">
+        <!-- <div id="buttonArea1">
           <VueButton>
             Activate
           </VueButton>
-        </div>
+        </div> -->
         <div id="buttonArea2" @click="register_new">
           <WideButton>
             Register new drone
@@ -82,23 +80,7 @@ data() {
   return {
     maxHeight: 500, // Max height in pixels
     selectedRowIndex: null, // Index of the selected row
-    rows: [
-        { col1: '1', col2: 'DJI Avata', col3: 'Large', col4: 'Active'},
-        { col1: '2', col2: 'Sky Rider', col3: 'Medium', col4: 'Active'},
-        { col1: '3', col2: 'Ruko U11', col3: 'Small', col4: 'Inactive'},
-        { col1: '4', col2: 'Falcon', col3: 'Large', col4: 'Active'},
-        { col1: '5', col2: 'Falcon', col3: 'Small', col4: 'Active'},
-        { col1: '6', col2: 'DJI Avata', col3: 'Large', col4: 'Active'},
-        { col1: '7', col2: 'Sky Rider', col3: 'Large', col4: 'Active'},
-        { col1: '8', col2: 'Ruko U11', col3: 'Small', col4: 'Active'},
-        { col1: '9', col2: 'Falcon', col3: 'Large', col4: 'Active'},
-        { col1: '10', col2: 'Potensic T25', col3: 'Small', col4: 'Active'},
-        { col1: '11', col2: 'DJI Avata 2', col3: 'Small', col4: 'Active'},
-        { col1: '12', col2: 'Sky Rider', col3: 'Medium', col4: 'Inactive'},
-        { col1: '13', col2: 'Potensic T25', col3: 'Small', col4: 'Inactive'},
-        { col1: '14', col2: 'Falcon', col3: 'Large', col4: 'Active'},
-        { col1: '15', col2: 'Ruko U13', col3: 'Large', col4: 'Inactive'},
-      ]
+    rows: []
   }
 },
 computed: {
@@ -111,6 +93,7 @@ computed: {
   },
 
   mounted() {
+    this.fetchDrones();
     // Add global click event listener
     document.addEventListener('click', this.deselectRow);
   },
@@ -119,38 +102,71 @@ computed: {
     document.removeEventListener('click', this.deselectRow);
   },
   methods: {
-    selectRow(index) {
-      this.selectedRowIndex = index;
-    },
+   
     register_new() {
       this.$router.push({path: '/drone/registration/new', query: {}})
     },
-    deselectRow(event) {
-      // Get the clicked element
-      const clickedElement = event.target;
-
-      // Check if the clicked element is the back button, scroll, or restock button
-      const isSpecialElement = clickedElement.closest('#backButton') ||
-                              clickedElement.closest('#tableContent') ||
-                              clickedElement.closest('#buttonArea');
-
-      // Only deselect the row if a special element was not clicked
-      if (!isSpecialElement) {
-        this.selectedRowIndex = null;
-      }
-    },
-
-    getStatus(status) {
-      return status === 'Active' ? 'active' : 'banned';
-    },
-
+    
     goBack() {
       this.$router.push({path: '/dashboard', query: {focus: 'drones'}})
     },
 
-    gotoManageAccountsEdit() {
-      this.$router.push({path: '../admin/manageAccounts/edit', query: {}})
-    },
+
+  fetchDrones() {
+  // Correctly set the authorization header
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No token found');
+    // Handle the case where the token is missing
+    return;
+  }
+
+  const authorizationHeaders = {
+    'Content-Type': 'application/json',
+    'Authorization': `Token ${token}`
+  };
+
+  const email = localStorage.getItem('userEmail');
+
+  // Check if email is not null or undefined
+  if (!email) {
+    console.error('No email found');
+    // Handle the case where the email is missing
+    return;
+  }
+
+  // Use template literals to insert the email variable into the URL
+  fetch(`http://localhost:8000/drone_operator/get_all_owned_drones?ownerID=${email}`, {
+    method: 'GET',
+    headers: authorizationHeaders
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    this.processDroneData(data);
+  })
+  .catch(error => {
+    console.error('There has been a problem with your fetch operation:', error);
+  });
+},
+
+
+
+processDroneData(droneData) {
+
+this.rows = droneData.map((item, index) => {
+return {
+    col1: item.id,
+    col2: item.size,
+    col3: item.status,
+  };
+});
+},
+    
   }
 }
 </script>

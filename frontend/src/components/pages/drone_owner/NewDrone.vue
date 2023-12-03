@@ -14,8 +14,8 @@
               <input
                 type="text"
                 placeholder="Enter drone name"
-                id="itemNameInput"
-                v-model="itemNameInput"
+                id="droneNameInput"
+                v-model="droneNameInput"
               />
             </div>
           </div>
@@ -25,14 +25,14 @@
             <div class="input-wrapper3">
               <img id="downIcon" src="@/assets/downTriangle.png" />
               <select
-                v-model="itemType"
-                :class="{ 'placeholder-color': !itemType }"
+                v-model="size"
+                :class="{ 'placeholder-color': !size }"
                 class="dropdown"
               >
                 <option disabled value="">Select size</option>
-                <option>Small</option>
-                <option>Medium</option>
-                <option>Large</option>
+                <option>small</option>
+                <option>medium</option>
+                <option>large</option>
               </select>
             </div>
           </div>
@@ -40,8 +40,9 @@
 
         <div id="buttonArea">
           <VueButton
-            :class="{ 'button-disabled': !itemType || !itemNameInput }"
-            :disabled="!itemType || !itemNameInput"
+            :class="{ 'button-disabled': !size || !droneNameInput }"
+            :disabled="!size || !droneNameInput"
+            @click="addDrone"
           >
             Register
           </VueButton>
@@ -71,10 +72,62 @@ components: {
 },
   data() {
     return {
-      itemType: '',
-      itemNameInput: '',
+      droneNameInput: '',
+      ownerID: '',
+      size: '',
+      status:''
     };
   },
+
+  methods: {
+    goBack() {
+      this.$router.push({path: '/drone/registration', query: {}})
+  },
+
+  addDrone() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No token found');
+    return;
+  }
+
+  this.ownerID = localStorage.getItem('userEmail');
+
+
+  const authorizationHeaders = {
+    'Content-Type': 'application/json',
+    'Authorization': `Token ${token}`
+  };
+
+  const options = {
+  method: 'POST',
+  headers: authorizationHeaders,
+  body: JSON.stringify({
+    ownerID: this.ownerID,
+    size: this.size,
+    status: "active"
+    }),
+  };
+
+  fetch('http://localhost:8000/drone_operator/register_drone', options)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Add successful:', data);
+    this.$router.push({path: '/drone/registration', query: {}})
+  })
+  .catch(error => {
+    console.error('Add failed:', error);
+  });
+  },
+}
+
+
+
 }
 </script>
 

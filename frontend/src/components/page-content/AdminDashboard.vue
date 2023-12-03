@@ -81,7 +81,7 @@ export default {
 
 .caption {
   margin-top: 10px;
-  font-size: 13pt;
+  font-size: 18pt;
   user-select: none;
 }
 
