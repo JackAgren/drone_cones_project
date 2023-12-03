@@ -32,101 +32,92 @@ export default {
     }
   },
   mounted() {
-    this.fetchUserID();
+    this.fetchEarnings();
   },
   methods: {
     goBack() {
       this.$router.push({ path: '/dashboard', query: { focus: 'drones' } })
     },
 
+    // For getting earning of a single drone
+    fetchDroneEarnings(droneID) {
+      // Correctly set the authorization header
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
 
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+      
+      fetch("http://localhost:8000/drone_operator/drone_earnings?droneID=" + droneID, {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+      })
+      .then(data => {
+        this.earnings = this.formatCurrency(data.earnings);
+        return this.earnings
+      })
+      .catch(error => {
+        // If this throws a 404 error it could mean the drone has not made any money yet
+        console.error(("Could not get earnings for drone " + data[i]['id']), error);
 
+      });
+    },
 
-    fetchEarnings(userID) {
-  // Correctly set the authorization header
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.error('No token found');
-    // Handle the case where the token is missing
-    return;
-  }
+    // For getting earnings of ALL drones
+    fetchEarnings() {
+      // Correctly set the authorization header
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        // Handle the case where the token is missing
+        return;
+      }
 
-  const authorizationHeaders = {
-    'Content-Type': 'application/json',
-    'Authorization': `Token ${token}`
-  };
-
-  // Use template literals to insert the email variable into the URL
-  fetch(`http://localhost:8000/orders/drone_earnings?droneID=${userID}`, {
-    method: 'GET',
-    headers: authorizationHeaders
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    this.earnings = this.formatCurrency(data.earnings);
-    
-  })
-  .catch(error => {
-    console.error('There has been a problem with your fetch operation:', error);
-  });
-},
-
-  fetchUserID() {
-  // Correctly set the authorization header
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.error('No token found');
-    // Handle the case where the token is missing
-    return;
-  }
-
-  const authorizationHeaders = {
-    'Content-Type': 'application/json',
-    'Authorization': `Token ${token}`
-  };
-
-  const email = localStorage.getItem('userEmail'); 
-  console.log(email);
-  // Check if email is not null or undefined
-  if (!email) {
-    console.error('No id found');
-    // Handle the case where the email is missing
-    return;
-  }
-
-  // Use template literals to insert the email variable into the URL
-  fetch(`http://localhost:8000/user/get_users?email=${email}`, {
-    method: 'GET',
-    headers: authorizationHeaders
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log(data.user.id);
-    var userID = data.user.id; // -1 to account for ID offset by DJango.
-    this.fetchEarnings(userID);
-  })
-  .catch(error => {
-    console.error('There has been a problem with your fetch operation:', error);
-  });
-},
-
-
+      const authorizationHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+      };
+        fetch("http://localhost:8000/drone_operator/get_all_owned_drones?ownerID=" + localStorage.getItem('userEmail'), {
+        method: 'GET',
+        headers: authorizationHeaders
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        for (var i = 0; i < data.length; i++){
+          console.log(data[i]['id']);
+          try {
+            var single_earnings = this.fetchDroneEarnings(data[i]['id'])
+          }
+          catch(err) {
+            console.log("Could not get earnings for drone " + data[i]['id']);
+          }
+          if (typeof single_earnings === 'number') {
+            this.earnings = this.earnings + single_earnings
+          }
+        }
+        return single_earnings
+        
+      })
+    },
     formatCurrency(value) {
       return `${parseFloat(value).toFixed(2)}`;
     },
-
-
-
 
   }
 }
