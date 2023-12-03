@@ -111,14 +111,12 @@ export default {
       const id = localStorage.getItem('userEmail');
       const token = localStorage.getItem('token');
 
-      const body = {
+      let body = {
         cones: [],
         userID: id,
-        droneID: 1,
+        //droneID: 1,
         location: this.address,
       }
-
-      console.log(this.orderInfo);
 
       for (let i = 0; i < this.orderInfo.length; i++) {
         for (let j = 0; j < this.orderInfo[i].qty; j++) {
@@ -131,20 +129,51 @@ export default {
         }
       }
 
-      console.log(body);
-
-      fetch(SERVER_URL + `orders/add`, {
-        method: 'POST',
+      fetch(SERVER_URL + `drone_operator/get_delivering_drones?cone_count=${body.cones.length}`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`
-        },
-        body: JSON.stringify(body)
+        }
       })
           .then(res => {
             return res.json();
           })
           .then(resp => {
+
+            console.log(body.cones.length);
+            console.log(resp);
+
+            if (resp.error === "Not enough drones.") {
+              alert("We're so sorry, but no drones are available at this time to complete your order. Please try again later.");
+              return "no drones";
+            }
+
+            body.droneID = resp[0].id;
+
+            console.log(this.orderInfo);
+
+            console.log(body);
+
+            return fetch(SERVER_URL + `orders/add`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+              },
+              body: JSON.stringify(body)
+            });
+          })
+          .then(res => {
+            if (res === "no drones") {
+              return "no drones";
+            }
+            return res.json();
+          })
+          .then(resp => {
+            if (resp === "no drones") {
+              return "no drones";
+            }
             console.log(resp);
 
             const orderID = resp.success.slice(resp.success.lastIndexOf("#") + 1);
@@ -153,6 +182,7 @@ export default {
           })
           .catch(err => {
             console.log(`An error occurred: ${err}`);
+            alert(`We're so sorry, an error occurred! Please reach out to customer support with the following information:\n${err}`);
           });
     },
     formatDetails(details) {
