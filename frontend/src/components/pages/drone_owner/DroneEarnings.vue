@@ -69,7 +69,7 @@ export default {
       })
       .catch(error => {
         // If this throws a 404 error it could mean the drone has not made any money yet
-        console.error('There has been a problem with your fetch operation:', error);
+        console.error(("Could not get earnings for drone " + data[i]['id']), error);
 
       });
     },
