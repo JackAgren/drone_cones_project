@@ -101,7 +101,6 @@ hr {
   margin: 2% 2% 2% 2%;
   width: 96%;
   height: 96%;
-  outline: red solid;
 }
 
 .dashboard-button {

@@ -373,7 +373,6 @@ export default {
 .grid-container > div {
   text-align: center;
   padding: 5px 0;
-  border: goldenrod solid;
 }
 
 .scoops {

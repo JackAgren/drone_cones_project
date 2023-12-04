@@ -268,7 +268,6 @@ h3 {
   background-color: rgba(244, 255, 256, .95);
   position: relative;
   height: 100%;
-  outline: hotpink solid;
 }
 
 .cart-icon {
