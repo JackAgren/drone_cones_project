@@ -4,50 +4,51 @@
 1. Click **Login**
     - Username: admin@test.com
     - Password: 1234
-    <img src="screenshots/home.png" width="640" height="360" />
-    <img src="screenshots/login.png" width="640" height="360" />
+    - <img src="screenshots/home.png" width="640" height="360" />
+    - <img src="screenshots/login.png" width="640" height="360" />
 2. The panel on the left has two options 
     - Click admin tools
-    <img src="screenshots/admin-tools-manage-inventory.png" width="640" height="360"/>
+    - <img src="screenshots/admin-tools-manage-inventory.png" width="640" height="360"/>
 3. Now navigate to Manage Inventory
     - There should now be a list of items that are currently available
     - Click on the **Strawberry** item to highlight it
     - Now click the restock button
-    <img src="screenshots/inventory-management.png" width="640" height="360"/>
+    - <img src="screenshots/inventory-management.png" width="640" height="360"/>
 4. Enter an amount in the input box to restock
     - Now click restock 
-    <img src="screenshots/restock.png" width="640" height="360"/>
+    - <img src="screenshots/restock.png" width="640" height="360"/>
 
 ## As a manager run the revenue report to see if the business is profitable
 1. Click **Login**
     - Username: admin@test.com
     - Password: 1234
-    <img src="screenshots/home.png" width="640" height="360" />
-    <img src="screenshots/login.png" width="640" height="360" />
+    - <img src="screenshots/home.png" width="640" height="360" />
+    - <img src="screenshots/login.png" width="640" height="360" />
 2. The panel on the left has two options 
     - Click admin tools
 3. Navigate to financial records
     - Review Financials 
-    <img src="screenshots/admin-tools-financial-records.png" width="640" height="360"/>
+    - <img src="screenshots/admin-tools-financial-records.png" width="640" height="360"/>
 4. Generate the report
+    - <img src="screenshots/finance.png" width="640" height="360"/>
 
 ## As a guest place an order when one or more items are out of stock
 1. Click **Login as Guest**
-    <img src="screenshots/00-guest-login.png" width="640" height="360" />
+    - <img src="screenshots/00-guest-login.png" width="640" height="360" />
 2. Click the main panel labeled **Place Order**
-   <img src="screenshots/01-guest-dashboard.png" width="640" height="360" />
+    - <img src="screenshots/01-guest-dashboard.png" width="640" height="360" />
 3. There is a featured section and a create your own section
-   <img src="screenshots/02-order.png" width="640" />
+    - <img src="screenshots/02-order.png" width="640" />
     * In this example, chocolate ice cream is out of stock. 
    Notice that the featured S'mores cone (which includes chocolate ice cream)
    is unavailable. Chocolate ice cream is also not available to be selected in the CYO section.
 4. Select an available item to add to the cart and click the Checkout button in the upper right of the screen.
 5. Enter your desired delivery address in the box and click the Purchase & Place Order button. Your saved card will be automatically charged.
-   <img src="screenshots/03-checkout.png" width="640" />
+   - <img src="screenshots/03-checkout.png" width="640" />
 6. View the progress of the drone delivering your order.
-   <img src="screenshots/04-progress.png" width="640" />
+   - <img src="screenshots/04-progress.png" width="640" />
 7. Enjoy your cone!
-   <img src="screenshots/05-delivered.png" width="640" />
+   - <img src="screenshots/05-delivered.png" width="640" />
 
 ## As a customer make a new customer account and make an order when one or more items are out of stock
 1. Click **Register**
@@ -60,33 +61,33 @@
     - **Zip Code**: *84321*
     - **Account Type**: *Customer*
 
-   <img src="screenshots/10-register.png" width="640"/>
-   <img src="screenshots/11-make-account.png" width="500"/>
+   - <img src="screenshots/10-register.png" width="640"/>
+   - <img src="screenshots/11-make-account.png" width="500"/>
 2. Click the main panel labeled **Place Order**
-   <img src="screenshots/12-dashboard.png" width="640"/>
+   - <img src="screenshots/12-dashboard.png" width="640"/>
 3. There is a featured section and a create your own section
-   <img src="screenshots/02-order.png" width="640" />
+   - <img src="screenshots/02-order.png" width="640" />
     * In this example, chocolate ice cream is out of stock.
       Notice that the featured S'mores cone (which includes chocolate ice cream)
       is unavailable. Chocolate ice cream is also not available to be selected in the CYO section.
 4. Select an available item to add to the cart and click the **Checkout** button in the upper right of the screen.
 5. Enter your desired delivery address in the box and click the **Purchase & Place Order** button. Your saved card will be automatically charged.
-   <img src="screenshots/03-checkout.png" width="640" />
+   - <img src="screenshots/03-checkout.png" width="640" />
 6. View the progress of the drone delivering your order.
-   <img src="screenshots/04-progress.png" width="640" />
+   - <img src="screenshots/04-progress.png" width="640" />
 7. Enjoy your cone!
-   <img src="screenshots/05-delivered.png" width="640" />
+   - <img src="screenshots/05-delivered.png" width="640" />
 
 ## As a customer review previous orders (this can be a pre-populated account)
 1. Click **Login**
     - Username: customer@test.com
     - Password: 1234
-    <img src="screenshots/home.png" width="640" height="360" />
-    <img src="screenshots/login.png" width="640" />
+    - <img src="screenshots/home.png" width="640" height="360" />
+    - <img src="screenshots/login.png" width="640" />
 2. Click the panel under the main panel labeled **View Order History**
-   <img src="screenshots/20-dashboard.png" width="640" />
+   - <img src="screenshots/20-dashboard.png" width="640" />
 3. View your Order History
-   <img src="screenshots/21-history.png" width="640" />
+   - <img src="screenshots/21-history.png" width="640" />
    * To reorder an item, click the corresponding **Add to Cart** button,
    then select the **Checkout** button on the upper right.
 
@@ -94,8 +95,8 @@
 1. Click **Login**
     - Username: drone@test.com
     - Password: 1234
-    <img src="screenshots/home.png" width="640" height="360" />
-    <img src="screenshots/login.png" width="640" height="360" />
+    - <img src="screenshots/home.png" width="640" height="360" />
+    - <img src="screenshots/login.png" width="640" height="360" />
 2. The panel on the left has three options 
     - Click manage leased drone
 3. Click the Drone registration panel to register a new drone
@@ -109,8 +110,8 @@
 1. Click **Login**
     - Username: drone@test.com
     - Password: 1234
-    <img src="screenshots/home.png" width="640" height="360" />
-    <img src="screenshots/login.png" width="640" height="360" />
+    - <img src="screenshots/home.png" width="640" height="360" />
+    - <img src="screenshots/login.png" width="640" height="360" />
 2. The panel on the left has three options 
     - Click manage leased drone
 3. Click the **Drone Activity** panel
