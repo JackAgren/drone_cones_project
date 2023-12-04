@@ -5,22 +5,22 @@
     - **Username:** admin@test.com
     - **Password:** 1234
 
-    Press the **Login** button when ready.
+    Press the **Login** button when ready.\
     <img src="screenshots/home.png" width="640" height="360" />
     <img src="screenshots/login.png" width="640" height="360" />
 
-2. Upon successful login, the panel on the left has two options. Click **Admin Tools**.
+2. Upon successful login, the panel on the left has two options. Click **Admin Tools**.\
   <img src="screenshots/toAdminDashboard.png" width="640" height="360"/>
     
-1. Now click **Restock**.
+1. Now click **Restock**.\
     <img src="screenshots/admin-tools-manage-inventory.png" width="640" height="360"/>
 
-1. Click on an entry to select it (i.e.**Chocolate**).  Then, click the **Restock** button below the item table.
+1. Click on an entry to select it (i.e.**Chocolate**).  Then, click the **Restock** button below the item table.\
     <img src="screenshots/inventory-management.png" width="640" height="360"/>
-1. Enter the quantity to purchase in the provided input.  Click on the **Restock** button when ready. 
+1. Enter the quantity to purchase in the provided input.  Click on the **Restock** button when ready. \
     <img src="screenshots/restock.png" width="640" height="360"/>
 
-1. Click the **Back** icon on upper left corner to return to dashboard.
+1. Click the **Back** icon on upper left corner to return to dashboard.\
     <img src="screenshots/exitRestock.png" width="640" height="360"/>
 
 ## As a manager run the revenue report to see if the business is profitable
@@ -28,20 +28,20 @@
     - **Username:** admin@test.com
     - **Password:** 1234
   
-    Press the **Login** button when ready.
+    Press the **Login** button when ready.\
     <img src="screenshots/home.png" width="640" height="360" />
     <img src="screenshots/login.png" width="640" height="360" />
-1. Upon successful login, the panel on the left has two options. Click **Admin Tools**.
+1. Upon successful login, the panel on the left has two options. Click **Admin Tools**.\
   <img src="screenshots/toAdminDashboard.png" width="640" height="360"/>
 
-1. Now click **Financial Records**.
+1. Now click **Financial Records**.\
 
     <img src="screenshots/admin-tools-financial-records.png" width="640" height="360"/>
 
-1. You will see the generated financial report.
+1. You will see the generated financial report.\
 <img src="screenshots/finance.png" width="640" height="360"/>
 
-1. Click the **Back** icon on upper left corner to return to dashboard.
+1. Click the **Back** icon on upper left corner to return to dashboard.\
     <img src="screenshots/exitFinance.png" width="640" height="360"/>
 
 ## As a guest place an order when one or more items are out of stock
