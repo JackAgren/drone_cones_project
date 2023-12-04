@@ -50,14 +50,14 @@ import VueBackButton from '@/components/BackButton.vue'
 
 
 export default {
-name: 'NewDrone',
-components: {
-  AppHeader,
-  AppFooter,
-  Background,
-  VueButton,
-  VueBackButton,
-},
+  name: 'NewDrone',
+  components: {
+    AppHeader,
+    AppFooter,
+    Background,
+    VueButton,
+    VueBackButton,
+  },
   data() {
     return {
       droneNameInput: '',
@@ -113,8 +113,6 @@ components: {
   });
   },
 }
-
-
 
 }
 </script>

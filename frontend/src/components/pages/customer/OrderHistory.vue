@@ -88,7 +88,7 @@ export default {
             for (let j = 0; j < resp[i].cones.length; j++) {
               const thisCone = resp[i].cones[j];
               this.orderHistory.push({
-                name: "CYO cone",
+                name: "Cone",
                 price: thisCone.cost,
                 qty: 1,
                 order_date: date.toLocaleDateString(),
@@ -114,6 +114,7 @@ export default {
         })
         .then(resp => {
           this.inventory = resp;
+          console.log(this.inventory);
         })
         .catch(err => {
           console.log(`An error occurred: ${err}`);
@@ -124,21 +125,33 @@ export default {
 
       console.log(item);
 
-      if (this.inventory.find(obj => { return obj.description === item.cone && obj.quantity > 0}) === undefined) {
+      const cone = this.inventory.find(obj => { return obj.description === item.cone && obj.quantity > 0});
+      if (cone === undefined) {
         return false;
+      } else {
+        const index = this.inventory.indexOf(cone);
+        this.inventory[index].quantity = this.inventory[index].quantity - 1;
       }
 
       for (let i = 0; i < item.scoops.length; i++) {
-        if (this.inventory.find(obj => { return obj.description === item.scoops[i] && obj.quantity > 0}) === undefined) {
+        const scoop = this.inventory.find(obj => { return obj.description === item.scoops[i] && obj.quantity > 0});
+        if (scoop === undefined) {
           console.log(item.scoops[i]);
           return false;
+        } else {
+          const index = this.inventory.indexOf(scoop);
+          this.inventory[index].quantity = this.inventory[index].quantity - 1;
         }
       }
 
       for (let i = 0; i < item.toppings.length; i++) {
-        if (this.inventory.find(obj => { return obj.description === item.toppings[i] && obj.quantity > 0}) === undefined) {
+        const topping = this.inventory.find(obj => { return obj.description === item.toppings[i] && obj.quantity > 0});
+        if (topping === undefined) {
           console.log(item.toppings[i]);
           return false;
+        } else {
+          const index = this.inventory.indexOf(topping);
+          this.inventory[index].quantity = this.inventory[index].quantity - 1;
         }
       }
 
@@ -238,17 +251,17 @@ td {
 .dashboard-button {
   position: fixed;
   top: 12%;
-  left: 2%;
+  left: 20px;
 }
 
 .center {
   margin: auto;
-  width: 70%;
+  width: 90%;
   height: 70%;
   position: fixed;
   z-index: 1;
   top: 20%;
-  left: 15%;
+  left: 5%;
   color: white;
   font-weight: bold;
   text-align: center;
@@ -258,12 +271,12 @@ td {
 
 .small-center {
   margin: auto;
-  width: 50%;
+  width: 70%;
   height: 55%;
   position: fixed;
   z-index: 1;
   top: 30%;
-  left: 25%;
+  left: 15%;
   color: rgba(40, 40, 40);
   font-weight: bold;
   text-align: left;
@@ -278,7 +291,7 @@ h1 {
 .checkout-button {
   position: fixed;
   top: 12%;
-  left: 85%;
+  right: 20px;
 }
 
 .cart-icon {

@@ -1,67 +1,60 @@
 <template>
 
-  <table style="width:100%;">
-    <tr>
-      <td>
+  <div class="grid-container">
 
-        <div class="small-center">
-          <h3>Number of Scoops</h3>
+    <div class="item2 small-center scoops">
+        <h3>Number of Scoops</h3>
 
-          <div style="padding-left: 25%;" class="no-highlight">
-            <p @click="decreaseScoops" class="arrow-button" :style="checkIfDisabled('remove scoop')">&#x25C0;</p>
-            <p class="scoop-count">{{scoopCount}}</p>
-            <p @click="increaseScoops" class="arrow-button" :style="checkIfDisabled('add scoop')">&#x25B6;</p>
-          </div>
-
-          <h3>Flavor(s)</h3>
-          <div v-for="scoop in scoopCount" style="padding-left: 10%;">
-            <p @click="decreaseFlavor(scoop - 1)" class="arrow-button">&#x25C0;</p>
-            <p class="flavor"> {{ scoops[scoop - 1] }} </p>
-            <p @click="advanceFlavor(scoop - 1)" class="arrow-button">&#x25B6;</p>
-            <img class="icecream" :src="getScoopLink(scoop - 1)">
-          </div>
-
-        </div>
-      </td>
-      <td>
-
-        <div class="small-center">
-          <h3>Cone</h3>
-
-          <div style="padding-left: 25%;">
-            <p @click="decreaseCone" class="arrow-button">&#x25C0;</p>
-            <p class="cone-label"> {{ cone }} </p>
-            <p @click="advanceCone" class="arrow-button">&#x25B6;</p>
-            <img class="cone" :src="getConeLink()">
-          </div>
-
+        <div style="align-content: center;" class="no-highlight">
+          <p @click="decreaseScoops" class="arrow-button" :style="checkIfDisabled('remove scoop')">&#x25C0;</p>
+          <p class="scoop-count">{{scoopCount}}</p>
+          <p @click="increaseScoops" class="arrow-button" :style="checkIfDisabled('add scoop')">&#x25B6;</p>
         </div>
 
-        <div class="small-center">
-          <h3>Toppings</h3>
-
-          <div>
-            <p @click="decreaseTopping" class="arrow-button">&#x25C0;</p>
-            <p class="cone-label">{{currentTopping}}</p>
-            <p @click="advanceTopping" class="arrow-button">&#x25B6;</p>
-            <img class="cone" :src="getToppingLink()">
-          </div>
-
-          <VueButton @mouseup="addTopping" class="add-topping">
-            {{toppingButton}}
-          </VueButton>
-
+        <h3>Flavor(s)</h3>
+        <div v-for="scoop in scoopCount" style="align-content: center;">
+          <p @click="decreaseFlavor(scoop - 1)" class="arrow-button">&#x25C0;</p>
+          <p class="flavor"> {{ scoops[scoop - 1] }} </p>
+          <p @click="advanceFlavor(scoop - 1)" class="arrow-button">&#x25B6;</p>
+          <img class="icecream" :src="getScoopLink(scoop - 1)">
         </div>
 
+    </div>
 
-        <VueButton @mouseup="addToCart()" class="add-to-cart">
-          {{addButton}}
-          <img class="cart-icon" src="../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
+    <div class="item3 small-center">
+        <h3>Cone</h3>
+
+        <div style="align-content: center;">
+          <p @click="decreaseCone" class="arrow-button">&#x25C0;</p>
+          <p class="cone-label"> {{ cone }} </p>
+          <p @click="advanceCone" class="arrow-button">&#x25B6;</p>
+          <img class="cone" :src="getConeLink()">
+        </div>
+
+    </div>
+
+    <div class="item5 small-center">
+        <h3>Toppings</h3>
+
+        <div>
+          <p @click="decreaseTopping" class="arrow-button">&#x25C0;</p>
+          <p class="cone-label">{{currentTopping}}</p>
+          <p @click="advanceTopping" class="arrow-button">&#x25B6;</p>
+          <img class="cone" :src="getToppingLink()">
+        </div>
+
+        <VueButton @mouseup="addTopping" class="add-topping">
+          {{toppingButton}}
         </VueButton>
 
-      </td>
-    </tr>
-  </table>
+    </div>
+
+  </div>
+
+  <VueButton @mouseup="addToCart()" class="add-to-cart">
+    {{addButton}}
+    <img class="cart-icon" src="../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
+  </VueButton>
 
 </template>
 
@@ -154,6 +147,43 @@ export default {
         });
   },
   methods: {
+    inStock(item) {
+
+      console.log(item);
+
+      const cone = this.inventory.find(obj => { return obj.description === item.cone && obj.quantity > 0});
+      if (cone === undefined) {
+        console.log(cone);
+        return false;
+      } else {
+        const index = this.inventory.indexOf(cone);
+        this.inventory[index].quantity = this.inventory[index].quantity - 1;
+      }
+
+      for (let i = 0; i < item.scoops.length; i++) {
+        const scoop = this.inventory.find(obj => { return obj.description === item.scoops[i] && obj.quantity > 0});
+        if (scoop === undefined) {
+          console.log(item.scoops[i]);
+          return false;
+        } else {
+          const index = this.inventory.indexOf(scoop);
+          this.inventory[index].quantity = this.inventory[index].quantity - 1;
+        }
+      }
+
+      for (let i = 0; i < item.toppings.length; i++) {
+        const topping = this.inventory.find(obj => { return obj.description === item.toppings[i] && obj.quantity > 0});
+        if (topping === undefined) {
+          console.log(item.toppings[i]);
+          return false;
+        } else {
+          const index = this.inventory.indexOf(topping);
+          this.inventory[index].quantity = this.inventory[index].quantity - 1;
+        }
+      }
+
+      return true;
+    },
     addTopping() {
       this.toppings.push(this.currentTopping);
       this.toppingButton = "Added!";
@@ -265,7 +295,32 @@ export default {
       return "";
     },
     calculatePrice() {
-      return 4.99;
+
+      let price = 0;
+
+      for (let i = 0; i < this.scoopCount; i++) {
+        //add price of this.scoops[i] to price
+        let theCost = this.inventory.find(obj => { return obj.description === this.scoops[i]});
+        if (theCost !== undefined) {
+          price += theCost.costPerUnit;
+        }
+      }
+
+      for (let i = 0; i < this.toppings.length; i++) {
+        //add price of this.toppings[i] to price
+        let theCost = this.inventory.find(obj => { return obj.description === this.toppings[i]});
+        if (theCost !== undefined) {
+          price += theCost.costPerUnit;
+        }
+      }
+
+      //add price of this.cone to price
+      let theCost = this.inventory.find(obj => { return obj.description === this.cone});
+      if (theCost !== undefined) {
+        price += theCost.costPerUnit;
+      }
+
+      return price;
     },
     addToCart() {
       if (this.toppings.length === 0) {
@@ -274,9 +329,14 @@ export default {
       }
       const item = {name: 'CYO cone', price: this.calculatePrice(), qty: 1, details: {
           cone: this.cone, scoops: this.scoops.slice(0, this.scoopCount), toppings: this.toppings
-        }}
-      this.$emit('sendToCart', item);
-      this.addButton = "Added! Add again?";
+        }};
+
+      if (this.inStock(item.details)) {
+        this.$emit('sendToCart', item);
+        this.addButton = "Added! Add again?";
+      } else {
+        alert("Unfortunately this item is now out of stock! Please try again later.");
+      }
     },
     increaseScoops() {
       this.addButton = "Add to Cart";
@@ -296,10 +356,33 @@ export default {
 
 <style scoped>
 
+.item2 { grid-area: menu; }
+.item3 { grid-area: main; }
+.item5 { grid-area: footer; }
+
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'menu menu menu main main main'
+    'menu menu menu footer footer footer';
+  gap: 5px;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+.grid-container > div {
+  text-align: center;
+  padding: 5px 0;
+}
+
+.scoops {
+  height: 100%;
+}
+
 .add-topping {
   width: 45%;
   margin-bottom: 10px;
-  margin-left: 60%;
+  margin-left: 50%;
 }
 
 .cone {
@@ -356,9 +439,7 @@ export default {
 }
 
 .add-to-cart {
-  position: absolute;
-  left: 60%;
-  top: 85%;
+  position: relative;
 }
 
 h3 {

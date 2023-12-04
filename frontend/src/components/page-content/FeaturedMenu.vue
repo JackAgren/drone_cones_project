@@ -1,7 +1,7 @@
 <template>
 
   <table>
-    <tr v-for="row in featured" style="height: 40%;">
+    <tr v-for="row in featured" style="height: 50%;">
 
       <td v-for="item in row" style="width: 50%;">
         <div class="small-center">
@@ -55,18 +55,18 @@ export default {
     return {
       featured: [
         [
-          {name: "S'mores", price: 1.23, image: featured0, css: 'featured-image f0', details: {
+          {name: "S'mores", price: 0, image: featured0, css: 'featured-image f0', details: {
               cone: "Waffle", scoops: ["Vanilla", "Chocolate"], toppings: ["S'mores", "Chocolate Sauce"]
             }, inStock: false},
-          {name: 'Berry Blast', price: 1.23, image: featured1, css: 'featured-image f1', details: {
+          {name: 'Berry Blast', price: 0, image: featured1, css: 'featured-image f1', details: {
               cone: "Waffle", scoops: ["Strawberry", "Strawberry"], toppings: ["Mixed Berries", "Sprinkles"]
             }, inStock: false},
         ],
         [
-          {name: 'Strawberry Cheesecake', price: 1.23, image: featured2, css: 'featured-image f2', details: {
+          {name: 'Strawberry Cheesecake', price: 0, image: featured2, css: 'featured-image f2', details: {
               cone: "Waffle", scoops: ["Cheesecake", "Cheesecake"], toppings: ["Strawberries"]
             }, inStock: false},
-          {name: 'Peanut Butter', price: 1.23, image: featured3, css: 'featured-image f3', details: {
+          {name: 'Peanut Butter', price: 0, image: featured3, css: 'featured-image f3', details: {
               cone: "Waffle", scoops: ["Peanut Butter", "Peanut Butter"], toppings: ["Oreo", "Chocolate Sauce"]
             }, inStock: false},
         ],
@@ -75,13 +75,54 @@ export default {
     }
   },
   methods: {
+    checkStockForOrder(item) {
+
+      console.log(item);
+
+      const cone = this.inventory.find(obj => { return obj.description === item.cone && obj.quantity > 0});
+      if (cone === undefined) {
+        console.log(cone);
+        return false;
+      } else {
+        const index = this.inventory.indexOf(cone);
+        this.inventory[index].quantity = this.inventory[index].quantity - 1;
+      }
+
+      for (let i = 0; i < item.scoops.length; i++) {
+        const scoop = this.inventory.find(obj => { return obj.description === item.scoops[i] && obj.quantity > 0});
+        if (scoop === undefined) {
+          console.log(item.scoops[i]);
+          return false;
+        } else {
+          const index = this.inventory.indexOf(scoop);
+          this.inventory[index].quantity = this.inventory[index].quantity - 1;
+        }
+      }
+
+      for (let i = 0; i < item.toppings.length; i++) {
+        const topping = this.inventory.find(obj => { return obj.description === item.toppings[i] && obj.quantity > 0});
+        if (topping === undefined) {
+          console.log(item.toppings[i]);
+          return false;
+        } else {
+          const index = this.inventory.indexOf(topping);
+          this.inventory[index].quantity = this.inventory[index].quantity - 1;
+        }
+      }
+
+      return true;
+    },
     addToCart(cone) {
       const item = {name: cone.name, price: cone.price, qty: 1, details: cone.details}
 
-      console.log(item);
-      this.$emit('sendToCart', item);
+      if (this.inStock(item.details)) {
+        console.log(item);
+        this.$emit('sendToCart', item);
 
-      alert("Added to cart!");
+        alert("Added to cart!");
+      } else {
+        alert("Unfortunately this item is now out of stock! Please try again later.");
+      }
     },
     inStock(item) {
 
@@ -124,6 +165,33 @@ export default {
           for (let i = 0; i < this.featured.length; i++) {
             this.featured[i][0].inStock = this.inStock(this.featured[i][0].details);
             this.featured[i][1].inStock = this.inStock(this.featured[i][1].details);
+
+
+            for (let j = 0; j < this.featured[i].length; j++) {
+              let thisFeatured = this.featured[i][j].details;
+              let price = 0;
+
+              for (let k = 0; k < thisFeatured.scoops.length; k++) {
+                let theCost = this.inventory.find(obj => { return obj.description === thisFeatured.scoops[k]});
+                if (theCost !== undefined) {
+                  price += theCost.costPerUnit;
+                }
+              }
+
+              for (let k = 0; k < thisFeatured.toppings.length; k++) {
+                let theCost = this.inventory.find(obj => { return obj.description === thisFeatured.toppings[k]});
+                if (theCost !== undefined) {
+                  price += theCost.costPerUnit;
+                }
+              }
+
+              let theCost = this.inventory.find(obj => { return obj.description === thisFeatured.cone});
+              if (theCost !== undefined) {
+                price += theCost.costPerUnit;
+              }
+
+              this.featured[i][j].price = price;
+            }
           }
         });
   }
@@ -173,7 +241,7 @@ export default {
 }
 
 .f2 {
-  width: 55%;
+  width: 60%;
 }
 
 .f3 {
@@ -186,7 +254,7 @@ export default {
 }
 
 h3 {
-  font-size: 12pt;
+  font-size: 11pt;
   text-align: center;
   margin-top: 2mm;
 }
@@ -199,6 +267,7 @@ h3 {
   text-align: left;
   background-color: rgba(244, 255, 256, .95);
   position: relative;
+  height: 100%;
 }
 
 .cart-icon {
