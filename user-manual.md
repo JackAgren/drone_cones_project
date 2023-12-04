@@ -109,14 +109,18 @@
     - Password: 1234
     - <img src="screenshots/home.png" width="640" height="360" />
     - <img src="screenshots/login.png" width="640" height="360" />
-2. The panel on the left has three options 
-    - Click manage leased drone
-3. Click the Drone registration panel to register a new drone
+2. The panel on the left has two options 
+    - Click **Manage Leased Drone**
+    - <img src="screenshots/23-drone-dashboard.png" width="640" height="360" />
+3. Click the **Drone Registration** panel to register a new drone
+    - <img src="screenshots/24-drone-registration.png" width="640" height="360" />
 4. On this page you can see all of your registered drones and their current status'
-    - On the bottom left of the page click the **Register New Drone** button 
+    - On the bottom right of the page click the **Register New Drone** button
+    - <img src="screenshots/25-new-drone.png" width="640" height="360" />
 5. Register your new drone
-    - **Name**: *Namehere*
     - **Size**: *Select any size*
+    - On the bottom right of the page click the **Register** button
+    - <img src="screenshots/26-drone-info.png" width="640" height="360" />
 
 ## As a drone operator review how many hours my drone(s) worked and how much $$$ I earned
 1. Click **Login**
