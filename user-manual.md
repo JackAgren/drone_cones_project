@@ -1,36 +1,42 @@
  # User Manual
 
 ## As a manager check on inventory and restock items
-1. Click **Login**
-    - Username: admin@test.com
-    - Password: 1234
+1. In homepage, click **Login** and enter following credentials on Login page:
+    - **Username:** admin@test.com
+    - **Password:** 1234
+
+    Press the **Login** button when ready.
     <img src="screenshots/home.png" width="640" height="360" />
     <img src="screenshots/login.png" width="640" height="360" />
-2. The panel on the left has two options 
-    - Click admin tools
+
+1. Upon successful login, the panel on the left has two options. Click **Admin Tools**.
+  <img src="screenshots/toAdminDashboard.png" width="640" height="360"/>
+    
+1. Now click **Restock**.
     <img src="screenshots/admin-tools-manage-inventory.png" width="640" height="360"/>
-3. Now navigate to Manage Inventory
-    - There should now be a list of items that are currently available
-    - Click on the **Strawberry** item to highlight it
-    - Now click the restock button
+
+2. Click on an entry to select it (i.e.**Chocolate**).  Then, click the **Restock** button below the item table.
     <img src="screenshots/inventory-management.png" width="640" height="360"/>
-4. Enter an amount in the input box to restock
-    - Now click restock 
+3. Enter the quantity to purchase in the provided input.  Click on the **Restock** button when ready. 
     <img src="screenshots/restock.png" width="640" height="360"/>
 
 ## As a manager run the revenue report to see if the business is profitable
-1. Click **Login**
-    - Username: admin@test.com
-    - Password: 1234
+1. Click **Login** and enter following credentials on Login page:
+    - **Username:** admin@test.com
+    - **Password:** 1234
+  
+    Press the **Login** button when ready.
     <img src="screenshots/home.png" width="640" height="360" />
     <img src="screenshots/login.png" width="640" height="360" />
-2. The panel on the left has two options 
-    - Click admin tools
-3. Navigate to financial records
-    - Review Financials 
-    <img src="screenshots/admin-tools-financial-records.png" width="640" height="360"/>
-4. Generate the report
+1. Upon successful login, the panel on the left has two options. Click **Admin Tools**.
+  <img src="screenshots/toAdminDashboard.png" width="640" height="360"/>
 
+1. Now click **Financial Records**.
+
+    <img src="screenshots/admin-tools-financial-records.png" width="640" height="360"/>
+
+1. You will see the generated financial report.
+<img src="screenshots/finance.png" width="640" height="360"/>
 ## As a guest place an order when one or more items are out of stock
 1. Click **Login as Guest**
     <img src="screenshots/00-guest-login.png" width="640" height="360" />
