@@ -1,67 +1,60 @@
 <template>
 
-  <table style="width:100%;">
-    <tr>
-      <td>
+  <div class="grid-container">
 
-        <div class="small-center scoops">
-          <h3>Number of Scoops</h3>
+    <div class="item2 small-center scoops">
+        <h3>Number of Scoops</h3>
 
-          <div style="padding-left: 25%;" class="no-highlight">
-            <p @click="decreaseScoops" class="arrow-button" :style="checkIfDisabled('remove scoop')">&#x25C0;</p>
-            <p class="scoop-count">{{scoopCount}}</p>
-            <p @click="increaseScoops" class="arrow-button" :style="checkIfDisabled('add scoop')">&#x25B6;</p>
-          </div>
-
-          <h3>Flavor(s)</h3>
-          <div v-for="scoop in scoopCount" style="padding-left: 10%;">
-            <p @click="decreaseFlavor(scoop - 1)" class="arrow-button">&#x25C0;</p>
-            <p class="flavor"> {{ scoops[scoop - 1] }} </p>
-            <p @click="advanceFlavor(scoop - 1)" class="arrow-button">&#x25B6;</p>
-            <img class="icecream" :src="getScoopLink(scoop - 1)">
-          </div>
-
-        </div>
-      </td>
-      <td>
-
-        <div class="small-center">
-          <h3>Cone</h3>
-
-          <div style="padding-left: 25%;">
-            <p @click="decreaseCone" class="arrow-button">&#x25C0;</p>
-            <p class="cone-label"> {{ cone }} </p>
-            <p @click="advanceCone" class="arrow-button">&#x25B6;</p>
-            <img class="cone" :src="getConeLink()">
-          </div>
-
+        <div style="align-content: center;" class="no-highlight">
+          <p @click="decreaseScoops" class="arrow-button" :style="checkIfDisabled('remove scoop')">&#x25C0;</p>
+          <p class="scoop-count">{{scoopCount}}</p>
+          <p @click="increaseScoops" class="arrow-button" :style="checkIfDisabled('add scoop')">&#x25B6;</p>
         </div>
 
-        <div class="small-center">
-          <h3>Toppings</h3>
-
-          <div>
-            <p @click="decreaseTopping" class="arrow-button">&#x25C0;</p>
-            <p class="cone-label">{{currentTopping}}</p>
-            <p @click="advanceTopping" class="arrow-button">&#x25B6;</p>
-            <img class="cone" :src="getToppingLink()">
-          </div>
-
-          <VueButton @mouseup="addTopping" class="add-topping">
-            {{toppingButton}}
-          </VueButton>
-
+        <h3>Flavor(s)</h3>
+        <div v-for="scoop in scoopCount" style="align-content: center;">
+          <p @click="decreaseFlavor(scoop - 1)" class="arrow-button">&#x25C0;</p>
+          <p class="flavor"> {{ scoops[scoop - 1] }} </p>
+          <p @click="advanceFlavor(scoop - 1)" class="arrow-button">&#x25B6;</p>
+          <img class="icecream" :src="getScoopLink(scoop - 1)">
         </div>
 
+    </div>
 
-        <VueButton @mouseup="addToCart()" class="add-to-cart">
-          {{addButton}}
-          <img class="cart-icon" src="../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
+    <div class="item3 small-center">
+        <h3>Cone</h3>
+
+        <div style="align-content: center;">
+          <p @click="decreaseCone" class="arrow-button">&#x25C0;</p>
+          <p class="cone-label"> {{ cone }} </p>
+          <p @click="advanceCone" class="arrow-button">&#x25B6;</p>
+          <img class="cone" :src="getConeLink()">
+        </div>
+
+    </div>
+
+    <div class="item5 small-center">
+        <h3>Toppings</h3>
+
+        <div>
+          <p @click="decreaseTopping" class="arrow-button">&#x25C0;</p>
+          <p class="cone-label">{{currentTopping}}</p>
+          <p @click="advanceTopping" class="arrow-button">&#x25B6;</p>
+          <img class="cone" :src="getToppingLink()">
+        </div>
+
+        <VueButton @mouseup="addTopping" class="add-topping">
+          {{toppingButton}}
         </VueButton>
 
-      </td>
-    </tr>
-  </table>
+    </div>
+
+  </div>
+
+  <VueButton @mouseup="addToCart()" class="add-to-cart">
+    {{addButton}}
+    <img class="cart-icon" src="../../assets/img/shopping-cart.png" alt="Shopping cart icon.">
+  </VueButton>
 
 </template>
 
@@ -363,16 +356,34 @@ export default {
 
 <style scoped>
 
-.scoops {
+.item2 { grid-area: menu; }
+.item3 { grid-area: main; }
+.item5 { grid-area: footer; }
+
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'menu menu menu main main main'
+    'menu menu menu footer footer footer';
+  gap: 5px;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+.grid-container > div {
+  text-align: center;
+  padding: 5px 0;
   border: goldenrod solid;
+}
+
+.scoops {
   height: 100%;
-  margin-top: 1px;
 }
 
 .add-topping {
   width: 45%;
   margin-bottom: 10px;
-  margin-left: 60%;
+  margin-left: 50%;
 }
 
 .cone {
@@ -429,9 +440,7 @@ export default {
 }
 
 .add-to-cart {
-  position: absolute;
-  left: 60%;
-  top: 85%;
+  position: relative;
 }
 
 h3 {

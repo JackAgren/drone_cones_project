@@ -103,6 +103,11 @@ export default {
     },
     placeOrder() {
 
+      if (this.orderInfo.length <= 0) {
+        alert("You cannot place an empty order!");
+        return;
+      }
+
       if (this.address === "") {
         alert("You must input a delivery address to place your order.");
         return;

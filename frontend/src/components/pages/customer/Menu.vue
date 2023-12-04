@@ -118,12 +118,12 @@ hr {
 
 .center {
   margin: auto;
-  width: 70%;
-  height: 70%;
+  width: 80%;
+  height: 75%;
   position: fixed;
   z-index: 1;
-  top: 20%;
-  left: 15%;
+  top: 150px;
+  left: 10%;
   color: white;
   font-weight: bold;
   text-align: center;
