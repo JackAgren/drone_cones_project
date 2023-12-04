@@ -39,7 +39,7 @@
     <img src="screenshots/admin-tools-financial-records.png" width="640" height="360"/>
 
 1. You will see the generated financial report.<br/>
-<img src="screenshots/finance.png" width="640" height="360"/>
+   <img src="screenshots/finance.png" width="640" height="360"/>
 
 1. Click the **Back** icon on upper left corner to return to dashboard.<br/>
     <img src="screenshots/exitFinance.png" width="640" height="360"/>
