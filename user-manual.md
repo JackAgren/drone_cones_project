@@ -32,7 +32,7 @@
     <img src="screenshots/home.png" width="640" height="360" />
     <img src="screenshots/login.png" width="640" height="360" />
 1. Upon successful login, the panel on the left has two options. Click **Admin Tools**.<br/>
-  <img src="screenshots/toAdminDashboard.png" width="640" height="360"/>
+   <img src="screenshots/toAdminDashboard.png" width="640" height="360"/>
 
 1. Now click **Financial Records**.<br/>
 
