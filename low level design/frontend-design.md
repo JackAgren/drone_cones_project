@@ -10,7 +10,7 @@ https://www.figma.com/file/kuxGFMhTcyI4Y4n39xwAdq/DroneCones_UX_Blueprint?type=d
 The user can:
 
 * Move to the login page
-* Move to the menu page
+* Log in as a guest
 * Move to the page to create a customer account
 * Move to the page to create a drone owner account
 * Move to the page to apply to create an admin account
@@ -24,7 +24,6 @@ The user can:
 * Enter their login information and attempt to log in
     * If login is successful, the user is moved to the dashboard page
 * Move to the page to create an account
-* Move to the customer support page
 
 Requests made to the backend:
 
@@ -37,19 +36,19 @@ The user can (depending on the permissions of their role):
 
 * Access admin tools
     * Move to the financial records page
-    * Move to the manage payments page
-    * Move to the manage inventory page
+    * Move to the restock page
     * Move to the manage accounts page
     * Move to the manage menu page
 * Access drone owner tools
     * Move to the drone registration page
     * Move to the payments page
-    * Move to the drone activity page
 * Access customer options
     * Move to the menu page
     * Move to the order history page
 
-No requests made to the backend from the initial dashboard.
+Requests made to the backend:
+
+* Gets user permissions/roles
 
 ## Customer Pages
 
@@ -73,8 +72,9 @@ Requests made to the backend:
 The user can:
 
 * View their cart
-* Edit/remove items in their cart
+* Remove items in their cart
 * Return to the menu page
+* Return to the order history page
 * Enter location information
 * Place their order (which moves them to the order tracking page)
 
@@ -99,43 +99,33 @@ The user can:
 
 * Return to the dashboard page
 
-No requests are made to the backend.
+Requests made to the backend:
+
+* Marks order as delivered
 
 ### Order History
 
 The user can:
 
 * View their past orders
-* Select one to reorder (sends user to the checkout page)
+* Select one to reorder - add to cart
 * Return to the dashboard
 
 ## Drone Owner Pages
 ### Menu
-The drone owner will have options to move between the registration, activity, and payments pages.
+The drone owner will have options to move between the registration and payments pages.
+
 ### Drone Registration
 The drone owner can:
 
 * Register a new drone
-* Temporarily remove a drone from service
-* Permanently remove a drone from service
 
 Requests made to the backend:
 
 * Query drone data
     * Get drone ID, name
-* Change drone data
-    * Change drone status
+* Add a new drone
 
-### Drone Activity
-The drone owner can:
-
-* View data for each drone registered
-
-Requests made to the backend:
-
-* Query drone data
-    * Get deliveries
-    * Get status
 ### Earnings
 
 The drone owner can:
@@ -188,29 +178,7 @@ Requests made to the backend:
   * Request to modify current month profit/deficit.
   * Request to add new transaction corresponding to restock action.
 
-* Stock Status is *dervied* from whether or not quantity is or is not 0.
-
-### Manage Lease Payments
-
-The admin user can:
-
-* View list of active leases.
-* Make lease payments to selected unpaid leases.
-
-Requests made to the backend:
-
-* Query drones database to generate a list of leases consist of:
-  * Drone ID
-  * Drone Owner ID
-  * Drone Size Class
-  * Amount Due
-* Given a specific drone ID:
-  * Request to modify amount due data point corresponding to the drone ID.
-  * Request to modify balance in finance database.
-  * Request to modify current month profit/deficit.
-  * Request to add new transaction corresponding to lease payment action.
-  
-* Payment status is *dervied* from whether or not amount due is or is not 0.
+* Stock Status is *determined* by whether quantity is or is not 0.
 
 ### Financial Records
 
@@ -259,7 +227,7 @@ Requests made to the backend:
   * Request insertion of corresponding inventory item in inventory database.
   * Request insertion of menu item in menu item database.
 
-* Stock Status is *dervied* from whether or not quantity (from inventory database) is or is not 0.
+* Stock Status is *determined* by whether quantity (from inventory database) is or is not 0.
 
 ## UI Diagrams
 
